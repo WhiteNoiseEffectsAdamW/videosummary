@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Read(//c/Users/Adam W/AppData/Local/Programs/**)",
+      "Read(//c/Program Files/**)",
+      "Read(//c/Users/Adam W/.nvm/**)",
+      "Read(//c//**)",
+      "Bash(powershell.exe -Command \"Get-Command node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\")",
+      "Bash(powershell.exe -Command \"where.exe node\")",
+      "Bash(powershell.exe -Command \"where.exe npm; where.exe node\")",
+      "Bash(export PATH=\"/c/Program Files/nodejs:$PATH\")",
+      "Bash(npm --version)",
+      "WebSearch",
+      "Bash(gh auth:*)"
+    ]
+  }
+}
