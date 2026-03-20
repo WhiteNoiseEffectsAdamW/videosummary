@@ -1,8 +1,3 @@
-const { YoutubeTranscript } = require('youtube-transcript');
-
-const MAX_RETRIES = 3;
-const RETRY_DELAY_MS = 1000;
-
 // Extracts YouTube video ID from common URL formats.
 function extractVideoId(url) {
   const patterns = [
@@ -20,28 +15,7 @@ function extractVideoId(url) {
   return null;
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function fetchTranscriptWithRetry(videoId, attempt = 1) {
-  try {
-    const segments = await YoutubeTranscript.fetchTranscript(videoId);
-    return segments;
-  } catch (err) {
-    if (attempt >= MAX_RETRIES) {
-      const msg = err.message || String(err);
-      if (msg.includes('Could not find any transcripts')) {
-        throw new Error('No transcript available for this video. It may be disabled or not yet generated.');
-      }
-      throw new Error(`Failed to fetch transcript after ${MAX_RETRIES} attempts: ${msg}`);
-    }
-    await sleep(RETRY_DELAY_MS * attempt);
-    return fetchTranscriptWithRetry(videoId, attempt + 1);
-  }
-}
-
-// Converts offset (ms) to HH:MM:SS string.
+// Converts offset (ms) to M:SS or H:MM:SS string.
 function formatTimestamp(offsetMs) {
   const totalSeconds = Math.floor(offsetMs / 1000);
   const h = Math.floor(totalSeconds / 3600);
@@ -67,11 +41,31 @@ function buildTranscriptText(segments) {
 }
 
 async function getTranscript(videoId) {
-  const segments = await fetchTranscriptWithRetry(videoId);
+  const apiKey = process.env.SUPADATA_API_KEY;
+  if (!apiKey) throw new Error('SUPADATA_API_KEY is not set.');
+
+  const url = `https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}`;
+  const res = await fetch(url, { headers: { 'x-api-key': apiKey } });
+
+  if (!res.ok) {
+    const body = await res.text();
+    if (res.status === 404 || body.toLowerCase().includes('no transcript')) {
+      throw new Error('No transcript available for this video. The creator may have disabled captions.');
+    }
+    throw new Error(`Transcript API error (${res.status}). Try again in a moment.`);
+  }
+
+  const data = await res.json();
+  const segments = data.content || [];
+
+  if (!segments.length) {
+    throw new Error('No transcript available for this video. The creator may have disabled captions.');
+  }
+
   const text = buildTranscriptText(segments);
-  const durationMs = segments.length
-    ? segments[segments.length - 1].offset + (segments[segments.length - 1].duration || 0)
-    : 0;
+  const last = segments[segments.length - 1];
+  const durationMs = last ? last.offset + (last.duration || 0) : 0;
+
   return { text, durationSeconds: Math.floor(durationMs / 1000), segmentCount: segments.length };
 }
 
