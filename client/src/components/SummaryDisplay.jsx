@@ -2,10 +2,22 @@ import React from 'react';
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], readTimeSaved, cached, videoId } = data;
+  const { tldr, topics = [], quotes = [], readTimeSaved, cached, videoId, thumbnailUrl } = data;
 
   return (
     <div>
+      {/* Thumbnail */}
+      {thumbnailUrl && (
+        <div className="thumbnail-wrap">
+          <img
+            className="thumbnail"
+            src={thumbnailUrl}
+            alt="Video thumbnail"
+            onError={(e) => { e.target.closest('.thumbnail-wrap').style.display = 'none'; }}
+          />
+        </div>
+      )}
+
       {/* Meta row */}
       <div className="meta-row">
         <span className="pill pill-id">

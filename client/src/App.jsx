@@ -29,12 +29,6 @@ export default function App() {
   return (
     <div className="page">
       <header className="hero">
-        <div className="hero-eyebrow">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
-            <circle cx="5" cy="5" r="5" />
-          </svg>
-          AI-Powered
-        </div>
         <h1>Summarize any<br /><span>YouTube video</span></h1>
         <p>Paste a link and get key topics, quotes, and a TL;DR — in seconds.</p>
 

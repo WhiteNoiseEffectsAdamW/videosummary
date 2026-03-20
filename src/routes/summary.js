@@ -16,16 +16,17 @@ router.get('/', async (req, res, next) => {
       return res.status(400).json({ error: 'Could not parse a YouTube video ID from that URL.' });
     }
 
+    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
     // Cache hit
     const cached = await summaryModel.findByVideoId(videoId);
     if (cached) {
-      return res.json({ videoId, cached: true, ...cached.summary });
+      return res.json({ videoId, cached: true, thumbnailUrl, ...cached.summary });
     }
 
     // Fetch transcript
     const { text, durationSeconds } = await getTranscript(videoId);
 
-    // Summarize
     const summary = await summarize(text, durationSeconds);
 
     // Persist
@@ -36,7 +37,7 @@ router.get('/', async (req, res, next) => {
       transcriptLength: text.length,
     });
 
-    return res.json({ videoId, cached: false, ...summary });
+    return res.json({ videoId, cached: false, thumbnailUrl, ...summary });
   } catch (err) {
     next(err);
   }
