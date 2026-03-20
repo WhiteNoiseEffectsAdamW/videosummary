@@ -69,8 +69,10 @@ async function getTranscript(videoId) {
   const outputTemplate = path.join(tmpDir, videoId);
 
   try {
+    const ytDlp = process.env.YT_DLP_PATH || 'yt-dlp';
+    console.log('[yt-dlp] using binary:', ytDlp);
     await execFileAsync(
-      'yt-dlp',
+      ytDlp,
       [
         '--write-auto-sub',
         '--skip-download',
@@ -107,6 +109,12 @@ async function getTranscript(videoId) {
     if (err.message.startsWith('No transcript')) throw err;
 
     const detail = (err.stderr || err.message || '').toLowerCase();
+    console.error('[yt-dlp] stdout:', err.stdout);
+    console.error('[yt-dlp] stderr:', err.stderr);
+    console.error('[yt-dlp] message:', err.message);
+    if (detail.includes('not found') || detail.includes('not recognized') || err.code === 'ENOENT') {
+      throw new Error('yt-dlp binary not found. Set YT_DLP_PATH in your environment.');
+    }
     if (detail.includes('subtitle') || detail.includes('caption') || detail.includes('no subtitles')) {
       throw new Error('No transcript available for this video. The creator may have disabled captions.');
     }

@@ -7,7 +7,6 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
-
   async function handleSubmit(e) {
     e.preventDefault();
     if (!url.trim()) return;
@@ -47,6 +46,7 @@ export default function App() {
               {loading ? 'Summarizing…' : 'Summarize'}
             </button>
           </form>
+
         </div>
       </header>
 

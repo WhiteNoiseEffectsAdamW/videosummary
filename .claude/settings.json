@@ -5,7 +5,15 @@
       "Bash(node -e \"const {YoutubeTranscript} = require\\(''youtube-transcript''\\); console.log\\(''ok''\\)\")",
       "Bash(node -e \"const p = require\\(''c:/Users/Adam W/Desktop/videosummary/node_modules/youtube-transcript/package.json''\\); console.log\\(''type:'', p.type\\)\")",
       "WebFetch(domain:docs.supadata.ai)",
-      "WebFetch(domain:kome.ai)"
+      "WebFetch(domain:kome.ai)",
+      "Bash(yt-dlp --version)",
+      "Bash(powershell.exe -Command \"Get-ChildItem -Path ''C:\\\\Users\\\\Adam W'' -Filter ''yt-dlp.exe'' -Recurse -ErrorAction SilentlyContinue | Select-Object FullName\")",
+      "Bash(powershell.exe -Command \"Get-ChildItem -Path ''C:\\\\'' -Filter ''yt-dlp.exe'' -Recurse -ErrorAction SilentlyContinue -Depth 8 | Select-Object FullName\")",
+      "Bash(powershell.exe -Command \"Get-ChildItem ''C:\\\\Users\\\\Adam W\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet'' -Recurse -ErrorAction SilentlyContinue | Where-Object {$_Name -like ''*yt-dlp*''} | Select-Object FullName\")",
+      "Bash(powershell.exe -Command \"dir ''C:\\\\Users\\\\Adam W\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Links'' 2>&1 | Select-String ''yt-dlp''\")",
+      "Bash(powershell.exe -Command \"winget list yt-dlp\")",
+      "Bash(powershell.exe -Command \"\\(Get-Command yt-dlp\\).Source\")",
+      "Bash(powershell.exe -Command \"& ''C:\\\\Users\\\\Adam W\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\yt-dlp.exe'' --version\")"
     ]
   }
 }

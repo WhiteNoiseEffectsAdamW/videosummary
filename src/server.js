@@ -28,6 +28,15 @@ app.use(errorHandler);
 
 async function start() {
   await migrate();
+
+  // Verify yt-dlp is available at startup
+  const { execFile } = require('child_process');
+  const ytDlp = process.env.YT_DLP_PATH || 'yt-dlp';
+  execFile(ytDlp, ['--version'], (err, stdout) => {
+    if (err) console.warn('[startup] yt-dlp not found:', err.message);
+    else console.log('[startup] yt-dlp version:', stdout.trim());
+  });
+
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
   });
