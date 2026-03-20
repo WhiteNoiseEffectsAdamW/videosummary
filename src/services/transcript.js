@@ -69,7 +69,9 @@ async function getTranscript(videoId) {
   const outputTemplate = path.join(tmpDir, videoId);
 
   try {
-    const ytDlp = process.env.YT_DLP_PATH || 'yt-dlp';
+    const localBin = require('path').join(__dirname, '../../bin/yt-dlp');
+    const ytDlp = process.env.YT_DLP_PATH ||
+      (require('fs').existsSync(localBin) ? localBin : 'yt-dlp');
     console.log('[yt-dlp] using binary:', ytDlp);
     await execFileAsync(
       ytDlp,
