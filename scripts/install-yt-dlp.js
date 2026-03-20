@@ -14,10 +14,6 @@ const binPath = path.join(binDir, 'yt-dlp');
 
 if (!fs.existsSync(binDir)) fs.mkdirSync(binDir);
 
-if (fs.existsSync(binPath)) {
-  console.log('[install-yt-dlp] already installed, skipping');
-  process.exit(0);
-}
 
 // yt-dlp_linux is a standalone binary that bundles Python — no system Python needed.
 const url = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux';
