@@ -1,3 +1,11 @@
+const { execFile } = require('child_process');
+const { promisify } = require('util');
+const fs = require('fs/promises');
+const path = require('path');
+const os = require('os');
+
+const execFileAsync = promisify(execFile);
+
 // Extracts YouTube video ID from common URL formats.
 function extractVideoId(url) {
   const patterns = [
@@ -26,7 +34,7 @@ function formatTimestamp(offsetMs) {
     : `${m}:${String(s).padStart(2, '0')}`;
 }
 
-// Flattens transcript segments into a single string, with inline timestamps every ~60 seconds.
+// Flattens transcript segments into a single string with inline timestamps every ~60s.
 function buildTranscriptText(segments) {
   let text = '';
   let lastStampAt = -60000;
@@ -40,33 +48,72 @@ function buildTranscriptText(segments) {
   return text.trim();
 }
 
+// Parses yt-dlp's json3 subtitle format into {text, offset, duration} segments.
+function parseJson3(json3) {
+  const segments = [];
+  for (const event of json3.events || []) {
+    if (!event.segs) continue;
+    const text = event.segs
+      .map((s) => s.utf8 || '')
+      .join('')
+      .replace(/\n/g, ' ')
+      .trim();
+    if (!text) continue;
+    segments.push({ text, offset: event.tStartMs || 0, duration: event.dDurationMs || 0 });
+  }
+  return segments;
+}
+
 async function getTranscript(videoId) {
-  const apiKey = process.env.SUPADATA_API_KEY;
-  if (!apiKey) throw new Error('SUPADATA_API_KEY is not set.');
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), 'yt-'));
+  const outputTemplate = path.join(tmpDir, videoId);
 
-  const url = `https://api.supadata.ai/v1/youtube/transcript?videoId=${videoId}`;
-  const res = await fetch(url, { headers: { 'x-api-key': apiKey } });
+  try {
+    await execFileAsync(
+      'yt-dlp',
+      [
+        '--write-auto-sub',
+        '--skip-download',
+        '--sub-format', 'json3',
+        '--sub-langs', 'en',
+        '--no-warnings',
+        '--output', outputTemplate,
+        `https://www.youtube.com/watch?v=${videoId}`,
+      ],
+      { timeout: 30000 }
+    );
 
-  if (!res.ok) {
-    const body = await res.text();
-    if (res.status === 404 || body.toLowerCase().includes('no transcript')) {
+    const files = await fs.readdir(tmpDir);
+    const subFile = files.find((f) => f.endsWith('.json3'));
+
+    if (!subFile) {
       throw new Error('No transcript available for this video. The creator may have disabled captions.');
     }
-    throw new Error(`Transcript API error (${res.status}). Try again in a moment.`);
+
+    const raw = await fs.readFile(path.join(tmpDir, subFile), 'utf8');
+    const segments = parseJson3(JSON.parse(raw));
+
+    if (!segments.length) {
+      throw new Error('No transcript available for this video. The creator may have disabled captions.');
+    }
+
+    const text = buildTranscriptText(segments);
+    const last = segments[segments.length - 1];
+    const durationMs = last ? last.offset + (last.duration || 0) : 0;
+
+    return { text, durationSeconds: Math.floor(durationMs / 1000), segmentCount: segments.length };
+  } catch (err) {
+    // Re-throw clean user-facing errors as-is
+    if (err.message.startsWith('No transcript')) throw err;
+
+    const detail = (err.stderr || err.message || '').toLowerCase();
+    if (detail.includes('subtitle') || detail.includes('caption') || detail.includes('no subtitles')) {
+      throw new Error('No transcript available for this video. The creator may have disabled captions.');
+    }
+    throw new Error('Could not fetch transcript. Try again in a moment.');
+  } finally {
+    await fs.rm(tmpDir, { recursive: true, force: true }).catch(() => {});
   }
-
-  const data = await res.json();
-  const segments = data.content || [];
-
-  if (!segments.length) {
-    throw new Error('No transcript available for this video. The creator may have disabled captions.');
-  }
-
-  const text = buildTranscriptText(segments);
-  const last = segments[segments.length - 1];
-  const durationMs = last ? last.offset + (last.duration || 0) : 0;
-
-  return { text, durationSeconds: Math.floor(durationMs / 1000), segmentCount: segments.length };
 }
 
 module.exports = { extractVideoId, getTranscript };

@@ -4,7 +4,8 @@
       "Bash(gh repo:*)",
       "Bash(node -e \"const {YoutubeTranscript} = require\\(''youtube-transcript''\\); console.log\\(''ok''\\)\")",
       "Bash(node -e \"const p = require\\(''c:/Users/Adam W/Desktop/videosummary/node_modules/youtube-transcript/package.json''\\); console.log\\(''type:'', p.type\\)\")",
-      "WebFetch(domain:docs.supadata.ai)"
+      "WebFetch(domain:docs.supadata.ai)",
+      "WebFetch(domain:kome.ai)"
     ]
   }
 }
