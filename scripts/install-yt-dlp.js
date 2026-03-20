@@ -19,7 +19,8 @@ if (fs.existsSync(binPath)) {
   process.exit(0);
 }
 
-const url = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp';
+// yt-dlp_linux is a standalone binary that bundles Python — no system Python needed.
+const url = 'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux';
 console.log('[install-yt-dlp] downloading from', url);
 
 function download(url, dest, redirects = 0) {
