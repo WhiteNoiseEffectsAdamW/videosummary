@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], readTimeSaved, cached, videoId, thumbnailUrl } = data;
+  const { tldr, topics = [], quotes = [], readTimeSaved, verdict, cached, videoId, thumbnailUrl } = data;
 
   return (
     <div>
@@ -34,6 +34,14 @@ export default function SummaryDisplay({ data }) {
           </span>
         )}
       </div>
+
+      {/* Verdict */}
+      {verdict && (
+        <div className={`verdict verdict-${verdict.action.toLowerCase().replace(' ', '-')}`}>
+          <span className="verdict-action">{verdict.action === 'Watch segment' ? `Watch ${verdict.segment}` : verdict.action}</span>
+          <span className="verdict-reason">{verdict.reason}</span>
+        </div>
+      )}
 
       {/* TL;DR */}
       <div className="card">
