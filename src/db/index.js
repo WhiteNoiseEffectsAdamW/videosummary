@@ -41,9 +41,15 @@ async function migrate() {
     await db.schema.createTable('users', (t) => {
       t.increments('id').primary();
       t.string('email').unique().notNullable();
+      t.string('password_hash').notNullable();
       t.string('name');
       t.timestamps(true, true);
     });
+  } else {
+    const hasPasswordHash = await db.schema.hasColumn('users', 'password_hash');
+    if (!hasPasswordHash) {
+      await db.schema.alterTable('users', (t) => t.string('password_hash'));
+    }
   }
 
   const hasSubs = await db.schema.hasTable('subscriptions');
