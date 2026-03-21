@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SummaryDisplay from './components/SummaryDisplay.jsx';
+import ErrorBoundary from './components/ErrorBoundary.jsx';
 import './app.css';
 
 export default function App() {
@@ -10,6 +11,10 @@ export default function App() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!url.trim()) return;
+    if (!url.match(/(?:youtube\.com|youtu\.be)/)) {
+      setError('Please enter a valid YouTube URL.');
+      return;
+    }
     setLoading(true);
     setError(null);
     setData(null);
@@ -68,7 +73,7 @@ export default function App() {
           </div>
         )}
 
-        {data && <SummaryDisplay data={data} />}
+        {data && <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>}
       </main>
     </div>
   );

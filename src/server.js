@@ -39,6 +39,9 @@ app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Health check
+app.get('/health', (req, res) => res.json({ ok: true }));
+
 // API routes
 app.use('/api/auth', authRouter);
 app.use('/api/summary', summaryRouter);
@@ -55,6 +58,13 @@ if (process.env.NODE_ENV === 'production') {
 app.use(errorHandler);
 
 async function start() {
+  // Validate required env vars before accepting traffic
+  const required = ['ANTHROPIC_API_KEY'];
+  if (process.env.NODE_ENV === 'production') required.push('SESSION_SECRET');
+  for (const key of required) {
+    if (!process.env[key]) throw new Error(`Missing required env var: ${key}`);
+  }
+
   await migrate();
 
   // Verify yt-dlp is available at startup
