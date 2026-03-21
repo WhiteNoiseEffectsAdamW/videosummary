@@ -18,6 +18,7 @@ export default function Nav() {
     <nav className="nav">
       <span className="nav-brand">VideoSummary</span>
       <div className="nav-links">
+        <Link className={`nav-link${pathname === '/videos' ? ' active' : ''}`} to="/videos">My Videos</Link>
         <Link className={`nav-link${pathname === '/channels' ? ' active' : ''}`} to="/channels">Channels</Link>
         <Link className={`nav-link${pathname === '/' ? ' active' : ''}`} to="/">Summarize</Link>
       </div>

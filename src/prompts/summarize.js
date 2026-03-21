@@ -32,6 +32,7 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
     }
   ],
   "readTimeSaved": <integer — estimated minutes a reader saves by reading this summary instead of watching>,
+  "categories": ["<tag>", "<tag>"],
   "verdict": {
     "action": "<one of: 'Watch', 'Skip', 'Watch segment'>",
     "segment": "<if action is 'Watch segment', the timestamp range e.g. '8:30–14:00', otherwise null>",
@@ -43,6 +44,7 @@ RULES:
 - topics: identify 3–8 distinct sections or themes, in chronological order.
 - quotes: select 2–5 of the most insightful, surprising, or quotable lines.
 - readTimeSaved: base this on the video duration (${durationMins} min) minus the ~2 min it takes to read this summary.
+- categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
 - verdict: be decisive. 'Watch' means the full video is worth the time. 'Skip' means the summary captures everything of value. 'Watch segment' means one portion justifies the time but the rest is filler — specify the exact timestamps.
 - Keep all text factual — no editorialising beyond what the speaker says.
 

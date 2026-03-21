@@ -9,6 +9,7 @@ const summaryRouter = require('./routes/summary');
 const authRouter = require('./routes/auth');
 const subscriptionsRouter = require('./routes/subscriptions');
 const channelsRouter = require('./routes/channels');
+const videosRouter = require('./routes/videos');
 const { errorHandler } = require('./middleware/errorHandler');
 const { startPolling } = require('./jobs/poll-channels');
 const { startDigestJob } = require('./jobs/send-digests');
@@ -53,6 +54,7 @@ app.get('/health', (req, res) => res.json({ ok: true }));
 app.use('/api/auth', authRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/channels', channelsRouter);
+app.use('/api/videos', videosRouter);
 app.use('/api/summary', summaryRouter);
 
 // Serve React build in production

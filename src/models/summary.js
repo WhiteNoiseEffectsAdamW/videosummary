@@ -29,4 +29,12 @@ async function findByChannelIdsSince(channelIds, since) {
     .orderBy('created_at', 'desc');
 }
 
-module.exports = { findByVideoId, create, findByChannelIdsSince };
+async function findByChannelIds(channelIds, limit = 50) {
+  const rows = await db(TABLE)
+    .whereIn('channel_id', channelIds)
+    .orderBy('created_at', 'desc')
+    .limit(limit);
+  return rows.map((row) => ({ ...row, summary: JSON.parse(row.summary_json) }));
+}
+
+module.exports = { findByVideoId, create, findByChannelIdsSince, findByChannelIds };
