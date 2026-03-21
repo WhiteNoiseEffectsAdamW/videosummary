@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const requireAuth = require('../middleware/requireAuth');
 const { extractVideoId, getTranscript } = require('../services/transcript');
 const { summarize } = require('../services/summarizer');
 const summaryModel = require('../models/summary');
 
-router.get('/', async (req, res, next) => {
+router.get('/', requireAuth, async (req, res, next) => {
   try {
     const { url } = req.query;
     if (!url) {

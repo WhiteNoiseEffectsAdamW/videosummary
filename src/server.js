@@ -7,6 +7,7 @@ const passport = require('./middleware/passport');
 const { migrate } = require('./db');
 const summaryRouter = require('./routes/summary');
 const authRouter = require('./routes/auth');
+const subscriptionsRouter = require('./routes/subscriptions');
 const { errorHandler } = require('./middleware/errorHandler');
 
 const app = express();
@@ -44,6 +45,7 @@ app.get('/health', (req, res) => res.json({ ok: true }));
 
 // API routes
 app.use('/api/auth', authRouter);
+app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/summary', summaryRouter);
 
 // Serve React build in production
