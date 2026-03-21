@@ -69,7 +69,7 @@ export default function ChannelsPage() {
           <input
             className="url-input"
             type="text"
-            placeholder="youtube.com/@hubermanlab"
+            placeholder="youtube.com/@CalNewportMedia"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
