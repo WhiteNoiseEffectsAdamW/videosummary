@@ -47,8 +47,8 @@ function SummarizerPage() {
   return (
     <div className="page">
       <header className="hero">
-        <h1>Summarize any<br /><span>YouTube video</span></h1>
-        <p>Paste a link and get key topics, quotes, and a TL;DR — in seconds.</p>
+        <h1>Your YouTube channels,<br /><span>without the time sink</span></h1>
+        <p>Paste any video link to get key topics, quotes, and a TL;DR — or follow channels to get a daily digest in your inbox.</p>
         <div className="form-wrap">
           <form className="form-row" onSubmit={handleSubmit}>
             <input

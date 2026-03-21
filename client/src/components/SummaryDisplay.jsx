@@ -18,6 +18,14 @@ export default function SummaryDisplay({ data }) {
         </div>
       )}
 
+      {/* Verdict */}
+      {verdict && (
+        <div className={`verdict verdict-${verdict.action.toLowerCase().replace(' ', '-')}`}>
+          <span className="verdict-action">{verdict.action === 'Watch segment' ? `Watch ${verdict.segment}` : verdict.action}</span>
+          <span className="verdict-reason">{verdict.reason}</span>
+        </div>
+      )}
+
       {/* Meta row */}
       <div className="meta-row">
         <span className="pill pill-id">
@@ -34,14 +42,6 @@ export default function SummaryDisplay({ data }) {
           </span>
         )}
       </div>
-
-      {/* Verdict */}
-      {verdict && (
-        <div className={`verdict verdict-${verdict.action.toLowerCase().replace(' ', '-')}`}>
-          <span className="verdict-action">{verdict.action === 'Watch segment' ? `Watch ${verdict.segment}` : verdict.action}</span>
-          <span className="verdict-reason">{verdict.reason}</span>
-        </div>
-      )}
 
       {/* TL;DR */}
       <div className="card">
