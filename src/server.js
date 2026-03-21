@@ -8,6 +8,7 @@ const { migrate } = require('./db');
 const summaryRouter = require('./routes/summary');
 const authRouter = require('./routes/auth');
 const subscriptionsRouter = require('./routes/subscriptions');
+const channelsRouter = require('./routes/channels');
 const { errorHandler } = require('./middleware/errorHandler');
 const { startPolling } = require('./jobs/poll-channels');
 const { startDigestJob } = require('./jobs/send-digests');
@@ -48,6 +49,7 @@ app.get('/health', (req, res) => res.json({ ok: true }));
 // API routes
 app.use('/api/auth', authRouter);
 app.use('/api/subscriptions', subscriptionsRouter);
+app.use('/api/channels', channelsRouter);
 app.use('/api/summary', summaryRouter);
 
 // Serve React build in production

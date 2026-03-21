@@ -1,19 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-function extractChannelId(input) {
-  input = input.trim();
-  // Direct channel ID
-  if (/^UC[\w-]{22}$/.test(input)) return input;
-  // youtube.com/channel/UCxxxxx
-  const m = input.match(/youtube\.com\/channel\/(UC[\w-]{22})/);
-  if (m) return m[1];
-  return null;
-}
-
 export default function ChannelsPage() {
   const [channels, setChannels] = useState([]);
   const [input, setInput] = useState('');
-  const [channelName, setChannelName] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -27,24 +16,24 @@ export default function ChannelsPage() {
   async function handleAdd(e) {
     e.preventDefault();
     setError(null);
-    const channelId = extractChannelId(input);
-    if (!channelId) {
-      setError('Paste a channel URL (youtube.com/channel/UC…) or a channel ID starting with UC.');
-      return;
-    }
+    if (!input.trim()) return;
     setLoading(true);
     try {
+      // Resolve any YouTube channel URL or ID to a channel ID
+      const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(input.trim())}`, { credentials: 'include' });
+      const resolved = await resolveRes.json();
+      if (!resolveRes.ok) throw new Error(resolved.error);
+
       const res = await fetch('/api/subscriptions', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channelId, channelName: channelName || channelId }),
+        body: JSON.stringify({ channelId: resolved.channelId, channelName: resolved.channelName || resolved.channelId }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setChannels((prev) => [...prev, data]);
       setInput('');
-      setChannelName('');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -67,17 +56,9 @@ export default function ChannelsPage() {
           <input
             className="url-input"
             type="text"
-            placeholder="youtube.com/channel/UCxxxxxx or channel ID"
+            placeholder="youtube.com/@handle or youtube.com/channel/UC…"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            disabled={loading}
-          />
-          <input
-            className="url-input channel-name-input"
-            type="text"
-            placeholder="Label (optional)"
-            value={channelName}
-            onChange={(e) => setChannelName(e.target.value)}
             disabled={loading}
           />
         </div>
