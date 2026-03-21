@@ -16,6 +16,9 @@ const { startDigestJob } = require('./jobs/send-digests');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust Railway's reverse proxy so secure cookies work over HTTPS
+app.set('trust proxy', 1);
+
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
