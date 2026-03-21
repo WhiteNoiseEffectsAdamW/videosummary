@@ -9,6 +9,7 @@ const summaryRouter = require('./routes/summary');
 const authRouter = require('./routes/auth');
 const subscriptionsRouter = require('./routes/subscriptions');
 const { errorHandler } = require('./middleware/errorHandler');
+const { startPolling } = require('./jobs/poll-channels');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -76,6 +77,8 @@ async function start() {
     if (err) console.warn('[startup] yt-dlp not found:', err.message);
     else console.log('[startup] yt-dlp version:', stdout.trim());
   });
+
+  startPolling();
 
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
