@@ -1,13 +1,27 @@
 import React, { useState } from 'react';
-import SummaryDisplay from './components/SummaryDisplay.jsx';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './AuthContext.jsx';
+import Nav from './components/Nav.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
+import SummaryDisplay from './components/SummaryDisplay.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
+import ChannelsPage from './pages/ChannelsPage.jsx';
 import './app.css';
 
-export default function App() {
+function RequireAuth({ children }) {
+  const { user } = useAuth();
+  if (user === undefined) return <div className="loading-screen">Loading…</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function SummarizerPage() {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+
   async function handleSubmit(e) {
     e.preventDefault();
     if (!url.trim()) return;
@@ -19,7 +33,7 @@ export default function App() {
     setError(null);
     setData(null);
     try {
-      const res = await fetch(`/api/summary?url=${encodeURIComponent(url.trim())}`);
+      const res = await fetch(`/api/summary?url=${encodeURIComponent(url.trim())}`, { credentials: 'include' });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
       setData(json);
@@ -35,7 +49,6 @@ export default function App() {
       <header className="hero">
         <h1>Summarize any<br /><span>YouTube video</span></h1>
         <p>Paste a link and get key topics, quotes, and a TL;DR — in seconds.</p>
-
         <div className="form-wrap">
           <form className="form-row" onSubmit={handleSubmit}>
             <input
@@ -51,10 +64,8 @@ export default function App() {
               {loading ? 'Summarizing…' : 'Summarize'}
             </button>
           </form>
-
         </div>
       </header>
-
       <main className="content">
         {error && (
           <div className="error-box">
@@ -65,16 +76,31 @@ export default function App() {
             {error}
           </div>
         )}
-
         {loading && (
           <div className="loader">
             <div className="spinner" />
             <span>Fetching transcript and generating summary…</span>
           </div>
         )}
-
         {data && <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>}
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Nav />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/channels" element={<RequireAuth><ChannelsPage /></RequireAuth>} />
+          <Route path="/" element={<RequireAuth><SummarizerPage /></RequireAuth>} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

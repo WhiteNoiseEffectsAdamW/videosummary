@@ -357,3 +357,81 @@
   color: #8888aa;
   line-height: 1.5;
 }
+
+/* Nav */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  height: 52px;
+  border-bottom: 1px solid #1e1e2e;
+  background: #0d0d14;
+}
+.nav-brand { font-size: 14px; font-weight: 700; color: #fff; margin-right: auto; }
+.nav-links { display: flex; gap: 4px; }
+.nav-link { font-size: 13px; color: #666; text-decoration: none; padding: 5px 10px; border-radius: 6px; }
+.nav-link:hover, .nav-link.active { color: #fff; background: #1a1a2e; }
+.nav-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.nav-email { font-size: 12px; color: #555; }
+.nav-logout { font-size: 12px; color: #555; background: none; border: none; cursor: pointer; padding: 0; }
+.nav-logout:hover { color: #fff; }
+
+/* Auth pages */
+.auth-page { display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 52px); padding: 24px; }
+.auth-card { width: 100%; max-width: 400px; }
+.auth-title { font-size: 24px; font-weight: 700; margin: 0 0 6px; }
+.auth-sub { font-size: 14px; color: #555; margin: 0 0 28px; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-size: 13px; color: #888; margin-bottom: 6px; }
+.field input {
+  width: 100%;
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  box-sizing: border-box;
+}
+.field input:focus { border-color: #7c6fff; }
+.optional { color: #444; }
+.auth-error { font-size: 13px; color: #ef4444; margin-bottom: 12px; }
+.btn-primary {
+  width: 100%;
+  padding: 11px;
+  background: #7c6fff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+}
+.btn-primary:disabled { opacity: 0.5; cursor: default; }
+.auth-switch { font-size: 13px; color: #555; margin-top: 20px; text-align: center; }
+.auth-switch a { color: #7c6fff; text-decoration: none; }
+
+/* Channels page */
+.page-inner { max-width: 640px; margin: 0 auto; padding: 40px 24px; }
+.page-title { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+.page-sub { font-size: 14px; color: #555; margin: 0 0 28px; }
+.add-channel-form { margin-bottom: 32px; }
+.add-channel-inputs { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.channel-name-input { max-width: 180px; }
+.channel-list { list-style: none; margin: 0; padding: 0; }
+.channel-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid #1a1a2e;
+}
+.channel-name { font-size: 14px; font-weight: 500; color: #e0e0f0; }
+.channel-id { font-size: 12px; color: #444; margin-top: 2px; font-family: monospace; }
+.btn-remove { font-size: 12px; color: #555; background: none; border: 1px solid #222; border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn-remove:hover { color: #ef4444; border-color: #ef4444; }
+.empty-state { font-size: 14px; color: #444; }
+.loading-screen { display: flex; align-items: center; justify-content: center; height: 100vh; color: #444; font-size: 14px; }
