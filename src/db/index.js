@@ -28,11 +28,17 @@ async function migrate() {
     await db.schema.createTable('summaries', (t) => {
       t.increments('id').primary();
       t.string('video_id').unique().notNullable();
+      t.string('channel_id');
       t.string('title');
       t.text('summary_json').notNullable();
       t.integer('transcript_length');
       t.timestamps(true, true);
     });
+  } else {
+    const hasChannelId = await db.schema.hasColumn('summaries', 'channel_id');
+    if (!hasChannelId) {
+      await db.schema.alterTable('summaries', (t) => t.string('channel_id'));
+    }
   }
 
   // Phase 2 tables — stubbed now so the schema is in place

@@ -11,9 +11,10 @@ async function findByVideoId(videoId) {
   };
 }
 
-async function create({ videoId, title, summary, transcriptLength }) {
+async function create({ videoId, channelId, title, summary, transcriptLength }) {
   await db(TABLE).insert({
     video_id: videoId,
+    channel_id: channelId || null,
     title,
     summary_json: JSON.stringify(summary),
     transcript_length: transcriptLength,
@@ -21,4 +22,11 @@ async function create({ videoId, title, summary, transcriptLength }) {
   return findByVideoId(videoId);
 }
 
-module.exports = { findByVideoId, create };
+async function findByChannelIdsSince(channelIds, since) {
+  return db(TABLE)
+    .whereIn('channel_id', channelIds)
+    .where('created_at', '>=', since)
+    .orderBy('created_at', 'desc');
+}
+
+module.exports = { findByVideoId, create, findByChannelIdsSince };

@@ -10,6 +10,7 @@ const authRouter = require('./routes/auth');
 const subscriptionsRouter = require('./routes/subscriptions');
 const { errorHandler } = require('./middleware/errorHandler');
 const { startPolling } = require('./jobs/poll-channels');
+const { startDigestJob } = require('./jobs/send-digests');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -79,6 +80,7 @@ async function start() {
   });
 
   startPolling();
+  startDigestJob();
 
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

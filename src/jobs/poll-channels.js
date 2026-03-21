@@ -19,7 +19,7 @@ async function fetchChannelVideos(channelId) {
 }
 
 // Summarize a video if not already cached
-async function processVideo(videoId, title) {
+async function processVideo(videoId, channelId, title) {
   const cached = await summaryModel.findByVideoId(videoId);
   if (cached) return;
 
@@ -28,6 +28,7 @@ async function processVideo(videoId, title) {
   const summary = await summarize(text, durationSeconds);
   await summaryModel.create({
     videoId,
+    channelId,
     title: title || summary.tldr?.slice(0, 100) || videoId,
     summary,
     transcriptLength: text.length,
@@ -60,7 +61,7 @@ async function pollAllChannels() {
         const videoId = video['yt:videoId'];
         const title = typeof video.title === 'string' ? video.title : videoId;
         try {
-          await processVideo(videoId, title);
+          await processVideo(videoId, channelId, title);
         } catch (err) {
           console.error(`[poll] failed to process ${videoId}:`, err.message);
         }

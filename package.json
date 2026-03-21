@@ -23,6 +23,7 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "pg": "^8.20.0",
+    "resend": "^6.9.4",
     "sqlite3": "^5.1.7",
     "youtube-transcript": "^1.2.1"
   }
