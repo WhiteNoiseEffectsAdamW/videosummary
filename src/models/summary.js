@@ -12,7 +12,7 @@ async function findByVideoId(videoId) {
 }
 
 async function create({ videoId, title, summary, transcriptLength }) {
-  const [id] = await db(TABLE).insert({
+  await db(TABLE).insert({
     video_id: videoId,
     title,
     summary_json: JSON.stringify(summary),

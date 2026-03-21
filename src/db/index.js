@@ -1,18 +1,26 @@
 require('dotenv').config();
 const knex = require('knex');
 
-const db = knex({
-  client: 'sqlite3',
-  connection: {
-    filename: './videosummary.db',
-  },
-  useNullAsDefault: true,
-  pool: {
-    afterCreate(conn, done) {
-      conn.run('PRAGMA foreign_keys = ON', done);
-    },
-  },
-});
+const isPg = !!process.env.DATABASE_URL;
+
+const db = knex(
+  isPg
+    ? {
+        client: 'pg',
+        connection: process.env.DATABASE_URL,
+        pool: { min: 2, max: 10 },
+      }
+    : {
+        client: 'sqlite3',
+        connection: { filename: './videosummary.db' },
+        useNullAsDefault: true,
+        pool: {
+          afterCreate(conn, done) {
+            conn.run('PRAGMA foreign_keys = ON', done);
+          },
+        },
+      }
+);
 
 async function migrate() {
   const exists = await db.schema.hasTable('summaries');

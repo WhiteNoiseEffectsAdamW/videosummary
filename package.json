@@ -15,6 +15,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "knex": "^3.1.0",
+    "pg": "^8.20.0",
     "sqlite3": "^5.1.7",
     "youtube-transcript": "^1.2.1"
   }
