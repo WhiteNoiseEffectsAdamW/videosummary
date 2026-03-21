@@ -13,7 +13,8 @@
       "Bash(powershell.exe -Command \"dir ''C:\\\\Users\\\\Adam W\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Links'' 2>&1 | Select-String ''yt-dlp''\")",
       "Bash(powershell.exe -Command \"winget list yt-dlp\")",
       "Bash(powershell.exe -Command \"\\(Get-Command yt-dlp\\).Source\")",
-      "Bash(powershell.exe -Command \"& ''C:\\\\Users\\\\Adam W\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\yt-dlp.exe'' --version\")"
+      "Bash(powershell.exe -Command \"& ''C:\\\\Users\\\\Adam W\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\yt-dlp.exe'' --version\")",
+      "WebFetch(domain:videosummary-production.up.railway.app)"
     ]
   }
 }
