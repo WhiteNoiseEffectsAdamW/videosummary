@@ -19,8 +19,9 @@ export default function ChannelsPage() {
 
   useEffect(() => {
     fetch('/api/subscriptions', { credentials: 'include' })
-      .then((r) => r.json())
-      .then(setChannels);
+      .then((r) => r.ok ? r.json() : [])
+      .then(setChannels)
+      .catch(() => {});
   }, []);
 
   async function handleAdd(e) {
