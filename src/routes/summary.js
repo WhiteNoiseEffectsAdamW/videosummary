@@ -5,7 +5,7 @@ const { extractVideoId, getTranscript } = require('../services/transcript');
 const { summarize } = require('../services/summarizer');
 const summaryModel = require('../models/summary');
 
-router.get('/', requireAuth, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const { url } = req.query;
     if (!url) {
