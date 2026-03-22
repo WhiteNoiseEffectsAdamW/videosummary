@@ -308,11 +308,27 @@ body {
   gap: 12px;
   margin-bottom: 12px;
 }
+.summary-channel-group { display: flex; align-items: center; gap: 10px; }
 .summary-channel {
   font-size: 13px;
   color: #7c6fff;
   font-weight: 500;
 }
+.btn-follow {
+  font-size: 11px;
+  font-weight: 600;
+  color: #7c6fff;
+  background: none;
+  border: 1px solid rgba(124,111,255,0.35);
+  border-radius: 20px;
+  padding: 3px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-follow:hover:not(:disabled) { background: rgba(124,111,255,0.1); border-color: #7c6fff; }
+.btn-follow:disabled { opacity: 0.6; cursor: default; }
+.btn-follow-done { color: #22c55e; border-color: rgba(34,197,94,0.35); }
 .summary-header-actions { display: flex; align-items: center; gap: 10px; }
 .btn-share {
   font-size: 12px;
@@ -1059,8 +1075,8 @@ body {
 }
 .digest-email-sender { font-size: 12px; font-weight: 700; color: #222; }
 .digest-email-subject { font-size: 11px; color: #666; }
-.digest-email-card { background: #fff; padding: 16px; }
-.digest-email-row { display: flex; gap: 14px; align-items: flex-start; }
+.digest-email-card { background: #fff; padding: 0; }
+.digest-email-row { display: flex; gap: 14px; align-items: flex-start; padding: 16px; }
 .digest-email-thumb { width: 90px; height: 60px; object-fit: cover; border-radius: 4px; display: block; }
 .digest-email-content { flex: 1; min-width: 0; }
 .digest-email-channel { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
@@ -1068,6 +1084,10 @@ body {
 .digest-email-tldr { font-size: 12px; color: #555; line-height: 1.5; margin-bottom: 8px; }
 .digest-email-watch { font-size: 12px; font-weight: 600; color: #111; text-decoration: none; }
 .digest-email-watch:hover { text-decoration: underline; }
+.digest-email-divider { height: 1px; background: #ebebeb; margin: 0 16px; }
+.digest-email-row-muted { padding: 14px 0; opacity: 0.5; }
+.digest-email-thumb-placeholder { width: 90px; height: 60px; border-radius: 4px; background: #ddd; flex-shrink: 0; }
+.digest-placeholder-line { height: 10px; border-radius: 4px; background: #ddd; margin-bottom: 6px; }
 
 @media (max-width: 700px) {
   .digest-section-inner { flex-direction: column; gap: 40px; }

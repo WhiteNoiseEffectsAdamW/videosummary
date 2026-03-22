@@ -10,6 +10,33 @@ export default function SummaryDisplay({ data }) {
   if (!data) return null;
   const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, titleClaim, channelName } = data;
   const [copied, setCopied] = useState(false);
+  const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
+
+  async function handleFollow() {
+    if (followState !== 'idle') return;
+    setFollowState('loading');
+    try {
+      const resolveRes = await fetch(`/api/channels/resolve?videoId=${videoId}`, { credentials: 'include' });
+      const resolved = await resolveRes.json();
+      if (!resolveRes.ok) throw new Error(resolved.error);
+
+      const subRes = await fetch('/api/subscriptions', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelId: resolved.channelId, channelName: resolved.channelName || channelName }),
+      });
+      if (!subRes.ok) {
+        const d = await subRes.json();
+        if (subRes.status === 409) { setFollowState('following'); return; }
+        throw new Error(d.error);
+      }
+      setFollowState('following');
+    } catch {
+      setFollowState('error');
+      setTimeout(() => setFollowState('idle'), 3000);
+    }
+  }
 
   function handleShare() {
     const url = `${window.location.origin}/s/${videoId}`;
@@ -43,7 +70,18 @@ export default function SummaryDisplay({ data }) {
 
       {/* Channel + Watch CTA + Share */}
       <div className="summary-header">
-        {channelName && <span className="summary-channel">{channelName}</span>}
+        <div className="summary-channel-group">
+          {channelName && <span className="summary-channel">{channelName}</span>}
+          {channelName && (
+            <button
+              className={`btn-follow${followState === 'following' ? ' btn-follow-done' : ''}`}
+              onClick={handleFollow}
+              disabled={followState !== 'idle'}
+            >
+              {followState === 'loading' ? 'Following…' : followState === 'following' ? '✓ Following' : followState === 'error' ? 'Error' : '+ Follow'}
+            </button>
+          )}
+        </div>
         <div className="summary-header-actions">
           <button className="btn-share" onClick={handleShare}>
             {copied ? 'Copied!' : 'Share'}

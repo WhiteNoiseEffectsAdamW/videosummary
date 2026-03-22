@@ -21,8 +21,12 @@ function useFadeIn() {
 
 function DigestSection({ data }) {
   const ref = useFadeIn();
-  // Split on '. ' to avoid cutting on abbreviations like 'Dr.'
-  const tldrFirst = data?.tldr ? data.tldr.split(/\.\s+/)[0] + '.' : '';
+  // Grab first ~110 chars, trim to last word boundary — avoids abbreviation splits like "Dr."
+  const tldrFirst = data?.tldr
+    ? data.tldr.length <= 110
+      ? data.tldr
+      : data.tldr.slice(0, 110).replace(/\s+\S*$/, '') + '…'
+    : '';
   const videoUrl = `https://www.youtube.com/watch?v=${data?.videoId}`;
 
   return (
@@ -53,6 +57,7 @@ function DigestSection({ data }) {
               </div>
               {data && (
                 <div className="digest-email-card">
+                  {/* Real video */}
                   <div className="digest-email-row">
                     <a href={videoUrl} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0 }}>
                       <img src={data.thumbnailUrl} alt={data.title || ''} className="digest-email-thumb"
@@ -63,6 +68,25 @@ function DigestSection({ data }) {
                       <div className="digest-email-title">{data.title}</div>
                       {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
                       <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
+                    </div>
+                  </div>
+                  {/* Placeholder rows to convey multi-video digest */}
+                  <div className="digest-email-divider" />
+                  <div className="digest-email-row digest-email-row-muted">
+                    <div className="digest-email-thumb-placeholder" />
+                    <div className="digest-email-content">
+                      <div className="digest-email-channel digest-placeholder-line" style={{ width: 80 }} />
+                      <div className="digest-placeholder-line" style={{ width: '90%' }} />
+                      <div className="digest-placeholder-line" style={{ width: '70%', marginTop: 4 }} />
+                    </div>
+                  </div>
+                  <div className="digest-email-divider" />
+                  <div className="digest-email-row digest-email-row-muted">
+                    <div className="digest-email-thumb-placeholder" />
+                    <div className="digest-email-content">
+                      <div className="digest-email-channel digest-placeholder-line" style={{ width: 64 }} />
+                      <div className="digest-placeholder-line" style={{ width: '80%' }} />
+                      <div className="digest-placeholder-line" style={{ width: '55%', marginTop: 4 }} />
                     </div>
                   </div>
                 </div>
