@@ -9,13 +9,6 @@ function getResend() {
   return new Resend(process.env.RESEND_API_KEY);
 }
 
-function verdictLabel(verdict) {
-  if (!verdict) return null;
-  if (verdict.action === 'Watch segment') return `Watch ${verdict.segment}`;
-  if (verdict.action === 'Skip') return 'Summary covers it';
-  return verdict.action;
-}
-
 function renderDigestText(summaries) {
   const count = summaries.length;
   const lines = [];
@@ -25,24 +18,22 @@ function renderDigestText(summaries) {
 
   for (const s of summaries) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, quotes = [], verdict } = data;
+    const { tldr, quotes = [] } = data;
     const videoUrl = `https://www.youtube.com/watch?v=${s.video_id}`;
-    const label = verdictLabel(verdict);
 
     lines.push(DIVIDER);
 
-    const meta = [s.channel_name, label].filter(Boolean).join(' · ');
+    if (s.channel_name) lines.push(s.channel_name);
     lines.push(s.title || s.video_id);
-    if (meta) lines.push(meta);
     lines.push('');
 
-    // Lead quote if available
+    if (tldr) lines.push(tldr);
+    lines.push('');
+
+    // Quote below TL;DR
     if (quotes.length > 0) {
       lines.push(`"${quotes[0].text}"`);
-      lines.push('');
     }
-
-    if (tldr) lines.push(tldr);
 
     lines.push('');
     lines.push(`Watch: ${videoUrl}`);
