@@ -944,23 +944,22 @@ body {
 .landing-submit-btn { padding: 11px 22px; font-size: 15px; flex-shrink: 0; }
 .landing-input-error { font-size: 13px; color: #ef4444; margin-top: 10px; }
 .landing-limit-box { margin-top: 14px; font-size: 14px; color: #888; background: #0d0d1a; border: 1px solid #2a2a40; border-radius: 8px; padding: 12px 16px; }
-.landing-demo-badge { display: inline-block; font-size: 11px; font-weight: 600; color: #444; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 14px; }
 .landing-demo {
   max-width: 720px;
   margin: 0 auto;
   padding: 0 24px 80px;
 }
-.landing-demo-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #444;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 20px;
-}
 .landing-demo-card { display: flex; flex-direction: column; }
+.landing-demo-layout { display: flex; gap: 20px; align-items: flex-start; }
+.landing-demo-left { flex: 0 0 220px; min-width: 0; }
+.landing-demo-right { flex: 1; min-width: 0; display: flex; align-items: center; height: 100%; }
 .landing-thumb-link { display: block; line-height: 0; border-radius: 8px; overflow: hidden; }
-.landing-thumb { width: 100%; height: 160px; object-fit: cover; display: block; }
+.landing-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+@media (max-width: 560px) {
+  .landing-demo-layout { flex-direction: column; }
+  .landing-demo-left { flex: none; width: 100%; }
+  .landing-demo-right { width: 100%; }
+}
 .landing-video-ref { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; margin-bottom: 4px; }
 .landing-video-channel { font-size: 11px; font-weight: 600; color: #7c6fff; flex-shrink: 0; }
 .landing-video-title { font-size: 12px; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -968,6 +967,7 @@ body {
 .landing-verdict-action { font-size: 13px; font-weight: 700; flex-shrink: 0; }
 .landing-verdict-reason { font-size: 13px; color: #666; line-height: 1.5; }
 .landing-quote { font-size: 13px; font-style: italic; color: #555; line-height: 1.65; margin-top: 16px; padding-left: 14px; border-left: 2px solid #2a2a40; }
+.landing-demo-right .landing-quote { margin-top: 0; }
 .landing-inline-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 32px; padding-top: 28px; border-top: 1px solid #1a1a2e; }
 .landing-inline-cta .btn-primary { font-size: 14px; padding: 12px 22px; }
 .landing-inline-cta-sub { font-size: 13px; color: #444; }
@@ -992,7 +992,9 @@ body {
 /* ── Digest section ───────────────────────────────────────── */
 .digest-section {
   padding: 80px 24px;
+  background: #07070e;
   border-top: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.6s ease, transform 0.6s ease;
@@ -1009,14 +1011,43 @@ body {
 .digest-eyebrow { font-size: 11px; font-weight: 600; color: #7c6fff; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
 .digest-heading { font-size: 32px; font-weight: 700; color: #f0f0ff; margin: 0 0 14px; letter-spacing: -0.02em; }
 .digest-sub { font-size: 15px; color: #666; line-height: 1.7; margin: 0 0 24px; }
+.digest-cta { display: inline-block; }
 
 /* Email mockup */
 .digest-email-wrap { flex: 1; min-width: 0; }
-.digest-email-chrome {
-  background: #f0f0f0;
+.digest-email-window {
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.digest-email-titlebar {
+  background: #2a2a2a;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.digest-email-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #555;
+  display: inline-block;
+}
+.digest-email-dot:nth-child(1) { background: #ff5f57; }
+.digest-email-dot:nth-child(2) { background: #febc2e; }
+.digest-email-dot:nth-child(3) { background: #28c840; }
+.digest-email-titlebar-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #888;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 23px; /* optically center past the dots */
+}
+.digest-email-chrome {
+  background: #f0f0f0;
+  overflow: hidden;
 }
 .digest-email-from {
   background: #e8e8e8;

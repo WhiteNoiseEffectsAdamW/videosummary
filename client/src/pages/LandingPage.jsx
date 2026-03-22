@@ -21,7 +21,8 @@ function useFadeIn() {
 
 function DigestSection({ data }) {
   const ref = useFadeIn();
-  const tldrFirst = data?.tldr?.split('.')[0] + '.' || '';
+  // Split on '. ' to avoid cutting on abbreviations like 'Dr.'
+  const tldrFirst = data?.tldr ? data.tldr.split(/\.\s+/)[0] + '.' : '';
   const videoUrl = `https://www.youtube.com/watch?v=${data?.videoId}`;
 
   return (
@@ -33,36 +34,40 @@ function DigestSection({ data }) {
           <div className="digest-eyebrow">Daily digest</div>
           <h2 className="digest-heading">Set it on autopilot.</h2>
           <p className="digest-sub">Follow the channels you care about. Every morning, Headwater emails you summaries of what's new — so you can decide what's worth your time before you open YouTube.</p>
-          <Link to="/register" className="btn-primary" style={{ marginTop: 8 }}>Follow your first channel →</Link>
+          <Link to="/register" className="btn-primary digest-cta">Follow your first channel →</Link>
         </div>
 
         {/* Email card mockup */}
         <div className="digest-email-wrap">
-          <div className="digest-email-chrome">
-            <div className="digest-email-from">
-              <span className="digest-email-sender">Headwater</span>
-              <span className="digest-email-subject">Your daily digest — 3 new videos</span>
+          <div className="digest-email-window">
+            <div className="digest-email-titlebar">
+              <span className="digest-email-dot" />
+              <span className="digest-email-dot" />
+              <span className="digest-email-dot" />
+              <span className="digest-email-titlebar-label">Inbox</span>
             </div>
-            {data && (
-              <div className="digest-email-card">
-                <div className="digest-email-row">
-                  <a href={videoUrl} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0 }}>
-                    <img
-                      src={data.thumbnailUrl}
-                      alt={data.title || ''}
-                      className="digest-email-thumb"
-                      onError={(e) => { e.target.style.display = 'none'; }}
-                    />
-                  </a>
-                  <div className="digest-email-content">
-                    {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
-                    <div className="digest-email-title">{data.title}</div>
-                    {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
-                    <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
+            <div className="digest-email-chrome">
+              <div className="digest-email-from">
+                <div className="digest-email-sender">Headwater <span className="digest-email-addr">&lt;digest@headwater.app&gt;</span></div>
+                <div className="digest-email-subject">Your daily digest — 3 new videos</div>
+              </div>
+              {data && (
+                <div className="digest-email-card">
+                  <div className="digest-email-row">
+                    <a href={videoUrl} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0 }}>
+                      <img src={data.thumbnailUrl} alt={data.title || ''} className="digest-email-thumb"
+                        onError={(e) => { e.target.style.display = 'none'; }} />
+                    </a>
+                    <div className="digest-email-content">
+                      {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
+                      <div className="digest-email-title">{data.title}</div>
+                      {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
+                      <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
@@ -71,25 +76,36 @@ function DigestSection({ data }) {
   );
 }
 
-function CuratedSummary({ data, isDemo }) {
+function CuratedSummary({ data }) {
   const { titleClaim, tldr, verdict, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
   const quote = quotes[0];
 
   return (
     <div className="landing-demo-card">
-      {isDemo && <div className="landing-demo-badge">Example</div>}
+      <div className="landing-demo-layout">
 
-      <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" className="landing-thumb-link">
-        <img src={thumbnailUrl} alt={title || ''} className="landing-thumb"
-          onError={(e) => { e.target.closest('.landing-thumb-link').style.display = 'none'; }} />
-      </a>
-
-      {(channelName || title) && (
-        <div className="landing-video-ref">
-          {channelName && <span className="landing-video-channel">{channelName}</span>}
-          {title && <span className="landing-video-title">{title}</span>}
+        {/* Left: thumbnail + meta */}
+        <div className="landing-demo-left">
+          <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" className="landing-thumb-link">
+            <img src={thumbnailUrl} alt={title || ''} className="landing-thumb"
+              onError={(e) => { e.target.closest('.landing-thumb-link').style.display = 'none'; }} />
+          </a>
+          {(channelName || title) && (
+            <div className="landing-video-ref">
+              {channelName && <span className="landing-video-channel">{channelName}</span>}
+              {title && <span className="landing-video-title">{title}</span>}
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Right: quote */}
+        {quote && (
+          <div className="landing-demo-right">
+            <div className="landing-quote">"{quote.text}"</div>
+          </div>
+        )}
+
+      </div>
 
       {titleClaim?.claim && titleClaim?.reality && (
         <div className="card card-title-claim" style={{ marginTop: 20 }}>
@@ -120,8 +136,6 @@ function CuratedSummary({ data, isDemo }) {
           <span className="landing-verdict-reason">{verdict.reason}</span>
         </div>
       )}
-
-      {quote && <div className="landing-quote">"{quote.text}"</div>}
     </div>
   );
 }
@@ -216,7 +230,7 @@ export default function LandingPage() {
 
         {result && !loading && (
           <>
-            <CuratedSummary data={result} isDemo={false} />
+            <CuratedSummary data={result} />
             <div className="landing-inline-cta">
               <Link to="/register" className="btn-primary">Sign up to save this and follow channels →</Link>
               <span className="landing-inline-cta-sub">Free. No credit card required.</span>
@@ -226,8 +240,7 @@ export default function LandingPage() {
 
         {!result && !loading && demoData && (
           <>
-            <div className="landing-demo-label">Or see an example</div>
-            <CuratedSummary data={demoData} isDemo={true} />
+            <CuratedSummary data={demoData} />
             <div className="landing-inline-cta">
               <Link to="/register" className="btn-primary">Try it free →</Link>
               <span className="landing-inline-cta-sub">Free. No credit card required.</span>
