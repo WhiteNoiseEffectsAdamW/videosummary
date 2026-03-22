@@ -598,6 +598,27 @@ body {
 .page-title { font-size: 22px; font-weight: 700; margin: 0 0 20px; }
 .page-sub { font-size: 14px; color: #555; margin: 0 0 28px; }
 
+.videos-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.btn-test-email {
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 500;
+  color: #a0a0c0;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 7px;
+  padding: 7px 13px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.btn-test-email:hover { color: #e0e0f0; background: rgba(255,255,255,0.09); }
+.btn-test-email:disabled { opacity: 0.5; cursor: default; }
+
 /* Email digest toggle */
 .digest-toggle-row {
   display: flex;
@@ -779,3 +800,4 @@ body {
   white-space: nowrap;
   pointer-events: none;
 }
+.toast-error { border-color: rgba(239,68,68,0.3); color: #f87171; }

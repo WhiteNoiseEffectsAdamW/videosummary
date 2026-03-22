@@ -3,6 +3,7 @@ const requireAuth = require('../middleware/requireAuth');
 const subscriptionModel = require('../models/subscription');
 const summaryModel = require('../models/summary');
 const { scanChannel } = require('../jobs/poll-channels');
+const { sendDigest } = require('../services/email');
 
 // GET /api/videos — user's saved videos (manual + channel)
 router.get('/', requireAuth, async (req, res, next) => {
@@ -37,6 +38,23 @@ router.get('/', requireAuth, async (req, res, next) => {
 router.delete('/:videoId', requireAuth, async (req, res, next) => {
   try {
     await summaryModel.dismissUserSave(req.user.id, req.params.videoId);
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/videos/send-test-digest — send a sample digest to the logged-in user
+router.post('/send-test-digest', requireAuth, async (req, res, next) => {
+  try {
+    if (!process.env.RESEND_API_KEY) {
+      return res.status(503).json({ error: 'Email is not configured yet.' });
+    }
+    const rows = await summaryModel.findSavedByUserId(req.user.id, 10);
+    if (!rows.length) {
+      return res.status(400).json({ error: 'No videos in your list to send.' });
+    }
+    await sendDigest(req.user.email, rows);
     res.json({ ok: true });
   } catch (err) {
     next(err);

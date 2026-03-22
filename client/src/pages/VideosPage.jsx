@@ -23,7 +23,7 @@ function VideoRow({ video, onDelete }) {
         {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
         <div className="vrow-meta">
           <span className="vrow-date">{date}</span>
-{video.categories.slice(0, 2).map((c, i) => (
+          {video.categories.slice(0, 2).map((c, i) => (
             <span key={i} className="pill pill-cat" style={{ fontSize: 11, padding: '2px 7px' }}>{c}</span>
           ))}
         </div>
@@ -40,6 +40,8 @@ export default function VideosPage() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailToast, setEmailToast] = useState(null);
 
   function loadVideos() {
     setError(false);
@@ -57,10 +59,35 @@ export default function VideosPage() {
     await fetch(`/api/videos/${videoId}`, { method: 'DELETE', credentials: 'include' });
   }
 
+  async function handleSendTestEmail() {
+    setSendingEmail(true);
+    setEmailToast(null);
+    try {
+      const res = await fetch('/api/videos/send-test-digest', { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setEmailToast({ ok: true, msg: 'Email sent — check your inbox.' });
+    } catch (err) {
+      setEmailToast({ ok: false, msg: err.message || 'Could not send email.' });
+    } finally {
+      setSendingEmail(false);
+      setTimeout(() => setEmailToast(null), 4000);
+    }
+  }
+
   return (
     <div className="page-inner">
-      <h1 className="page-title">My Videos</h1>
-      <p className="page-sub">Click any video to read the summary.</p>
+      {emailToast && (
+        <div className={`toast${emailToast.ok ? '' : ' toast-error'}`}>{emailToast.msg}</div>
+      )}
+      <div className="videos-header">
+        <h1 className="page-title" style={{ margin: 0 }}>My Videos</h1>
+        {videos.length > 0 && (
+          <button className="btn-test-email" onClick={handleSendTestEmail} disabled={sendingEmail}>
+            {sendingEmail ? 'Sending…' : 'Send digest email'}
+          </button>
+        )}
+      </div>
 
       {loading && <div style={{ padding: '48px 0', color: '#555', fontSize: 14, textAlign: 'center' }}>Loading…</div>}
       {error && <p className="auth-error">Couldn't load videos. Please refresh.</p>}
@@ -69,7 +96,7 @@ export default function VideosPage() {
         <p className="empty-state">
           No videos yet. Summarize one on the{' '}
           <Link to="/" style={{ color: '#7c6fff' }}>Summarize page</Link>
-          {' '}or <Link to="/channels" style={{ color: '#7c6fff' }}>follow channels</Link> and hit Scan now.
+          {' '}or <Link to="/following" style={{ color: '#7c6fff' }}>follow channels</Link>.
         </p>
       )}
 
