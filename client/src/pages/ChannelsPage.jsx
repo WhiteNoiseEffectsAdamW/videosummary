@@ -81,7 +81,7 @@ export default function ChannelsPage() {
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
       </form>
 
-      <p className="digest-next">Next digest: tomorrow at 7am UTC</p>
+      <p className="digest-next">Digests send daily at 7am UTC. New videos are checked every hour.</p>
 
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}
       {channels.length === 0 && !loadError ? (

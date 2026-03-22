@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext.jsx';
 import Nav from './components/Nav.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
@@ -18,10 +18,29 @@ function RequireAuth({ children }) {
 }
 
 function SummarizerPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+
+  // Auto-load if ?v=VIDEO_ID is in the URL (e.g. from My Videos)
+  useEffect(() => {
+    const videoId = searchParams.get('v');
+    if (!videoId) return;
+    setSearchParams({}, { replace: true });
+    setLoading(true);
+    setError(null);
+    setData(null);
+    fetch(`/api/summary/${videoId}`, { credentials: 'include' })
+      .then((r) => r.json())
+      .then((json) => {
+        if (json.error) throw new Error(json.error);
+        setData(json);
+      })
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();

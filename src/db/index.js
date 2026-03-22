@@ -62,6 +62,18 @@ async function migrate() {
     }
   }
 
+  const hasSaves = await db.schema.hasTable('user_saves');
+  if (!hasSaves) {
+    await db.schema.createTable('user_saves', (t) => {
+      t.increments('id').primary();
+      t.integer('user_id').notNullable();
+      t.string('video_id').notNullable();
+      t.boolean('dismissed').defaultTo(false);
+      t.timestamps(true, true);
+      t.unique(['user_id', 'video_id']);
+    });
+  }
+
   const hasSubs = await db.schema.hasTable('subscriptions');
   if (!hasSubs) {
     await db.schema.createTable('subscriptions', (t) => {
