@@ -626,6 +626,11 @@ body {
 .auth-card .btn-primary { width: 100%; padding: 11px; margin-top: 4px; text-align: center; }
 .auth-switch { font-size: 13px; color: #555; margin-top: 20px; text-align: center; }
 .auth-switch a { color: #7c6fff; text-decoration: none; }
+.auth-legal { font-size: 11px; color: #3a3a50; margin-top: 12px; text-align: center; }
+.auth-legal a { color: #555; text-decoration: underline; }
+.field-checkbox { margin-bottom: 4px; }
+.checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #888; cursor: pointer; }
+.checkbox-label input[type="checkbox"] { width: 14px; height: 14px; accent-color: #7c6fff; flex-shrink: 0; cursor: pointer; }
 
 /* Following page */
 .page-inner { max-width: 640px; margin: 0 auto; padding: 40px 24px; }
@@ -1096,6 +1101,19 @@ body {
 
 /* ── Public summary page ──────────────────────────────────── */
 .public-summary-page { min-height: 100vh; background: #08080f; }
+
+/* ── Legal pages ─────────────────────────────────────────── */
+.legal-page { min-height: 100vh; background: #08080f; padding: 60px 24px; }
+.legal-inner { max-width: 640px; margin: 0 auto; }
+.legal-back { font-size: 13px; color: #555; text-decoration: none; display: inline-block; margin-bottom: 32px; }
+.legal-back:hover { color: #888; }
+.legal-page h1 { font-size: 28px; font-weight: 700; color: #f0f0ff; margin: 0 0 6px; }
+.legal-date { font-size: 12px; color: #444; margin: 0 0 36px; }
+.legal-page h2 { font-size: 15px; font-weight: 600; color: #c0c0d8; margin: 28px 0 8px; }
+.legal-page p, .legal-page li { font-size: 14px; color: #666; line-height: 1.7; margin: 0 0 12px; }
+.legal-page ul { padding-left: 20px; }
+.legal-page a { color: #7c6fff; text-decoration: none; }
+.legal-page a:hover { text-decoration: underline; }
 .public-header {
   display: flex;
   align-items: center;

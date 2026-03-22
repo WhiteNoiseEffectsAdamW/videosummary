@@ -1,16 +1,33 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const rateLimit = require('express-rate-limit');
 const passport = require('../middleware/passport');
-const { findByEmail, create, updatePreferences } = require('../models/user');
+const { findByEmail, create, updatePreferences, deleteById } = require('../models/user');
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => res.status(429).json({ error: 'Too many login attempts. Try again in 15 minutes.' }),
+});
+
+const registerLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => res.status(429).json({ error: 'Too many accounts created from this IP. Try again later.' }),
+});
 
 function serializeUser(u) {
   return { id: u.id, email: u.email, name: u.name, emailDigest: u.email_digest !== false };
 }
 
 // POST /api/auth/register
-router.post('/register', async (req, res, next) => {
+router.post('/register', registerLimiter, async (req, res, next) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, name, emailDigest } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
     if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
 
@@ -18,7 +35,7 @@ router.post('/register', async (req, res, next) => {
     if (existing) return res.status(409).json({ error: 'An account with that email already exists.' });
 
     const passwordHash = await bcrypt.hash(password, 12);
-    const user = await create({ email, passwordHash, name });
+    const user = await create({ email, passwordHash, name, emailDigest: emailDigest === true });
 
     req.login(user, (err) => {
       if (err) return next(err);
@@ -30,7 +47,7 @@ router.post('/register', async (req, res, next) => {
 });
 
 // POST /api/auth/login
-router.post('/login', (req, res, next) => {
+router.post('/login', loginLimiter, (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err);
     if (!user) return res.status(401).json({ error: info?.message || 'Invalid email or password.' });
@@ -63,6 +80,20 @@ router.patch('/me', async (req, res, next) => {
     const { emailDigest } = req.body;
     const updated = await updatePreferences(req.user.id, { emailDigest });
     res.json(serializeUser(updated));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE /api/auth/me — permanently delete account
+router.delete('/me', async (req, res, next) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
+  try {
+    await deleteById(req.user.id);
+    req.logout((err) => {
+      if (err) return next(err);
+      res.json({ ok: true });
+    });
   } catch (err) {
     next(err);
   }

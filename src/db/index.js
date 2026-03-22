@@ -49,12 +49,6 @@ async function migrate() {
     }
   }
 
-  // Add email_digest preference to users
-  const hasEmailDigest = await db.schema.hasColumn('users', 'email_digest');
-  if (!hasEmailDigest) {
-    await db.schema.alterTable('users', (t) => t.boolean('email_digest').defaultTo(true));
-  }
-
   // Phase 2 tables — stubbed now so the schema is in place
   const hasUsers = await db.schema.hasTable('users');
   if (!hasUsers) {
@@ -63,12 +57,18 @@ async function migrate() {
       t.string('email').unique().notNullable();
       t.string('password_hash').notNullable();
       t.string('name');
+      t.boolean('email_digest').defaultTo(false);
       t.timestamps(true, true);
     });
   } else {
     const hasPasswordHash = await db.schema.hasColumn('users', 'password_hash');
     if (!hasPasswordHash) {
       await db.schema.alterTable('users', (t) => t.string('password_hash'));
+    }
+    // Add email_digest preference — defaultTo(false): opt-in only
+    const hasEmailDigest = await db.schema.hasColumn('users', 'email_digest');
+    if (!hasEmailDigest) {
+      await db.schema.alterTable('users', (t) => t.boolean('email_digest').defaultTo(false));
     }
   }
 

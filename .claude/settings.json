@@ -27,7 +27,22 @@
       "Bash(npm run:*)",
       "Bash(curl -s https://videosummary-production.up.railway.app/health)",
       "Bash(curl -s -c /tmp/prod-cookies.txt -X POST https://videosummary-production.up.railway.app/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"test@example.com\"\",\"\"password\"\":\"\"password123\"\",\"\"name\"\":\"\"Test\"\"}')",
-      "WebFetch(domain:tmsearch.uspto.gov)"
+      "WebFetch(domain:tmsearch.uspto.gov)",
+      "WebFetch(domain:www.whois.com)",
+      "WebFetch(domain:who.is)",
+      "WebFetch(domain:lookup.icann.org)",
+      "WebFetch(domain:tsdrapi.uspto.gov)",
+      "WebFetch(domain:developer.uspto.gov)",
+      "WebFetch(domain:instantdomainsearch.com)",
+      "WebFetch(domain:trademark.trademarkia.com)",
+      "WebFetch(domain:www.trademarkia.com)",
+      "WebFetch(domain:branddb.wipo.int)",
+      "WebFetch(domain:efts.uspto.gov)",
+      "WebFetch(domain:lumio.com)",
+      "WebFetch(domain:vela.com)",
+      "WebFetch(domain:novu.com)",
+      "WebFetch(domain:claro.com)",
+      "WebFetch(domain:felo.com)"
     ]
   }
 }

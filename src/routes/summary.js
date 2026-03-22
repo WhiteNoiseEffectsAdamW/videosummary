@@ -4,6 +4,20 @@ const rateLimit = require('express-rate-limit');
 const { extractVideoId, getTranscript } = require('../services/transcript');
 const { summarize } = require('../services/summarizer');
 const summaryModel = require('../models/summary');
+const { db } = require('../db');
+
+const DAILY_USER_CAP = parseInt(process.env.DAILY_USER_CAP || '20', 10);
+
+async function getUserSummariesToday(userId) {
+  const since = new Date();
+  since.setHours(0, 0, 0, 0);
+  const row = await db('user_saves')
+    .where({ user_id: userId })
+    .where('created_at', '>=', since)
+    .count('id as n')
+    .first();
+  return Number(row.n);
+}
 
 // 3 free summaries per IP per day for unauthenticated users
 const anonLimit = rateLimit({
@@ -36,6 +50,14 @@ router.get('/', anonLimit, async (req, res, next) => {
 
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
     const userId = req.user?.id || null;
+
+    // Per-user daily cap for authenticated users
+    if (userId) {
+      const count = await getUserSummariesToday(userId);
+      if (count >= DAILY_USER_CAP) {
+        return res.status(429).json({ error: `Daily limit of ${DAILY_USER_CAP} summaries reached. Try again tomorrow.`, limitReached: true });
+      }
+    }
 
     // Cache hit — still save to user's list
     const cached = await summaryModel.findByVideoId(videoId);

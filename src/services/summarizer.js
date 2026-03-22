@@ -4,9 +4,9 @@ const { buildSummarizePrompt } = require('../prompts/summarize');
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-// Safety cap: ~400 k chars ≈ 100 k tokens, well within Claude's 200 k context.
+// Safety cap: ~80 k chars ≈ 20 k tokens, covers a 45-60 min video.
 // Trims from the middle to preserve intro and conclusion.
-const MAX_TRANSCRIPT_CHARS = 400_000;
+const MAX_TRANSCRIPT_CHARS = 80_000;
 
 function trimTranscript(text) {
   if (text.length <= MAX_TRANSCRIPT_CHARS) return text;
@@ -39,7 +39,8 @@ function parseStructuredSummary(raw) {
   try {
     return JSON.parse(jsonText.trim());
   } catch {
-    throw new Error('Claude returned malformed JSON. Raw response: ' + raw.slice(0, 300));
+    const detail = process.env.NODE_ENV !== 'production' ? ' Raw: ' + raw.slice(0, 300) : '';
+    throw new Error('Summary generation failed — please try again.' + detail);
   }
 }
 

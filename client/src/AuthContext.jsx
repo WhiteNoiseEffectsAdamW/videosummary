@@ -24,12 +24,12 @@ export function AuthProvider({ children }) {
     setUser(data);
   }
 
-  async function register(email, password, name) {
+  async function register(email, password, name, emailDigest) {
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name }),
+      body: JSON.stringify({ email, password, name, emailDigest }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);

@@ -11,6 +11,8 @@ import VideosPage from './pages/VideosPage.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
 import LandingPage from './pages/LandingPage.jsx';
 import PublicSummaryPage from './pages/PublicSummaryPage.jsx';
+import PrivacyPage from './pages/PrivacyPage.jsx';
+import TermsPage from './pages/TermsPage.jsx';
 import './app.css';
 
 function RequireAuth({ children }) {
@@ -131,6 +133,8 @@ export default function App() {
           <Route path="/following" element={<RequireAuth><FollowingPage /></RequireAuth>} />
           <Route path="/channels" element={<Navigate to="/following" replace />} />
           <Route path="/videos" element={<RequireAuth><VideosPage /></RequireAuth>} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
           <Route path="/" element={<AuthGate><SummarizerPage /></AuthGate>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

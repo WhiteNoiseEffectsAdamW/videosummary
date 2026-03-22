@@ -50,7 +50,7 @@ export default function Nav() {
     <>
       {/* Desktop top nav */}
       <nav className="nav">
-        <span className="nav-brand">VideoSummary</span>
+        <span className="nav-brand">Headwater</span>
         <div className="nav-links">
           {TABS.map((t) => (
             <Link key={t.to} className={`nav-link${pathname === t.to ? ' active' : ''}`} to={t.to}>
