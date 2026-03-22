@@ -1,8 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const rateLimit = require('express-rate-limit');
 const { extractVideoId, getTranscript } = require('../services/transcript');
 const { summarize } = require('../services/summarizer');
 const summaryModel = require('../models/summary');
+
+// 3 free summaries per IP per day for unauthenticated users
+const anonLimit = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  max: 3,
+  skip: (req) => !!req.user,
+  handler: (req, res) => res.status(429).json({ error: 'Free limit reached. Sign up to summarize more videos.', limitReached: true }),
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 async function fetchVideoMeta(videoId) {
   try {
@@ -15,7 +26,7 @@ async function fetchVideoMeta(videoId) {
   }
 }
 
-router.get('/', async (req, res, next) => {
+router.get('/', anonLimit, async (req, res, next) => {
   try {
     const { url } = req.query;
     if (!url) return res.status(400).json({ error: 'Missing required query param: url' });
