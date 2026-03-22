@@ -66,7 +66,7 @@ router.post('/scan', requireAuth, async (req, res, next) => {
   try {
     const subs = await subscriptionModel.findByUserId(req.user.id);
     if (!subs.length) return res.json({ ok: true, message: 'No channels to scan.' });
-    subs.forEach((s) => scanChannel(s.channel_id).catch(() => {}));
+    subs.forEach((s) => scanChannel(s.channel_id, s.channel_name).catch(() => {}));
     res.json({ ok: true, message: `Scanning ${subs.length} channel(s)…` });
   } catch (err) {
     next(err);

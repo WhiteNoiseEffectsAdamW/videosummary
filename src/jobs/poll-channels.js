@@ -19,16 +19,17 @@ async function fetchChannelVideos(channelId) {
 }
 
 // Summarize a video if not already cached
-async function processVideo(videoId, channelId, title) {
+async function processVideo(videoId, channelId, channelName, title) {
   const cached = await summaryModel.findByVideoId(videoId);
   if (cached) return;
 
   console.log(`[poll] summarizing ${videoId} — "${title}"`);
   const { text, durationSeconds } = await getTranscript(videoId);
-  const summary = await summarize(text, durationSeconds);
+  const summary = await summarize(text, durationSeconds, title);
   await summaryModel.create({
     videoId,
     channelId,
+    channelName: channelName || null,
     title: title || summary.tldr?.slice(0, 100) || videoId,
     summary,
     transcriptLength: text.length,
@@ -41,7 +42,7 @@ async function pollAllChannels() {
   console.log('[poll] starting');
   const cutoff = new Date(Date.now() - 25 * 60 * 60 * 1000);
 
-  const rows = await db('subscriptions').where({ active: true }).distinct('channel_id');
+  const rows = await db('subscriptions').where({ active: true }).distinct('channel_id', 'channel_name');
   const channelIds = rows.map((r) => r.channel_id);
 
   if (!channelIds.length) {
@@ -51,7 +52,8 @@ async function pollAllChannels() {
 
   console.log(`[poll] checking ${channelIds.length} channel(s)`);
 
-  for (const channelId of channelIds) {
+  for (const row of rows) {
+    const { channel_id: channelId, channel_name: channelName } = row;
     try {
       const videos = await fetchChannelVideos(channelId);
       const recent = videos.filter((v) => new Date(v.published) > cutoff);
@@ -61,7 +63,7 @@ async function pollAllChannels() {
         const videoId = video['yt:videoId'];
         const title = typeof video.title === 'string' ? video.title : videoId;
         try {
-          await processVideo(videoId, channelId, title);
+          await processVideo(videoId, channelId, channelName, title);
         } catch (err) {
           console.error(`[poll] failed to process ${videoId}:`, err.message);
         }
@@ -75,7 +77,7 @@ async function pollAllChannels() {
 }
 
 // Scan a single channel for recent videos — used on first follow
-async function scanChannel(channelId, lookbackMs = 7 * 24 * 60 * 60 * 1000) {
+async function scanChannel(channelId, channelName, lookbackMs = 7 * 24 * 60 * 60 * 1000) {
   const cutoff = new Date(Date.now() - lookbackMs);
   try {
     const videos = await fetchChannelVideos(channelId);
@@ -85,7 +87,7 @@ async function scanChannel(channelId, lookbackMs = 7 * 24 * 60 * 60 * 1000) {
       const videoId = video['yt:videoId'];
       const title = typeof video.title === 'string' ? video.title : videoId;
       try {
-        await processVideo(videoId, channelId, title);
+        await processVideo(videoId, channelId, channelName, title);
       } catch (err) {
         console.error(`[scan] failed ${videoId}:`, err.message);
       }
