@@ -18,9 +18,9 @@ function trimTranscript(text) {
   );
 }
 
-async function summarize(transcriptText, durationSeconds) {
+async function summarize(transcriptText, durationSeconds, title) {
   const trimmed = trimTranscript(transcriptText);
-  const prompt = buildSummarizePrompt(trimmed, durationSeconds);
+  const prompt = buildSummarizePrompt(trimmed, durationSeconds, title);
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',

@@ -5,18 +5,23 @@
  * so it can be reliably extracted even if Claude adds a preamble sentence.
  */
 
-function buildSummarizePrompt(transcriptText, durationSeconds) {
+function buildSummarizePrompt(transcriptText, durationSeconds, title) {
   const durationMins = Math.round(durationSeconds / 60);
+  const titleLine = title ? `\nVIDEO TITLE: "${title}"\n` : '';
 
   return `You are an expert at distilling long-form video content into clear, structured summaries.
 
-Below is the full transcript of a YouTube video (~${durationMins} minutes long). Inline timestamps appear as [M:SS] or [H:MM:SS].
+Below is the full transcript of a YouTube video (~${durationMins} minutes long). Inline timestamps appear as [M:SS] or [H:MM:SS].${titleLine}
 
 YOUR TASK:
 Produce a structured summary as a single JSON object wrapped in a \`\`\`json code fence. Do not include any text outside the fence. Use this exact shape:
 
 {
   "tldr": "<2–3 sentence plain-English summary of the whole video>",
+  "titleClaim": {
+    "claim": "<what the title implies or promises>",
+    "reality": "<what the video actually delivers — be specific and honest>"
+  },
   "topics": [
     {
       "title": "<section or topic title>",
@@ -31,7 +36,6 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
       "context": "<one sentence explaining why this quote is notable>"
     }
   ],
-  "readTimeSaved": <integer — estimated minutes a reader saves by reading this summary instead of watching>,
   "categories": ["<tag>", "<tag>"],
   "verdict": {
     "action": "<one of: 'Watch', 'Skip', 'Watch segment'>",
@@ -43,7 +47,7 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
 RULES:
 - topics: identify 3–8 distinct sections or themes, in chronological order.
 - quotes: select 2–5 of the most insightful, surprising, or quotable lines.
-- readTimeSaved: base this on the video duration (${durationMins} min) minus the ~2 min it takes to read this summary.
+- titleClaim: only include if the title can be evaluated against the content (i.e. it makes a specific promise, tease, or claim). If the title is straightforward and accurately describes the video, set both fields to null. Be honest — note if it's clickbait, misleading, or accurate.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
 - verdict: be decisive. 'Watch' means the full video is worth the time. 'Skip' means the summary captures everything of value. 'Watch segment' means one portion justifies the time but the rest is filler — specify the exact timestamps.
 - Keep all text factual — no editorialising beyond what the speaker says.

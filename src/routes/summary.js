@@ -37,7 +37,7 @@ router.get('/', async (req, res, next) => {
       getTranscript(videoId),
       fetchVideoMeta(videoId),
     ]);
-    const summary = await summarize(text, durationSeconds);
+    const summary = await summarize(text, durationSeconds, meta.title);
 
     await summaryModel.create({
       videoId,

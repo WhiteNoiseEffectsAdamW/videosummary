@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], readTimeSaved, verdict, cached, videoId, thumbnailUrl } = data;
+  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, titleClaim } = data;
 
   return (
     <div>
@@ -47,11 +47,6 @@ export default function SummaryDisplay({ data }) {
           {videoId}
         </span>
         {cached && <span className="pill pill-cache">✓ cached</span>}
-        {readTimeSaved > 0 && (
-          <span className="pill pill-time" style={{ marginLeft: 'auto' }}>
-            ~{readTimeSaved} min saved
-          </span>
-        )}
       </div>
 
       {/* TL;DR */}
@@ -62,6 +57,21 @@ export default function SummaryDisplay({ data }) {
         )}
         <p className="tldr-text">{tldr}</p>
       </div>
+
+      {/* Title Claim */}
+      {titleClaim?.claim && titleClaim?.reality && (
+        <div className="card card-title-claim">
+          <div className="card-label">Title vs Reality</div>
+          <div className="title-claim-row">
+            <span className="title-claim-label">Promised</span>
+            <span className="title-claim-text">{titleClaim.claim}</span>
+          </div>
+          <div className="title-claim-row">
+            <span className="title-claim-label">Delivered</span>
+            <span className="title-claim-text">{titleClaim.reality}</span>
+          </div>
+        </div>
+      )}
 
       {/* Topics */}
       {topics.length > 0 && (

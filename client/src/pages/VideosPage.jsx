@@ -23,8 +23,7 @@ function VideoRow({ video, onDelete }) {
         {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
         <div className="vrow-meta">
           <span className="vrow-date">{date}</span>
-          {video.readTimeSaved > 0 && <span className="vrow-saved">{video.readTimeSaved}m saved</span>}
-          {video.categories.slice(0, 2).map((c, i) => (
+{video.categories.slice(0, 2).map((c, i) => (
             <span key={i} className="pill pill-cat" style={{ fontSize: 11, padding: '2px 7px' }}>{c}</span>
           ))}
         </div>
