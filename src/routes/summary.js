@@ -4,6 +4,17 @@ const { extractVideoId, getTranscript } = require('../services/transcript');
 const { summarize } = require('../services/summarizer');
 const summaryModel = require('../models/summary');
 
+async function fetchVideoMeta(videoId) {
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
+    if (!res.ok) return {};
+    const data = await res.json();
+    return { title: data.title || null, channelName: data.author_name || null };
+  } catch {
+    return {};
+  }
+}
+
 router.get('/', async (req, res, next) => {
   try {
     const { url } = req.query;
@@ -19,15 +30,19 @@ router.get('/', async (req, res, next) => {
     const cached = await summaryModel.findByVideoId(videoId);
     if (cached) {
       summaryModel.upsertUserSave(userId, videoId).catch(() => {});
-      return res.json({ videoId, cached: true, thumbnailUrl, ...cached.summary });
+      return res.json({ videoId, cached: true, thumbnailUrl, channelName: cached.channel_name, ...cached.summary });
     }
 
-    const { text, durationSeconds } = await getTranscript(videoId);
+    const [{ text, durationSeconds }, meta] = await Promise.all([
+      getTranscript(videoId),
+      fetchVideoMeta(videoId),
+    ]);
     const summary = await summarize(text, durationSeconds);
 
     await summaryModel.create({
       videoId,
-      title: summary.tldr?.slice(0, 100) ?? videoId,
+      title: meta.title || summary.tldr?.slice(0, 100) || videoId,
+      channelName: meta.channelName || null,
       summary,
       transcriptLength: text.length,
     });
