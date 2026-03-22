@@ -153,7 +153,7 @@ export default function FollowingPage() {
                     className={`btn-digest-pill${digestOn ? ' pill-on' : ' pill-off'}`}
                     onClick={() => handleToggleChannel(c.id, digestOn)}
                   >
-                    {digestOn ? 'In digest' : 'Paused'}
+                    {digestOn ? 'Active' : 'Paused'}
                   </button>
                   <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Unfollow</button>
                 </div>
