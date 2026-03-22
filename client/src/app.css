@@ -922,10 +922,19 @@ body {
   letter-spacing: 0.08em;
   margin-bottom: 20px;
 }
-.landing-featured-card { margin-bottom: 0; }
-.landing-demo-cta { text-align: center; padding: 48px 0 0; }
-.landing-demo-cta .btn-primary { font-size: 15px; padding: 13px 24px; }
-.landing-demo-cta-sub { font-size: 13px; color: #444; margin: 12px 0 0; }
+.landing-demo-card { display: flex; flex-direction: column; }
+.landing-thumb-link { display: block; line-height: 0; border-radius: 8px; overflow: hidden; }
+.landing-thumb { width: 100%; height: 160px; object-fit: cover; display: block; }
+.landing-video-ref { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; margin-bottom: 4px; }
+.landing-video-channel { font-size: 11px; font-weight: 600; color: #7c6fff; flex-shrink: 0; }
+.landing-video-title { font-size: 12px; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.landing-verdict { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; padding: 14px 18px; background: #0d0d1a; border-radius: 8px; }
+.landing-verdict-action { font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.landing-verdict-reason { font-size: 13px; color: #666; line-height: 1.5; }
+.landing-quote { font-size: 13px; font-style: italic; color: #555; line-height: 1.65; margin-top: 16px; padding-left: 14px; border-left: 2px solid #2a2a40; }
+.landing-inline-cta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 32px; padding-top: 28px; border-top: 1px solid #1a1a2e; }
+.landing-inline-cta .btn-primary { font-size: 15px; padding: 13px 24px; }
+.landing-inline-cta-sub { font-size: 13px; color: #444; }
 .landing-footer {
   border-top: 1px solid #12121f;
   padding: 24px 32px;
