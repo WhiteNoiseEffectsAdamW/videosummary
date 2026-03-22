@@ -39,6 +39,10 @@ async function migrate() {
     if (!hasChannelId) {
       await db.schema.alterTable('summaries', (t) => t.string('channel_id'));
     }
+    const hasSummarizedBy = await db.schema.hasColumn('summaries', 'summarized_by');
+    if (!hasSummarizedBy) {
+      await db.schema.alterTable('summaries', (t) => t.integer('summarized_by'));
+    }
   }
 
   // Phase 2 tables — stubbed now so the schema is in place

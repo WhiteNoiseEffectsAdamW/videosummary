@@ -525,6 +525,20 @@ body {
 }
 .video-watch-link:hover { text-decoration: underline; }
 
+.btn-scan {
+  font-size: 12px;
+  font-family: inherit;
+  color: #7c6fff;
+  background: rgba(124,111,255,0.1);
+  border: 1px solid rgba(124,111,255,0.2);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-scan:hover:not(:disabled) { background: rgba(124,111,255,0.18); }
+.btn-scan:disabled { opacity: 0.5; cursor: default; }
+
 .digest-next { font-size: 12px; color: #4a4a60; margin: 0 0 24px; }
 .empty-state { font-size: 14px; color: #6b6b80; }
 .loading-screen { display: flex; align-items: center; justify-content: center; height: 100vh; color: #444; font-size: 14px; }

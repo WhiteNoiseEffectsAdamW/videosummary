@@ -65,20 +65,49 @@ function VideoCard({ video }) {
 export default function VideosPage() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [scanning, setScanning] = useState(false);
+  const [scanMsg, setScanMsg] = useState(null);
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    fetch('/api/videos', { credentials: 'include' })
+  function loadVideos() {
+    return fetch('/api/videos', { credentials: 'include' })
       .then((r) => r.ok ? r.json() : Promise.reject())
       .then(setVideos)
       .catch(() => setError(true))
       .finally(() => setLoading(false));
-  }, []);
+  }
+
+  useEffect(() => { loadVideos(); }, []);
+
+  async function handleScan() {
+    setScanning(true);
+    setScanMsg(null);
+    try {
+      const res = await fetch('/api/videos/scan', { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      setScanMsg(data.message || 'Scan started — check back in a minute.');
+      // Reload after a short delay to pick up any fast results
+      setTimeout(() => {
+        setLoading(true);
+        loadVideos();
+      }, 8000);
+    } catch {
+      setScanMsg('Scan failed. Please try again.');
+    } finally {
+      setScanning(false);
+    }
+  }
 
   return (
     <div className="page-inner">
-      <h1 className="page-title">My Videos</h1>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+        <h1 className="page-title" style={{ margin: 0 }}>My Videos</h1>
+        <button className="btn-scan" onClick={handleScan} disabled={scanning}>
+          {scanning ? 'Scanning…' : 'Scan now'}
+        </button>
+      </div>
       <p className="page-sub">Summaries from your followed channels, newest first.</p>
+      {scanMsg && <p className="digest-next">{scanMsg}</p>}
 
       {loading && <div className="loading-screen" style={{ height: 'auto', padding: '48px 0' }}>Loading…</div>}
       {error && <p className="auth-error">Couldn't load videos. Please refresh.</p>}
@@ -87,7 +116,7 @@ export default function VideosPage() {
         <p className="empty-state">
           No summaries yet.{' '}
           <Link to="/channels" style={{ color: '#7c6fff' }}>Follow some channels</Link>
-          {' '}and summaries will appear here as new videos are detected.
+          {' '}then hit Scan now, or wait for the hourly check.
         </p>
       )}
 

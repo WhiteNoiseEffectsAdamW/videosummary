@@ -36,6 +36,7 @@ router.get('/', async (req, res, next) => {
       title: summary.tldr?.slice(0, 100) ?? videoId,
       summary,
       transcriptLength: text.length,
+      summarizedBy: req.user?.id || null,
     });
 
     return res.json({ videoId, cached: false, thumbnailUrl, ...summary });
