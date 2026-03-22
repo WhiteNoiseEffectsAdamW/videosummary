@@ -16,7 +16,7 @@ export default function LoginPage() {
     setError(null);
     try {
       await login(email, password);
-      navigate('/channels');
+      navigate('/');
     } catch (err) {
       setError(err.message);
     } finally {
