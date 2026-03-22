@@ -30,7 +30,7 @@ export default function RegisterPage() {
     <div className="auth-page">
       <div className="auth-card">
         <h1 className="auth-title">Create account</h1>
-        <p className="auth-sub">Your YouTube digest, without the algorithm.</p>
+        <p className="auth-sub">The signal, before the feed gets to it.</p>
         <form onSubmit={handleSubmit}>
           <div className="field">
             <label>Name <span className="optional">(optional)</span></label>

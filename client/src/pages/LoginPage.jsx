@@ -28,7 +28,7 @@ export default function LoginPage() {
     <div className="auth-page">
       <div className="auth-card">
         <h1 className="auth-title">Sign in</h1>
-        <p className="auth-sub">Your YouTube digest, without the algorithm.</p>
+        <p className="auth-sub">The signal, before the feed gets to it.</p>
         <form onSubmit={handleSubmit}>
           <div className="field">
             <label>Email</label>

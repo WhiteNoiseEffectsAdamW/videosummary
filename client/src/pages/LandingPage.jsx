@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const DEMO_VIDEO_ID = 'UclrVWafRAI';
-const VERDICT_COLOR = { Watch: '#22c55e', Skip: '#f59e0b', 'Watch segment': '#7c6fff' };
+const VERDICT_COLOR = { Watch: '#22d3ee', Skip: '#334155', 'Watch segment': '#8aa4c8' };
 
 function useFadeIn() {
   const ref = useRef(null);
@@ -52,7 +52,7 @@ function DigestSection({ data }) {
             </div>
             <div className="digest-email-chrome">
               <div className="digest-email-from">
-                <div className="digest-email-sender">Headwater <span className="digest-email-addr">&lt;digest@headwater.app&gt;</span></div>
+                <div className="digest-email-sender">Headwater <span className="digest-email-addr">&lt;digest@headwaterhq.co&gt;</span></div>
                 <div className="digest-email-subject">Your daily digest — 3 new videos</div>
               </div>
               {data && (
@@ -67,7 +67,7 @@ function DigestSection({ data }) {
                       {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
                       <div className="digest-email-title">{data.title}</div>
                       {data.verdict && (
-                        <div className="digest-email-verdict" style={{ color: data.verdict.action === 'Watch' ? '#16a34a' : data.verdict.action === 'Skip' ? '#b45309' : '#6d28d9' }}>
+                        <div className="digest-email-verdict" style={{ color: data.verdict.action === 'Watch' ? '#22d3ee' : data.verdict.action === 'Skip' ? '#334155' : '#8aa4c8' }}>
                           {data.verdict.action === 'Watch segment' ? `Watch ${data.verdict.segment}` : data.verdict.action}
                           {data.verdict.reason && <span className="digest-email-verdict-reason"> — {data.verdict.reason}</span>}
                         </div>
@@ -122,8 +122,11 @@ function CuratedSummary({ data }) {
           </a>
           {(channelName || title) && (
             <div className="landing-video-ref">
-              {channelName && <span className="landing-video-channel">{channelName}</span>}
-              {title && <span className="landing-video-title">{title}</span>}
+              <div className="landing-video-meta">
+                {channelName && <span className="landing-video-channel">{channelName}</span>}
+                {title && <span className="landing-video-title">{title}</span>}
+              </div>
+              <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" className="landing-yt-link">Watch on YouTube ↗</a>
             </div>
           )}
         </div>
@@ -191,7 +194,7 @@ export default function LandingPage() {
     e.preventDefault();
     if (!url.trim()) return;
     if (!url.match(/(?:youtube\.com|youtu\.be)/)) {
-      setError('Please enter a valid YouTube URL.');
+      setError('Please enter a valid YouTube video URL.');
       return;
     }
     setLoading(true);
@@ -220,13 +223,13 @@ export default function LandingPage() {
         <span className="landing-brand">Headwater</span>
         <div className="landing-nav-right">
           <Link to="/login" className="landing-nav-link">Sign in</Link>
-          <Link to="/register" className="btn-primary">Try it free</Link>
+          <button className="btn-primary" onClick={() => document.querySelector('.landing-url-input')?.focus()}>Try it free</button>
         </div>
       </header>
 
       <div className="landing-hero">
-        <h1 className="landing-headline">Know if a video is worth<br />your time.</h1>
-        <p className="landing-sub">Paste any YouTube link and get a verdict, key topics, and notable quotes — or follow channels for a daily digest in your inbox.</p>
+        <h1 className="landing-headline">The signal, before the<br />feed gets to it.</h1>
+        <p className="landing-sub">Paste any video link and get a Watch or Skip verdict, key topics, and standout quotes. Follow channels for a daily digest in your inbox.</p>
 
         <form className="landing-input-row" onSubmit={handleSubmit}>
           <input
@@ -244,7 +247,7 @@ export default function LandingPage() {
 
         <div className="landing-input-meta">
           {remaining !== null && !limitReached
-            ? <span>{remaining} free summar{remaining === 1 ? 'y' : 'ies'} left — <Link to="/register" style={{ color: '#7c6fff' }}>sign up for unlimited</Link></span>
+            ? <span>{remaining} free summar{remaining === 1 ? 'y' : 'ies'} left — <Link to="/register" style={{ color: '#22d3ee' }}>sign up for unlimited</Link></span>
             : <span>3 free summaries · no account needed</span>}
         </div>
 
@@ -253,17 +256,19 @@ export default function LandingPage() {
         {limitReached && (
           <div className="landing-limit-box">
             You've used your 3 free summaries.{' '}
-            <Link to="/register" style={{ color: '#7c6fff' }}>Sign up free</Link> to keep going.
+            <Link to="/register" style={{ color: '#22d3ee' }}>Sign up free</Link> to keep going.
           </div>
         )}
       </div>
 
       {/* Result or demo */}
       <div className="landing-demo">
+        {!result && !loading && demoData && <div className="landing-example-label">Example output</div>}
         {loading && (
           <div className="loader" style={{ paddingTop: 32, paddingBottom: 32 }}>
             <div className="spinner" />
-            <span>Fetching transcript and generating summary…</span>
+            <span>Reading the source.</span>
+            <span className="loader-hint">Pulling the transcript and distilling what matters — usually about 15 seconds.</span>
           </div>
         )}
 
@@ -281,7 +286,7 @@ export default function LandingPage() {
           <>
             <CuratedSummary data={demoData} />
             <div className="landing-inline-cta">
-              <Link to="/register" className="btn-primary">Try it free →</Link>
+              <button className="btn-primary" onClick={() => document.querySelector('.landing-url-input')?.focus()}>Try it free →</button>
               <span className="landing-inline-cta-sub">Free. No credit card required.</span>
             </div>
           </>

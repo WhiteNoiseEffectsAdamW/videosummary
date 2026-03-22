@@ -30,7 +30,7 @@ export default function WelcomePage() {
     e.preventDefault();
     if (!url.trim()) return;
     if (!url.match(/(?:youtube\.com|youtu\.be)/)) {
-      setError('Please enter a valid YouTube URL.');
+      setError('Please enter a valid YouTube video URL.');
       return;
     }
     setLoading(true);
@@ -108,8 +108,8 @@ export default function WelcomePage() {
             {loading && (
               <div className="loader">
                 <div className="spinner" />
-                <span>Fetching transcript and generating summary…</span>
-                <span className="loader-hint">This usually takes 10–20 seconds.</span>
+                <span>Reading the source.</span>
+                <span className="loader-hint">Pulling the transcript and distilling what matters — usually about 15 seconds.</span>
               </div>
             )}
 

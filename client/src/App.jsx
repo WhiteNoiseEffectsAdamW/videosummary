@@ -60,7 +60,7 @@ function SummarizerPage() {
     e.preventDefault();
     if (!url.trim()) return;
     if (!url.match(/(?:youtube\.com|youtu\.be)/)) {
-      setError('Please enter a valid YouTube URL.');
+      setError('Please enter a valid YouTube video URL.');
       return;
     }
     setLoading(true);
@@ -81,8 +81,8 @@ function SummarizerPage() {
   return (
     <div className="page">
       <header className="hero">
-        <h1>Your YouTube channels,<br /><span>without the time sink</span></h1>
-        <p>Paste any video link to get key topics, quotes, and a TL;DR — or follow channels to get a daily digest in your inbox.</p>
+        <h1>The signal, before the<br /><span>feed gets to it.</span></h1>
+        <p>Paste any video link and get a Watch or Skip verdict, key topics, and standout quotes. Follow channels for a daily digest in your inbox.</p>
         <div className="form-wrap">
           <form className="form-row" onSubmit={handleSubmit}>
             <input
@@ -113,8 +113,8 @@ function SummarizerPage() {
         {loading && (
           <div className="loader">
             <div className="spinner" />
-            <span>Fetching transcript and generating summary…</span>
-            <span className="loader-hint">This usually takes 10–20 seconds.</span>
+            <span>Reading the source.</span>
+            <span className="loader-hint">Summarizeing what matters — usually about 15 seconds.</span>
           </div>
         )}
         {data && <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>}
