@@ -55,6 +55,9 @@ export default function SummaryDisplay({ data }) {
       {/* TL;DR */}
       <div className="card">
         <div className="card-label">TL;DR</div>
+        {quotes.length > 0 && (
+          <p className="tldr-quote">"{quotes[0].text}"</p>
+        )}
         <p className="tldr-text">{tldr}</p>
       </div>
 

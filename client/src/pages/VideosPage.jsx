@@ -40,8 +40,6 @@ function VideoRow({ video, onDelete }) {
 export default function VideosPage() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [scanning, setScanning] = useState(false);
-  const [scanMsg, setScanMsg] = useState(null);
   const [error, setError] = useState(false);
 
   function loadVideos() {
@@ -60,33 +58,10 @@ export default function VideosPage() {
     await fetch(`/api/videos/${videoId}`, { method: 'DELETE', credentials: 'include' });
   }
 
-  async function handleScan() {
-    setScanning(true);
-    setScanMsg(null);
-    try {
-      const res = await fetch('/api/videos/scan', { method: 'POST', credentials: 'include' });
-      const data = await res.json();
-      setScanMsg(data.message || 'Scanning…');
-      setTimeout(() => { setLoading(true); loadVideos(); }, 10000);
-    } catch {
-      setScanMsg('Scan failed. Please try again.');
-    } finally {
-      setScanning(false);
-    }
-  }
-
   return (
     <div className="page-inner">
-      <div className="page-header-row">
-        <div>
-          <h1 className="page-title">My Videos</h1>
-          <p className="page-sub" style={{ margin: 0 }}>Click any video to read the summary.</p>
-        </div>
-        <button className="btn-scan" onClick={handleScan} disabled={scanning}>
-          {scanning ? 'Scanning…' : 'Scan now'}
-        </button>
-      </div>
-      {scanMsg && <p className="digest-next" style={{ marginTop: 10 }}>{scanMsg}</p>}
+      <h1 className="page-title">My Videos</h1>
+      <p className="page-sub">Click any video to read the summary.</p>
 
       {loading && <div style={{ padding: '48px 0', color: '#555', fontSize: 14, textAlign: 'center' }}>Loading…</div>}
       {error && <p className="auth-error">Couldn't load videos. Please refresh.</p>}

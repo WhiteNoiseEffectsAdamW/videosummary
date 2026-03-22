@@ -300,6 +300,16 @@ body {
   margin-bottom: 12px;
 }
 
+.tldr-quote {
+  font-style: italic;
+  color: #9090b0;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 14px;
+  border-left: 2px solid #4a4a70;
+  padding-left: 12px;
+}
+
 .tldr-text {
   font-size: 17px;
   line-height: 1.8;
@@ -413,11 +423,59 @@ body {
 .nav-logout { font-size: 12px; color: #777; background: none; border: none; cursor: pointer; padding: 4px 0; transition: color 0.15s; white-space: nowrap; }
 .nav-logout:hover { color: #ef4444; }
 
+/* ── Mobile bottom tab bar ───────────────────────────────── */
+.mobile-tabs { display: none; }
+
 @media (max-width: 600px) {
-  .nav { padding: 0 16px; gap: 8px; }
-  .nav-email { display: none; }
-  .nav-link { font-size: 13px; padding: 5px 8px; }
+  /* Hide desktop nav links on mobile */
+  .nav-links { display: none; }
+  .nav-email  { display: none; }
+  .nav-logout { display: none; }
+  .nav { padding: 0 16px; height: 48px; }
   .nav-brand { font-size: 14px; }
+
+  /* Show bottom tab bar */
+  .mobile-tabs {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #0d0d14;
+    border-top: 1px solid #1e1e2e;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: #555;
+    text-decoration: none;
+    font-size: 10px;
+    font-family: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 0;
+  }
+  .mobile-tab span { font-weight: 500; }
+  .mobile-tab.active { color: #7c6fff; }
+  .mobile-tab:hover  { color: #aaa; }
+  .mobile-tab-logout { color: #555; }
+  .mobile-tab-logout:hover { color: #ef4444; }
+
+  /* Pad page content so it clears the tab bar */
+  .page { padding-bottom: 60px; }
+  .page-inner { padding-bottom: 80px; }
+  .content { padding-bottom: 80px; }
+  .auth-page { padding-bottom: 60px; }
 }
 
 /* Auth pages */

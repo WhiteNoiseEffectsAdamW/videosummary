@@ -74,10 +74,31 @@ async function pollAllChannels() {
   console.log('[poll] done');
 }
 
+// Scan a single channel for recent videos — used on first follow
+async function scanChannel(channelId, lookbackMs = 7 * 24 * 60 * 60 * 1000) {
+  const cutoff = new Date(Date.now() - lookbackMs);
+  try {
+    const videos = await fetchChannelVideos(channelId);
+    const recent = videos.filter((v) => new Date(v.published) > cutoff);
+    console.log(`[scan] ${channelId}: ${recent.length} video(s) in window`);
+    for (const video of recent) {
+      const videoId = video['yt:videoId'];
+      const title = typeof video.title === 'string' ? video.title : videoId;
+      try {
+        await processVideo(videoId, channelId, title);
+      } catch (err) {
+        console.error(`[scan] failed ${videoId}:`, err.message);
+      }
+    }
+  } catch (err) {
+    console.error(`[scan] failed channel ${channelId}:`, err.message);
+  }
+}
+
 function startPolling() {
   // Run at the top of every hour
   cron.schedule('0 * * * *', pollAllChannels);
   console.log('[poll] scheduled — runs hourly');
 }
 
-module.exports = { startPolling, pollAllChannels };
+module.exports = { startPolling, pollAllChannels, scanChannel };
