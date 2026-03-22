@@ -147,18 +147,13 @@ export default function FollowingPage() {
             const digestOn = c.digest !== false;
             return (
               <li key={c.id} className="channel-item">
-                <div className="channel-item-left">
-                  <div className="channel-name">{c.channel_name || c.channel_id}</div>
-                  {!digestOn && <div className="channel-digest-off">Paused from digest</div>}
-                </div>
+                <div className="channel-name">{c.channel_name || c.channel_id}</div>
                 <div className="channel-item-actions">
                   <button
-                    className={`toggle-btn toggle-sm${digestOn ? ' toggle-on' : ''}`}
+                    className={`btn-digest-pill${digestOn ? ' pill-on' : ' pill-off'}`}
                     onClick={() => handleToggleChannel(c.id, digestOn)}
-                    aria-label={digestOn ? 'Pause from digest' : 'Include in digest'}
-                    title={digestOn ? 'Included in daily digest' : 'Paused from daily digest'}
                   >
-                    <span className="toggle-knob" />
+                    {digestOn ? 'In digest' : 'Paused'}
                   </button>
                   <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Unfollow</button>
                 </div>

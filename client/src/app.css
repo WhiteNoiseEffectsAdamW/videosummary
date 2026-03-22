@@ -684,12 +684,27 @@ body {
   padding: 14px 0;
   border-bottom: 1px solid #1a1a2e;
 }
-.channel-item-left { display: flex; flex-direction: column; gap: 2px; }
 .channel-item-actions { display: flex; align-items: center; gap: 10px; }
-.channel-digest-off { font-size: 11px; color: #555; }
-.toggle-sm { width: 36px; height: 20px; }
-.toggle-sm .toggle-knob { width: 14px; height: 14px; top: 3px; left: 3px; }
-.toggle-sm.toggle-on .toggle-knob { transform: translateX(16px); }
+.btn-digest-pill {
+  font-size: 11px;
+  font-weight: 500;
+  border-radius: 20px;
+  padding: 4px 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: opacity 0.15s;
+}
+.btn-digest-pill.pill-on {
+  background: rgba(124,111,255,0.15);
+  color: #a89fff;
+  border-color: rgba(124,111,255,0.3);
+}
+.btn-digest-pill.pill-off {
+  background: #1a1a2e;
+  color: #555;
+  border-color: #2a2a40;
+}
+.btn-digest-pill:hover { opacity: 0.75; }
 .channel-name { font-size: 14px; font-weight: 500; color: #e0e0f0; }
 .channel-id { font-size: 12px; color: #444; margin-top: 2px; font-family: monospace; }
 .btn-remove { font-size: 12px; color: #555; background: none; border: 1px solid #222; border-radius: 6px; padding: 5px 10px; cursor: pointer; }
