@@ -1,8 +1,75 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const DEMO_VIDEO_ID = 'UclrVWafRAI';
 const VERDICT_COLOR = { Watch: '#22c55e', Skip: '#f59e0b', 'Watch segment': '#7c6fff' };
+
+function useFadeIn() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { el.classList.add('fade-in-visible'); observer.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return ref;
+}
+
+function DigestSection({ data }) {
+  const ref = useFadeIn();
+  const tldrFirst = data?.tldr?.split('.')[0] + '.' || '';
+  const videoUrl = `https://www.youtube.com/watch?v=${data?.videoId}`;
+
+  return (
+    <div className="digest-section" ref={ref}>
+      <div className="digest-section-inner">
+
+        {/* Copy */}
+        <div className="digest-copy">
+          <div className="digest-eyebrow">Daily digest</div>
+          <h2 className="digest-heading">Set it on autopilot.</h2>
+          <p className="digest-sub">Follow the channels you care about. Every morning, Headwater emails you summaries of what's new — so you can decide what's worth your time before you open YouTube.</p>
+          <Link to="/register" className="btn-primary" style={{ marginTop: 8 }}>Follow your first channel →</Link>
+        </div>
+
+        {/* Email card mockup */}
+        <div className="digest-email-wrap">
+          <div className="digest-email-chrome">
+            <div className="digest-email-from">
+              <span className="digest-email-sender">Headwater</span>
+              <span className="digest-email-subject">Your daily digest — 3 new videos</span>
+            </div>
+            {data && (
+              <div className="digest-email-card">
+                <div className="digest-email-row">
+                  <a href={videoUrl} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0 }}>
+                    <img
+                      src={data.thumbnailUrl}
+                      alt={data.title || ''}
+                      className="digest-email-thumb"
+                      onError={(e) => { e.target.style.display = 'none'; }}
+                    />
+                  </a>
+                  <div className="digest-email-content">
+                    {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
+                    <div className="digest-email-title">{data.title}</div>
+                    {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
+                    <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
 
 function CuratedSummary({ data, isDemo }) {
   const { titleClaim, tldr, verdict, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
@@ -168,6 +235,8 @@ export default function LandingPage() {
           </>
         )}
       </div>
+
+      <DigestSection data={demoData} />
 
       <footer className="landing-footer">
         <span>© {new Date().getFullYear()} Headwater</span>

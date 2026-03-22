@@ -989,6 +989,60 @@ body {
   .landing-demo { padding: 0 20px 60px; }
 }
 
+/* ── Digest section ───────────────────────────────────────── */
+.digest-section {
+  padding: 80px 24px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.digest-section.fade-in-visible { opacity: 1; transform: translateY(0); }
+.digest-section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 64px;
+}
+.digest-copy { flex: 1; }
+.digest-eyebrow { font-size: 11px; font-weight: 600; color: #7c6fff; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+.digest-heading { font-size: 32px; font-weight: 700; color: #f0f0ff; margin: 0 0 14px; letter-spacing: -0.02em; }
+.digest-sub { font-size: 15px; color: #666; line-height: 1.7; margin: 0 0 24px; }
+
+/* Email mockup */
+.digest-email-wrap { flex: 1; min-width: 0; }
+.digest-email-chrome {
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.digest-email-from {
+  background: #e8e8e8;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-bottom: 1px solid #ddd;
+}
+.digest-email-sender { font-size: 12px; font-weight: 700; color: #222; }
+.digest-email-subject { font-size: 11px; color: #666; }
+.digest-email-card { background: #fff; padding: 16px; }
+.digest-email-row { display: flex; gap: 14px; align-items: flex-start; }
+.digest-email-thumb { width: 90px; height: 60px; object-fit: cover; border-radius: 4px; display: block; }
+.digest-email-content { flex: 1; min-width: 0; }
+.digest-email-channel { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+.digest-email-title { font-size: 13px; font-weight: 700; color: #111; line-height: 1.35; margin-bottom: 6px; }
+.digest-email-tldr { font-size: 12px; color: #555; line-height: 1.5; margin-bottom: 8px; }
+.digest-email-watch { font-size: 12px; font-weight: 600; color: #111; text-decoration: none; }
+.digest-email-watch:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+  .digest-section-inner { flex-direction: column; gap: 40px; }
+  .digest-heading { font-size: 26px; }
+}
+
 /* ── Public summary page ──────────────────────────────────── */
 .public-summary-page { min-height: 100vh; background: #08080f; }
 .public-header {
