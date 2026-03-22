@@ -55,14 +55,14 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// GET /api/summary/:videoId — fetch a single cached summary by video ID
+// GET /api/summary/:videoId — fetch a single cached summary by video ID (public)
 router.get('/:videoId', async (req, res, next) => {
   try {
     const { videoId } = req.params;
     const cached = await summaryModel.findByVideoId(videoId);
     if (!cached) return res.status(404).json({ error: 'Summary not found.' });
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-    res.json({ videoId, cached: true, thumbnailUrl, ...cached.summary });
+    res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, ...cached.summary });
   } catch (err) {
     next(err);
   }

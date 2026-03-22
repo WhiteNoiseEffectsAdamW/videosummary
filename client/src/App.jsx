@@ -9,12 +9,21 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import FollowingPage from './pages/ChannelsPage.jsx';
 import VideosPage from './pages/VideosPage.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
+import LandingPage from './pages/LandingPage.jsx';
+import PublicSummaryPage from './pages/PublicSummaryPage.jsx';
 import './app.css';
 
 function RequireAuth({ children }) {
   const { user } = useAuth();
   if (user === undefined) return <div className="loading-screen">Loading…</div>;
   if (!user) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function AuthGate({ children }) {
+  const { user } = useAuth();
+  if (user === undefined) return <div className="loading-screen">Loading…</div>;
+  if (!user) return <LandingPage />;
   return children;
 }
 
@@ -117,11 +126,12 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/s/:videoId" element={<PublicSummaryPage />} />
           <Route path="/welcome" element={<RequireAuth><WelcomePage /></RequireAuth>} />
           <Route path="/following" element={<RequireAuth><FollowingPage /></RequireAuth>} />
           <Route path="/channels" element={<Navigate to="/following" replace />} />
           <Route path="/videos" element={<RequireAuth><VideosPage /></RequireAuth>} />
-          <Route path="/" element={<RequireAuth><SummarizerPage /></RequireAuth>} />
+          <Route path="/" element={<AuthGate><SummarizerPage /></AuthGate>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

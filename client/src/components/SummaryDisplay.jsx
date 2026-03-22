@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const VERDICT_LABEL = {
   'Watch': 'Watch',
@@ -9,6 +9,15 @@ const VERDICT_LABEL = {
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
   const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, titleClaim, channelName } = data;
+  const [copied, setCopied] = useState(false);
+
+  function handleShare() {
+    const url = `${window.location.origin}/s/${videoId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
 
   function verdictLabel() {
     if (!verdict) return null;
@@ -32,20 +41,25 @@ export default function SummaryDisplay({ data }) {
         </div>
       )}
 
-      {/* Channel + Watch CTA */}
+      {/* Channel + Watch CTA + Share */}
       <div className="summary-header">
         {channelName && <span className="summary-channel">{channelName}</span>}
-        <a
-          className="btn-watch-yt"
-          href={`https://www.youtube.com/watch?v=${videoId}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
-          </svg>
-          Watch on YouTube
-        </a>
+        <div className="summary-header-actions">
+          <button className="btn-share" onClick={handleShare}>
+            {copied ? 'Copied!' : 'Share'}
+          </button>
+          <a
+            className="btn-watch-yt"
+            href={`https://www.youtube.com/watch?v=${videoId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
+            </svg>
+            Watch on YouTube
+          </a>
+        </div>
       </div>
 
       {/* Verdict */}
