@@ -1,7 +1,7 @@
 const { Resend } = require('resend');
 
-const FROM = process.env.FROM_EMAIL || 'digest@yourdomain.com';
-const APP_URL = process.env.APP_URL || 'https://yourdomain.com';
+const FROM = process.env.FROM_EMAIL || 'digest@videosummaryapp.com';
+const APP_URL = process.env.APP_URL || 'https://videosummaryapp.com';
 const DIVIDER = '────────────────────────────────';
 
 function getResend() {
