@@ -131,4 +131,20 @@ async function sendDigest(toEmail, summaries) {
   });
 }
 
-module.exports = { sendDigest };
+async function sendPasswordReset(toEmail, resetUrl) {
+  await getResend().emails.send({
+    from: FROM,
+    to: toEmail,
+    subject: 'Reset your Headwater password',
+    text: `You requested a password reset.\n\nClick the link below to set a new password (expires in 1 hour):\n${resetUrl}\n\nIf you didn't request this, ignore this email.\n\n${POSTAL_ADDRESS}`,
+    html: `<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
+<div style="max-width:480px;margin:0 auto;padding:48px 24px;">
+  <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:24px;">Reset your password</div>
+  <p style="font-size:14px;color:#555;line-height:1.6;margin:0 0 24px;">Click the button below to set a new password. This link expires in 1 hour.</p>
+  <a href="${resetUrl}" style="display:inline-block;background:#7c6fff;color:#fff;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Reset password</a>
+  <p style="font-size:12px;color:#bbb;margin-top:32px;line-height:1.6;">If you didn't request this, ignore this email. Your password won't change.<br><br>${esc(POSTAL_ADDRESS)}</p>
+</div></body></html>`,
+  });
+}
+
+module.exports = { sendDigest, sendPasswordReset };

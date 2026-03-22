@@ -31,4 +31,16 @@ async function updatePreferences(id, { emailDigest }) {
   return findById(id);
 }
 
-module.exports = { findById, findByEmail, create, updatePreferences, deleteById };
+async function setResetToken(id, token, expires) {
+  return db(TABLE).where({ id }).update({ reset_token: token, reset_token_expires: expires });
+}
+
+async function findByResetToken(token) {
+  return db(TABLE).where({ reset_token: token }).where('reset_token_expires', '>', new Date()).first();
+}
+
+async function clearResetToken(id, newPasswordHash) {
+  return db(TABLE).where({ id }).update({ password_hash: newPasswordHash, reset_token: null, reset_token_expires: null });
+}
+
+module.exports = { findById, findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken };

@@ -70,6 +70,14 @@ async function migrate() {
     if (!hasEmailDigest) {
       await db.schema.alterTable('users', (t) => t.boolean('email_digest').defaultTo(false));
     }
+    // Password reset columns
+    const hasResetToken = await db.schema.hasColumn('users', 'reset_token');
+    if (!hasResetToken) {
+      await db.schema.alterTable('users', (t) => {
+        t.string('reset_token');
+        t.timestamp('reset_token_expires');
+      });
+    }
   }
 
   const hasSaves = await db.schema.hasTable('user_saves');

@@ -1,8 +1,10 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const passport = require('../middleware/passport');
-const { findByEmail, create, updatePreferences, deleteById } = require('../models/user');
+const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken } = require('../models/user');
+const { sendPasswordReset } = require('../services/email');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -80,6 +82,42 @@ router.patch('/me', async (req, res, next) => {
     const { emailDigest } = req.body;
     const updated = await updatePreferences(req.user.id, { emailDigest });
     res.json(serializeUser(updated));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/forgot-password
+router.post('/forgot-password', async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required.' });
+    const user = await findByEmail(email);
+    // Always respond OK to avoid leaking which emails are registered
+    if (user) {
+      const token = crypto.randomBytes(32).toString('hex');
+      const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+      await setResetToken(user.id, token, expires);
+      const APP_URL = process.env.APP_URL || 'https://headwater.app';
+      await sendPasswordReset(user.email, `${APP_URL}/reset-password?token=${token}`);
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/reset-password
+router.post('/reset-password', async (req, res, next) => {
+  try {
+    const { token, password } = req.body;
+    if (!token || !password) return res.status(400).json({ error: 'Token and password are required.' });
+    if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+    const user = await findByResetToken(token);
+    if (!user) return res.status(400).json({ error: 'This reset link is invalid or has expired.' });
+    const passwordHash = await bcrypt.hash(password, 12);
+    await clearResetToken(user.id, passwordHash);
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }
