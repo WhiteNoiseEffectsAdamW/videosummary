@@ -22,13 +22,14 @@ app.set('trust proxy', 1);
 
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
-  : ['http://localhost:5173', 'http://localhost:3001'];
+  : null; // null = allow all origins (safe when frontend is same-origin on Railway)
 app.use(cors({
-  origin: (origin, cb) => {
-    // Allow same-origin requests (no Origin header) and listed origins
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error('Not allowed by CORS'));
-  },
+  origin: allowedOrigins
+    ? (origin, cb) => {
+        if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+        cb(new Error('Not allowed by CORS'));
+      }
+    : true,
   credentials: true,
 }));
 app.use(express.json());

@@ -1086,6 +1086,8 @@ body {
 .digest-email-content { flex: 1; min-width: 0; }
 .digest-email-channel { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
 .digest-email-title { font-size: 13px; font-weight: 700; color: #111; line-height: 1.35; margin-bottom: 6px; }
+.digest-email-verdict { font-size: 11px; font-weight: 700; margin-bottom: 5px; }
+.digest-email-verdict-reason { font-weight: 400; color: #666; }
 .digest-email-tldr { font-size: 12px; color: #555; line-height: 1.5; margin-bottom: 8px; }
 .digest-email-watch { font-size: 12px; font-weight: 600; color: #111; text-decoration: none; }
 .digest-email-watch:hover { text-decoration: underline; }

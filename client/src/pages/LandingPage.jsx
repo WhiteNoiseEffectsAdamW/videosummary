@@ -66,6 +66,12 @@ function DigestSection({ data }) {
                     <div className="digest-email-content">
                       {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
                       <div className="digest-email-title">{data.title}</div>
+                      {data.verdict && (
+                        <div className="digest-email-verdict" style={{ color: data.verdict.action === 'Watch' ? '#16a34a' : data.verdict.action === 'Skip' ? '#b45309' : '#6d28d9' }}>
+                          {data.verdict.action === 'Watch segment' ? `Watch ${data.verdict.segment}` : data.verdict.action}
+                          {data.verdict.reason && <span className="digest-email-verdict-reason"> — {data.verdict.reason}</span>}
+                        </div>
+                      )}
                       {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
                       <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
                     </div>
