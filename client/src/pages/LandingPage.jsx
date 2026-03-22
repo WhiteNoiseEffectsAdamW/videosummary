@@ -178,6 +178,7 @@ export default function LandingPage() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [limitReached, setLimitReached] = useState(false);
+  const [remaining, setRemaining] = useState(null); // free summaries left
 
   useEffect(() => {
     fetch(`/api/summary/${DEMO_VIDEO_ID}`)
@@ -202,6 +203,8 @@ export default function LandingPage() {
       const json = await res.json();
       if (json.limitReached) { setLimitReached(true); return; }
       if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
+      const rem = res.headers.get('RateLimit-Remaining');
+      if (rem !== null) setRemaining(Number(rem));
       setResult(json);
     } catch (err) {
       setError(err.message);
@@ -238,6 +241,12 @@ export default function LandingPage() {
             {loading ? 'Summarizing…' : 'Summarize'}
           </button>
         </form>
+
+        <div className="landing-input-meta">
+          {remaining !== null && !limitReached
+            ? <span>{remaining} free summar{remaining === 1 ? 'y' : 'ies'} left — <Link to="/register" style={{ color: '#7c6fff' }}>sign up for unlimited</Link></span>
+            : <span>3 free summaries · no account needed</span>}
+        </div>
 
         {error && <div className="landing-input-error">{error}</div>}
 

@@ -18,6 +18,35 @@ export default function PublicSummaryPage() {
       .catch((err) => setError(err.message));
   }, [videoId]);
 
+  useEffect(() => {
+    if (!data) return;
+    const title = data.title ? `${data.title} — Headwater` : 'Headwater';
+    const desc = data.tldr?.slice(0, 160) || 'AI-generated video summary';
+    const image = data.thumbnailUrl;
+
+    document.title = title;
+    setMeta('og:title', title);
+    setMeta('og:description', desc);
+    setMeta('og:image', image);
+    setMeta('og:type', 'article');
+    setMeta('twitter:card', 'summary_large_image');
+    setMeta('twitter:title', title);
+    setMeta('twitter:description', desc);
+    setMeta('twitter:image', image);
+  }, [data]);
+
+  function setMeta(property, content) {
+    if (!content) return;
+    const attr = property.startsWith('og:') ? 'property' : 'name';
+    let el = document.querySelector(`meta[${attr}="${property}"]`);
+    if (!el) {
+      el = document.createElement('meta');
+      el.setAttribute(attr, property);
+      document.head.appendChild(el);
+    }
+    el.setAttribute('content', content);
+  }
+
   return (
     <div className="public-summary-page">
       {/* Minimal header */}

@@ -7,6 +7,18 @@ const summaryModel = require('../models/summary');
 
 const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
 
+const POLL_DAILY_CAP = parseInt(process.env.POLL_DAILY_CAP || '50', 10);
+let pollCallsToday = 0;
+let pollCapResetDate = new Date().toDateString();
+
+function checkPollCap() {
+  const today = new Date().toDateString();
+  if (today !== pollCapResetDate) { pollCallsToday = 0; pollCapResetDate = today; }
+  if (pollCallsToday >= POLL_DAILY_CAP) return false;
+  pollCallsToday++;
+  return true;
+}
+
 // Fetch recent videos from a channel's RSS feed
 async function fetchChannelVideos(channelId) {
   const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
@@ -63,6 +75,7 @@ async function pollAllChannels() {
         const videoId = video['yt:videoId'];
         const title = typeof video.title === 'string' ? video.title : videoId;
         try {
+          if (!checkPollCap()) { console.warn('[poll] daily API cap reached, stopping'); return; }
           await processVideo(videoId, channelId, channelName, title);
         } catch (err) {
           console.error(`[poll] failed to process ${videoId}:`, err.message);

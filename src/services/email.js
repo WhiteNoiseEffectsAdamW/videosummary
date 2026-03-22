@@ -1,7 +1,8 @@
 const { Resend } = require('resend');
 
-const FROM = process.env.FROM_EMAIL || 'digest@videosummaryapp.com';
-const APP_URL = process.env.APP_URL || 'https://videosummaryapp.com';
+const FROM = process.env.FROM_EMAIL || 'digest@headwater.app';
+const APP_URL = process.env.APP_URL || 'https://headwater.app';
+const POSTAL_ADDRESS = process.env.POSTAL_ADDRESS || '548 Market St PMB 99999, San Francisco, CA 94104';
 const DIVIDER = '────────────────────────────────';
 
 function getResend() {
@@ -45,6 +46,8 @@ function renderDigestText(summaries) {
   lines.push('');
   lines.push('Summaries are AI-generated and may be incomplete or inaccurate.');
   lines.push(`To turn off these emails: ${APP_URL}/following`);
+  lines.push('');
+  lines.push(POSTAL_ADDRESS);
 
   return lines.join('\n');
 }
@@ -93,7 +96,8 @@ function renderDigestHtml(summaries) {
     <div style="border-top:1px solid #ebebeb;margin-top:48px;padding-top:24px;font-size:12px;color:#bbb;line-height:1.8;">
       <a href="${APP_URL}" style="color:#999;font-weight:600;text-decoration:none;">Headwater</a><br>
       Summaries are AI-generated and may be incomplete or inaccurate.<br>
-      <a href="${APP_URL}/following" style="color:#bbb;">Unsubscribe</a>
+      <a href="${APP_URL}/following" style="color:#bbb;">Unsubscribe</a><br>
+      ${esc(POSTAL_ADDRESS)}
     </div>
 
   </div>
@@ -120,6 +124,10 @@ async function sendDigest(toEmail, summaries) {
     subject: `Your digest — ${count} new video${count !== 1 ? 's' : ''}`,
     html: renderDigestHtml(summaries),
     text: renderDigestText(summaries),
+    headers: {
+      'List-Unsubscribe': `<${APP_URL}/following>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
   });
 }
 

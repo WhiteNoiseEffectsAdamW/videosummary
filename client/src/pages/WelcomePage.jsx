@@ -109,6 +109,7 @@ export default function WelcomePage() {
               <div className="loader">
                 <div className="spinner" />
                 <span>Fetching transcript and generating summary…</span>
+                <span className="loader-hint">This usually takes 10–20 seconds.</span>
               </div>
             )}
 
