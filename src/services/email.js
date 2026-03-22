@@ -16,6 +16,15 @@ function renderDigestText(summaries) {
   lines.push(`Your daily digest — ${count} new video${count !== 1 ? 's' : ''} from your followed channels`);
   lines.push('');
 
+  // Video list header
+  for (const s of summaries) {
+    const prefix = s.channel_name ? `${s.channel_name} — ` : '';
+    lines.push(`· ${prefix}${s.title || s.video_id}`);
+  }
+  lines.push('');
+  lines.push(DIVIDER);
+  lines.push('');
+
   for (const s of summaries) {
     const data = JSON.parse(s.summary_json);
     const { tldr, quotes = [] } = data;

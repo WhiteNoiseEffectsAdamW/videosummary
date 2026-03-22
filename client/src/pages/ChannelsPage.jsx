@@ -83,6 +83,21 @@ export default function FollowingPage() {
     }
   }
 
+  async function handleToggleChannel(id, current) {
+    const next = !current;
+    const res = await fetch(`/api/subscriptions/${id}`, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ digest: next }),
+    });
+    if (res.ok) {
+      setChannels((prev) => prev.map((c) => c.id === id ? { ...c, digest: next } : c));
+    } else {
+      showToast('Could not update channel. Please try again.');
+    }
+  }
+
   const digestOn = user?.emailDigest !== false;
 
   return (
@@ -109,17 +124,17 @@ export default function FollowingPage() {
       <form className="add-channel-form" onSubmit={handleAdd}>
         <div className="add-channel-inputs">
           <input
-            className="url-input"
+            className="url-input channel-url-input"
             type="text"
             placeholder="youtube.com/@CalNewportMedia"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
           />
+          <button className="btn-summarize" type="submit" disabled={loading}>
+            {loading ? 'Adding…' : 'Follow'}
+          </button>
         </div>
-        <button className="btn-summarize" type="submit" disabled={loading}>
-          {loading ? 'Adding…' : 'Follow'}
-        </button>
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
       </form>
 
@@ -128,12 +143,28 @@ export default function FollowingPage() {
         <p className="empty-state">No channels yet — add one above to get started.</p>
       ) : (
         <ul className="channel-list">
-          {channels.map((c) => (
-            <li key={c.id} className="channel-item">
-              <div className="channel-name">{c.channel_name || c.channel_id}</div>
-              <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Unfollow</button>
-            </li>
-          ))}
+          {channels.map((c) => {
+            const digestOn = c.digest !== false;
+            return (
+              <li key={c.id} className="channel-item">
+                <div className="channel-item-left">
+                  <div className="channel-name">{c.channel_name || c.channel_id}</div>
+                  {!digestOn && <div className="channel-digest-off">Paused from digest</div>}
+                </div>
+                <div className="channel-item-actions">
+                  <button
+                    className={`toggle-btn toggle-sm${digestOn ? ' toggle-on' : ''}`}
+                    onClick={() => handleToggleChannel(c.id, digestOn)}
+                    aria-label={digestOn ? 'Pause from digest' : 'Include in digest'}
+                    title={digestOn ? 'Included in daily digest' : 'Paused from daily digest'}
+                  >
+                    <span className="toggle-knob" />
+                  </button>
+                  <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Unfollow</button>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

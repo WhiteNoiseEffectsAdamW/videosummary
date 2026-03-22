@@ -15,8 +15,12 @@ async function remove({ userId, subscriptionId }) {
   return db(TABLE).where({ id: subscriptionId, user_id: userId }).delete();
 }
 
+async function setDigest({ userId, subscriptionId, digest }) {
+  return db(TABLE).where({ id: subscriptionId, user_id: userId }).update({ digest });
+}
+
 async function findAll() {
   return db(TABLE).where({ active: true });
 }
 
-module.exports = { findByUserId, create, remove, findAll };
+module.exports = { findByUserId, create, remove, findAll, setDigest };

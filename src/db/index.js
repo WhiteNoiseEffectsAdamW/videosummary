@@ -92,9 +92,15 @@ async function migrate() {
       t.string('channel_id').notNullable();
       t.string('channel_name');
       t.boolean('active').defaultTo(true);
+      t.boolean('digest').defaultTo(true);
       t.timestamps(true, true);
       t.unique(['user_id', 'channel_id']);
     });
+  } else {
+    const hasDigest = await db.schema.hasColumn('subscriptions', 'digest');
+    if (!hasDigest) {
+      await db.schema.alterTable('subscriptions', (t) => t.boolean('digest').defaultTo(true));
+    }
   }
 }
 

@@ -42,7 +42,7 @@ async function pollAllChannels() {
   console.log('[poll] starting');
   const cutoff = new Date(Date.now() - 25 * 60 * 60 * 1000);
 
-  const rows = await db('subscriptions').where({ active: true }).distinct('channel_id', 'channel_name');
+  const rows = await db('subscriptions').where({ active: true, digest: true }).distinct('channel_id', 'channel_name');
   const channelIds = rows.map((r) => r.channel_id);
 
   if (!channelIds.length) {

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const requireAuth = require('../middleware/requireAuth');
-const { findByUserId, create, remove } = require('../models/subscription');
+const { findByUserId, create, remove, setDigest } = require('../models/subscription');
 
 // All routes require login
 router.use(requireAuth);
@@ -33,6 +33,18 @@ router.post('/', async (req, res, next) => {
     if (err.message?.includes('UNIQUE') || err.code === '23505') {
       return res.status(409).json({ error: 'Already subscribed to this channel.' });
     }
+    next(err);
+  }
+});
+
+// PATCH /api/subscriptions/:id — update digest flag
+router.patch('/:id', async (req, res, next) => {
+  try {
+    const { digest } = req.body;
+    if (typeof digest !== 'boolean') return res.status(400).json({ error: 'digest must be a boolean.' });
+    await setDigest({ userId: req.user.id, subscriptionId: req.params.id, digest });
+    res.json({ ok: true, digest });
+  } catch (err) {
     next(err);
   }
 });
