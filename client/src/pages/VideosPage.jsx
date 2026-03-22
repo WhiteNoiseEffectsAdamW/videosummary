@@ -20,8 +20,8 @@ function VideoRow({ video, onDelete }) {
       onKeyDown={(e) => e.key === 'Enter' && navigate(`/?v=${video.videoId}`)}>
       <div className="vrow-main">
         <div className="vrow-title">{video.title || video.videoId}</div>
+        {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
         <div className="vrow-meta">
-          {video.channelName && <span className="vrow-channel">{video.channelName}</span>}
           <span className="vrow-date">{date}</span>
           {video.readTimeSaved > 0 && <span className="vrow-saved">{video.readTimeSaved}m saved</span>}
           {video.categories.slice(0, 2).map((c, i) => (

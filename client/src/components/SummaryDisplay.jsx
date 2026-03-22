@@ -9,12 +9,14 @@ export default function SummaryDisplay({ data }) {
       {/* Thumbnail */}
       {thumbnailUrl && (
         <div className="thumbnail-wrap">
-          <img
-            className="thumbnail"
-            src={thumbnailUrl}
-            alt="Video thumbnail"
-            onError={(e) => { e.target.closest('.thumbnail-wrap').style.display = 'none'; }}
-          />
+          <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">
+            <img
+              className="thumbnail"
+              src={thumbnailUrl}
+              alt="Video thumbnail"
+              onError={(e) => { e.target.closest('.thumbnail-wrap').style.display = 'none'; }}
+            />
+          </a>
         </div>
       )}
 
