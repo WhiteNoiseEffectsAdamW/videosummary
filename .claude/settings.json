@@ -14,7 +14,20 @@
       "Bash(powershell.exe -Command \"winget list yt-dlp\")",
       "Bash(powershell.exe -Command \"\\(Get-Command yt-dlp\\).Source\")",
       "Bash(powershell.exe -Command \"& ''C:\\\\Users\\\\Adam W\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\yt-dlp.yt-dlp_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\yt-dlp.exe'' --version\")",
-      "WebFetch(domain:videosummary-production.up.railway.app)"
+      "WebFetch(domain:videosummary-production.up.railway.app)",
+      "Bash(curl -s -X POST http://localhost:3001/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"test@example.com\"\",\"\"password\"\":\"\"password123\"\",\"\"name\"\":\"\"Test User\"\"}')",
+      "Bash(curl -s -c /tmp/cookies.txt -X POST http://localhost:3001/api/auth/login -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"test@example.com\"\",\"\"password\"\":\"\"password123\"\"}')",
+      "Bash(curl -s -b /tmp/cookies.txt http://localhost:3001/api/auth/me)",
+      "Bash(curl -s http://localhost:3001/api/subscriptions)",
+      "Bash(curl -s http://localhost:3001/api/summary?url=https://youtu.be/dHBEQ-Ryo24)",
+      "Bash(curl -s http://localhost:3001/health)",
+      "Bash(curl -s \"http://localhost:3001/api/summary?url=https://www.youtube.com/watch?v=mlzuPGQNahc\")",
+      "Bash(curl -s -b /tmp/cookies.txt -X POST http://localhost:3001/api/subscriptions -H \"Content-Type: application/json\" -d '{\"\"channelId\"\":\"\"UCnUYZLuoy1rq1aVMwx4aTzw\"\",\"\"channelName\"\":\"\"Cal Newport\"\"}')",
+      "Bash(node -e \":*)",
+      "Bash(npm run:*)",
+      "Bash(curl -s https://videosummary-production.up.railway.app/health)",
+      "Bash(curl -s -c /tmp/prod-cookies.txt -X POST https://videosummary-production.up.railway.app/api/auth/register -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"test@example.com\"\",\"\"password\"\":\"\"password123\"\",\"\"name\"\":\"\"Test\"\"}')",
+      "WebFetch(domain:tmsearch.uspto.gov)"
     ]
   }
 }

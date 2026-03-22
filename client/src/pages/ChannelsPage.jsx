@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth } from '../AuthContext.jsx';
 
-export default function ChannelsPage() {
+export default function FollowingPage() {
+  const { user, setUser } = useAuth();
   const [channels, setChannels] = useState([]);
   const [input, setInput] = useState('');
   const [error, setError] = useState(null);
   const [loadError, setLoadError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  const [togglingDigest, setTogglingDigest] = useState(false);
 
   function showToast(msg) {
     setToast(msg);
@@ -19,6 +22,28 @@ export default function ChannelsPage() {
       .then(setChannels)
       .catch(() => setLoadError(true));
   }, []);
+
+  async function handleToggleDigest() {
+    if (togglingDigest) return;
+    setTogglingDigest(true);
+    const next = !user.emailDigest;
+    try {
+      const res = await fetch('/api/auth/me', {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailDigest: next }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setUser(data);
+      showToast(next ? 'Daily digest enabled' : 'Daily digest turned off');
+    } catch {
+      showToast('Could not update preference. Please try again.');
+    } finally {
+      setTogglingDigest(false);
+    }
+  }
 
   async function handleAdd(e) {
     e.preventDefault();
@@ -40,7 +65,7 @@ export default function ChannelsPage() {
       if (!res.ok) throw new Error(data.error);
       setChannels((prev) => [...prev, data]);
       setInput('');
-      showToast(`✓ Added ${resolved.channelName || resolved.channelId}`);
+      showToast(`✓ Following ${resolved.channelName || resolved.channelId}`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -52,17 +77,34 @@ export default function ChannelsPage() {
     const res = await fetch(`/api/subscriptions/${id}`, { method: 'DELETE', credentials: 'include' });
     if (res.ok) {
       setChannels((prev) => prev.filter((c) => c.id !== id));
-      showToast(`Removed ${name}`);
+      showToast(`Unfollowed ${name}`);
     } else {
       showToast('Could not remove channel. Please try again.');
     }
   }
 
+  const digestOn = user?.emailDigest !== false;
+
   return (
     <div className="page-inner">
       {toast && <div className="toast">{toast}</div>}
-      <h1 className="page-title">My Channels</h1>
-      <p className="page-sub">Add channels below. We'll summarize new videos and email you each morning.</p>
+      <h1 className="page-title">Following</h1>
+
+      {/* Email digest toggle */}
+      <div className="digest-toggle-row">
+        <div className="digest-toggle-info">
+          <span className="digest-toggle-label">Daily digest</span>
+          <span className="digest-toggle-sub">New videos from your channels, every morning at 7am UTC</span>
+        </div>
+        <button
+          className={`toggle-btn${digestOn ? ' toggle-on' : ''}`}
+          onClick={handleToggleDigest}
+          disabled={togglingDigest}
+          aria-label={digestOn ? 'Turn off daily digest' : 'Turn on daily digest'}
+        >
+          <span className="toggle-knob" />
+        </button>
+      </div>
 
       <form className="add-channel-form" onSubmit={handleAdd}>
         <div className="add-channel-inputs">
@@ -81,8 +123,6 @@ export default function ChannelsPage() {
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
       </form>
 
-      <p className="digest-next">Digests send daily at 7am UTC. New videos are checked every hour.</p>
-
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}
       {channels.length === 0 && !loadError ? (
         <p className="empty-state">No channels yet — add one above to get started.</p>
@@ -91,7 +131,7 @@ export default function ChannelsPage() {
           {channels.map((c) => (
             <li key={c.id} className="channel-item">
               <div className="channel-name">{c.channel_name || c.channel_id}</div>
-              <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Remove</button>
+              <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Unfollow</button>
             </li>
           ))}
         </ul>

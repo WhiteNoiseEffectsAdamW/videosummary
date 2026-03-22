@@ -1,7 +1,11 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');
 const passport = require('../middleware/passport');
-const { findByEmail, create } = require('../models/user');
+const { findByEmail, create, updatePreferences } = require('../models/user');
+
+function serializeUser(u) {
+  return { id: u.id, email: u.email, name: u.name, emailDigest: u.email_digest !== false };
+}
 
 // POST /api/auth/register
 router.post('/register', async (req, res, next) => {
@@ -18,7 +22,7 @@ router.post('/register', async (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) return next(err);
-      res.status(201).json({ id: user.id, email: user.email, name: user.name });
+      res.status(201).json(serializeUser(user));
     });
   } catch (err) {
     next(err);
@@ -33,7 +37,7 @@ router.post('/login', (req, res, next) => {
 
     req.login(user, (err) => {
       if (err) return next(err);
-      res.json({ id: user.id, email: user.email, name: user.name });
+      res.json(serializeUser(user));
     });
   })(req, res, next);
 });
@@ -49,7 +53,19 @@ router.post('/logout', (req, res, next) => {
 // GET /api/auth/me
 router.get('/me', (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
-  res.json({ id: req.user.id, email: req.user.email, name: req.user.name });
+  res.json(serializeUser(req.user));
+});
+
+// PATCH /api/auth/me — update preferences
+router.patch('/me', async (req, res, next) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
+  try {
+    const { emailDigest } = req.body;
+    const updated = await updatePreferences(req.user.id, { emailDigest });
+    res.json(serializeUser(updated));
+  } catch (err) {
+    next(err);
+  }
 });
 
 module.exports = router;

@@ -15,10 +15,13 @@ async function sendAllDigests() {
 
   const since = new Date(Date.now() - LOOKBACK_HOURS * 60 * 60 * 1000);
 
-  // Get all users who have active subscriptions
+  // Get users with active subscriptions and digest enabled (null treated as true for existing rows)
   const users = await db('users')
     .join('subscriptions', 'users.id', 'subscriptions.user_id')
     .where('subscriptions.active', true)
+    .where(function () {
+      this.where('users.email_digest', true).orWhereNull('users.email_digest');
+    })
     .distinct('users.id', 'users.email')
     .select('users.id', 'users.email');
 

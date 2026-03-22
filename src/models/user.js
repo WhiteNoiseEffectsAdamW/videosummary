@@ -19,4 +19,9 @@ async function create({ email, passwordHash, name }) {
   return findByEmail(email);
 }
 
-module.exports = { findById, findByEmail, create };
+async function updatePreferences(id, { emailDigest }) {
+  await db(TABLE).where({ id }).update({ email_digest: emailDigest });
+  return findById(id);
+}
+
+module.exports = { findById, findByEmail, create, updatePreferences };

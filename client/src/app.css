@@ -593,10 +593,54 @@ body {
 .auth-switch { font-size: 13px; color: #555; margin-top: 20px; text-align: center; }
 .auth-switch a { color: #7c6fff; text-decoration: none; }
 
-/* Channels page */
+/* Following page */
 .page-inner { max-width: 640px; margin: 0 auto; padding: 40px 24px; }
-.page-title { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+.page-title { font-size: 22px; font-weight: 700; margin: 0 0 20px; }
 .page-sub { font-size: 14px; color: #555; margin: 0 0 28px; }
+
+/* Email digest toggle */
+.digest-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 28px;
+}
+.digest-toggle-info { display: flex; flex-direction: column; gap: 3px; }
+.digest-toggle-label { font-size: 14px; font-weight: 600; color: #dcdcf0; }
+.digest-toggle-sub { font-size: 12px; color: #5a5a7a; }
+
+.toggle-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+  padding: 2px;
+  transition: background 0.2s;
+  position: relative;
+}
+.toggle-btn.toggle-on { background: #7c6fff; }
+.toggle-btn:disabled { opacity: 0.6; cursor: default; }
+.toggle-knob {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+.toggle-btn.toggle-on .toggle-knob { transform: translateX(20px); }
+
 .add-channel-form { margin-bottom: 32px; }
 .add-channel-inputs { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
 .channel-name-input { max-width: 180px; }

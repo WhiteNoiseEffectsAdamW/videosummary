@@ -6,7 +6,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx';
 import SummaryDisplay from './components/SummaryDisplay.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
-import ChannelsPage from './pages/ChannelsPage.jsx';
+import FollowingPage from './pages/ChannelsPage.jsx';
 import VideosPage from './pages/VideosPage.jsx';
 import './app.css';
 
@@ -116,7 +116,8 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/channels" element={<RequireAuth><ChannelsPage /></RequireAuth>} />
+          <Route path="/following" element={<RequireAuth><FollowingPage /></RequireAuth>} />
+          <Route path="/channels" element={<Navigate to="/following" replace />} />
           <Route path="/videos" element={<RequireAuth><VideosPage /></RequireAuth>} />
           <Route path="/" element={<RequireAuth><SummarizerPage /></RequireAuth>} />
           <Route path="*" element={<Navigate to="/" replace />} />
