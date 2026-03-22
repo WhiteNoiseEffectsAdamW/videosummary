@@ -42,9 +42,7 @@ function renderDigestText(summaries) {
       lines.push('');
     }
 
-    // First sentence of TL;DR only
-    const sentence = tldr ? tldr.split(/(?<=\.)\s+/)[0] : '';
-    if (sentence) lines.push(sentence);
+    if (tldr) lines.push(tldr);
 
     lines.push('');
     lines.push(`Watch: ${videoUrl}`);

@@ -17,7 +17,7 @@ YOUR TASK:
 Produce a structured summary as a single JSON object wrapped in a \`\`\`json code fence. Do not include any text outside the fence. Use this exact shape:
 
 {
-  "tldr": "<2–3 sentence plain-English summary of the whole video>",
+  "tldr": "<2 sentences. First sentence directly answers or addresses what the title implies — state the actual finding, conclusion, or answer upfront. Second sentence adds the most important supporting detail or context. No 'In this video...' preamble. No hype. Plain declarative statements only.>",
   "titleClaim": {
     "claim": "<what the title implies or promises>",
     "reality": "<what the video actually delivers — be specific and honest>"
@@ -50,7 +50,8 @@ RULES:
 - titleClaim: only include if the title can be evaluated against the content (i.e. it makes a specific promise, tease, or claim). If the title is straightforward and accurately describes the video, set both fields to null. Be honest — note if it's clickbait, misleading, or accurate.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
 - verdict: be decisive. 'Watch' means the full video is worth the time. 'Skip' means the summary captures everything of value. 'Watch segment' means one portion justifies the time but the rest is filler — specify the exact timestamps.
-- Keep all text factual — no editorialising beyond what the speaker says.
+- tldr: must directly address the title's implied question or promise. If the title asks "Is X worth it?", open with the answer. If it teases a discovery, state what was actually found. Never open with "This video covers..." or "The creator discusses...". Write as if answering the title in two plain sentences.
+- Keep all text factual — no editorialising beyond what the speaker says. No promotional language.
 
 TRANSCRIPT:
 ${transcriptText}`;
