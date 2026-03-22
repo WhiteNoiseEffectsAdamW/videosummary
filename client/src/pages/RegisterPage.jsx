@@ -17,7 +17,7 @@ export default function RegisterPage() {
     setError(null);
     try {
       await register(email, password, name);
-      navigate('/channels');
+      navigate('/welcome');
     } catch (err) {
       setError(err.message);
     } finally {

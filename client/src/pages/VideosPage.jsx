@@ -42,6 +42,8 @@ export default function VideosPage() {
   const [error, setError] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailToast, setEmailToast] = useState(null);
+  const [filterVerdict, setFilterVerdict] = useState(null);
+  const [filterCategory, setFilterCategory] = useState(null);
 
   function loadVideos() {
     setError(false);
@@ -93,18 +95,61 @@ export default function VideosPage() {
       {error && <p className="auth-error">Couldn't load videos. Please refresh.</p>}
 
       {!loading && !error && videos.length === 0 && (
-        <p className="empty-state">
-          No videos yet. Summarize one on the{' '}
-          <Link to="/" style={{ color: '#7c6fff' }}>Summarize page</Link>
-          {' '}or <Link to="/following" style={{ color: '#7c6fff' }}>follow channels</Link>.
-        </p>
-      )}
-
-      {videos.length > 0 && (
-        <div className="vlist">
-          {videos.map((v) => <VideoRow key={v.videoId} video={v} onDelete={handleDelete} />)}
+        <div className="empty-state-block">
+          <p className="empty-state-title">No videos yet.</p>
+          <p className="empty-state-sub">Videos appear here when you summarize one manually or when a channel you follow posts something new.</p>
+          <div className="empty-state-actions">
+            <Link to="/" className="btn-primary empty-cta">Summarize a video</Link>
+            <Link to="/following" className="empty-cta-secondary">Follow channels →</Link>
+          </div>
         </div>
       )}
+
+      {videos.length > 0 && (() => {
+        const allCategories = [...new Set(videos.flatMap((v) => v.categories || []))].sort();
+        const filtered = videos.filter((v) => {
+          if (filterVerdict && v.verdict?.action !== filterVerdict) return false;
+          if (filterCategory && !(v.categories || []).includes(filterCategory)) return false;
+          return true;
+        });
+        return (
+          <>
+            <div className="filter-bar">
+              <div className="filter-group">
+                {['Watch', 'Watch segment', 'Skip'].map((v) => (
+                  <button
+                    key={v}
+                    className={`filter-pill${filterVerdict === v ? ' filter-pill-active' : ''}`}
+                    onClick={() => setFilterVerdict(filterVerdict === v ? null : v)}
+                  >
+                    {VERDICT_LABEL[v] || v}
+                  </button>
+                ))}
+              </div>
+              {allCategories.length > 0 && (
+                <div className="filter-group">
+                  {allCategories.map((c) => (
+                    <button
+                      key={c}
+                      className={`filter-pill${filterCategory === c ? ' filter-pill-active' : ''}`}
+                      onClick={() => setFilterCategory(filterCategory === c ? null : c)}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {filtered.length === 0 ? (
+              <p className="empty-state" style={{ marginTop: 24 }}>No videos match this filter.</p>
+            ) : (
+              <div className="vlist">
+                {filtered.map((v) => <VideoRow key={v.videoId} video={v} onDelete={handleDelete} />)}
+              </div>
+            )}
+          </>
+        );
+      })()}
     </div>
   );
 }

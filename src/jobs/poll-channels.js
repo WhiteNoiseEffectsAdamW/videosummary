@@ -77,7 +77,7 @@ async function pollAllChannels() {
 }
 
 // Scan a single channel for recent videos — used on first follow
-async function scanChannel(channelId, channelName, lookbackMs = 7 * 24 * 60 * 60 * 1000) {
+async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60 * 1000) {
   const cutoff = new Date(Date.now() - lookbackMs);
   try {
     const videos = await fetchChannelVideos(channelId);

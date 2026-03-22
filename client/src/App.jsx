@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import FollowingPage from './pages/ChannelsPage.jsx';
 import VideosPage from './pages/VideosPage.jsx';
+import WelcomePage from './pages/WelcomePage.jsx';
 import './app.css';
 
 function RequireAuth({ children }) {
@@ -116,6 +117,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/welcome" element={<RequireAuth><WelcomePage /></RequireAuth>} />
           <Route path="/following" element={<RequireAuth><FollowingPage /></RequireAuth>} />
           <Route path="/channels" element={<Navigate to="/following" replace />} />
           <Route path="/videos" element={<RequireAuth><VideosPage /></RequireAuth>} />

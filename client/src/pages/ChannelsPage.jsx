@@ -10,6 +10,7 @@ export default function FollowingPage() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [togglingDigest, setTogglingDigest] = useState(false);
+  const [scanStatus, setScanStatus] = useState(null);
 
   function showToast(msg) {
     setToast(msg);
@@ -66,6 +67,12 @@ export default function FollowingPage() {
       setChannels((prev) => [...prev, data]);
       setInput('');
       showToast(`✓ Following ${resolved.channelName || resolved.channelId}`);
+      // Kick off a background scan and show inline status
+      setScanStatus({ name: resolved.channelName || resolved.channelId, state: 'scanning' });
+      fetch('/api/videos/scan', { method: 'POST', credentials: 'include' }).then(() => {
+        setScanStatus((s) => s ? { ...s, state: 'done' } : null);
+        setTimeout(() => setScanStatus(null), 5000);
+      }).catch(() => setScanStatus(null));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -137,6 +144,14 @@ export default function FollowingPage() {
         </div>
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
       </form>
+
+      {scanStatus && (
+        <div className="scan-status">
+          {scanStatus.state === 'scanning'
+            ? `Scanning ${scanStatus.name} for recent videos…`
+            : `Scan complete — check My Videos for new summaries.`}
+        </div>
+      )}
 
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}
       {channels.length === 0 && !loadError ? (

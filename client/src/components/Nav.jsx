@@ -44,7 +44,7 @@ export default function Nav() {
     navigate('/login');
   }
 
-  if (!user) return null;
+  if (!user || pathname === '/welcome') return null;
 
   return (
     <>
