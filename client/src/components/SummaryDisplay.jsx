@@ -1,8 +1,20 @@
 import React from 'react';
 
+const VERDICT_LABEL = {
+  'Watch': 'Watch',
+  'Skip': 'Summary covers it',
+  'Watch segment': null, // handled inline
+};
+
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, titleClaim } = data;
+  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, titleClaim, channelName } = data;
+
+  function verdictLabel() {
+    if (!verdict) return null;
+    if (verdict.action === 'Watch segment') return `Watch ${verdict.segment}`;
+    return VERDICT_LABEL[verdict.action] ?? verdict.action;
+  }
 
   return (
     <div>
@@ -20,10 +32,26 @@ export default function SummaryDisplay({ data }) {
         </div>
       )}
 
+      {/* Channel + Watch CTA */}
+      <div className="summary-header">
+        {channelName && <span className="summary-channel">{channelName}</span>}
+        <a
+          className="btn-watch-yt"
+          href={`https://www.youtube.com/watch?v=${videoId}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
+          </svg>
+          Watch on YouTube
+        </a>
+      </div>
+
       {/* Verdict */}
       {verdict && (
         <div className={`verdict verdict-${verdict.action.toLowerCase().replace(' ', '-')}`}>
-          <span className="verdict-action">{verdict.action === 'Watch segment' ? `Watch ${verdict.segment}` : verdict.action}</span>
+          <span className="verdict-action">{verdictLabel()}</span>
           <span className="verdict-reason">{verdict.reason}</span>
         </div>
       )}
@@ -102,6 +130,12 @@ export default function SummaryDisplay({ data }) {
           ))}
         </div>
       )}
+
+      {/* Disclaimer */}
+      <p className="summary-disclaimer">
+        Summary is AI-generated and may be incomplete or inaccurate. Watch the full video for complete context.{' '}
+        <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
+      </p>
     </div>
   );
 }

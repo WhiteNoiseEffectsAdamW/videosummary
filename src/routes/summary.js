@@ -49,7 +49,7 @@ router.get('/', async (req, res, next) => {
 
     summaryModel.upsertUserSave(userId, videoId).catch(() => {});
 
-    return res.json({ videoId, cached: false, thumbnailUrl, ...summary });
+    return res.json({ videoId, cached: false, thumbnailUrl, channelName: meta.channelName || null, ...summary });
   } catch (err) {
     next(err);
   }
