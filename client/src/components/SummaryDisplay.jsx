@@ -21,7 +21,7 @@ const VERDICT_LABEL = {
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, title, channelName } = data;
+  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, title, titleClaim, channelName } = data;
   const [copied, setCopied] = useState(false);
   const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
 
