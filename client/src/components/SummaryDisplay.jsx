@@ -21,7 +21,7 @@ const VERDICT_LABEL = {
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, titleClaim, channelName } = data;
+  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, title, channelName } = data;
   const [copied, setCopied] = useState(false);
   const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
 
@@ -91,7 +91,7 @@ export default function SummaryDisplay({ data }) {
               onClick={handleFollow}
               disabled={followState !== 'idle'}
             >
-              {followState === 'loading' ? 'Adding…' : followState === 'following' ? '✓ Added to signal' : followState === 'error' ? 'Error' : '+ Add to signal'}
+              {followState === 'loading' ? 'Adding…' : followState === 'following' ? '✓ Added to digest' : followState === 'error' ? 'Error' : '+ Add to digest'}
             </button>
           )}
         </div>
@@ -112,6 +112,9 @@ export default function SummaryDisplay({ data }) {
           </a>
         </div>
       </div>
+
+      {/* Title */}
+      {title && <div className="summary-title">{title}</div>}
 
       {/* Verdict */}
       {verdict && (

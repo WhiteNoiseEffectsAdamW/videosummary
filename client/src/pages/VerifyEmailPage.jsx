@@ -21,6 +21,7 @@ export default function VerifyEmailPage() {
       .then((json) => {
         if (json.ok) {
           if (refreshUser) refreshUser();
+          localStorage.removeItem('verifyBannerDismissed');
           setStatus('success');
         } else {
           setStatus('error');

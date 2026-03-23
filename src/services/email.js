@@ -121,7 +121,7 @@ async function sendDigest(toEmail, summaries) {
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: 'Your morning signal',
+    subject: 'Your morning digest',
     html: renderDigestHtml(summaries),
     text: renderDigestText(summaries),
     headers: {

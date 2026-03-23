@@ -15,7 +15,7 @@ const TABS = [
   },
   {
     to: '/following',
-    label: 'My Signal',
+    label: 'Following',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M4 6h16M4 10h16M4 14h10M4 18h6"/>
@@ -39,7 +39,7 @@ function VerifyBanner() {
   const [resent, setResent] = useState(false);
   const [resending, setResending] = useState(false);
   const [resendError, setResendError] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+  const [dismissed, setDismissed] = useState(() => !!localStorage.getItem('verifyBannerDismissed'));
 
   if (!user || user.emailVerified || dismissed) return null;
 
@@ -69,7 +69,7 @@ function VerifyBanner() {
             <button className="verify-banner-resend" onClick={handleResend} disabled={resending}>
               {resending ? 'Sending…' : resendError ? 'Failed — try again' : 'Resend'}
             </button>
-            <button className="verify-banner-dismiss" onClick={() => setDismissed(true)}>✕</button>
+            <button className="verify-banner-dismiss" onClick={() => { localStorage.setItem('verifyBannerDismissed', '1'); setDismissed(true); }}>✕</button>
           </>}
     </div>
   );

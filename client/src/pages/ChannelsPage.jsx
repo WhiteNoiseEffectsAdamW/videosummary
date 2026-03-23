@@ -66,7 +66,7 @@ export default function FollowingPage() {
       if (!res.ok) throw new Error(data.error);
       setChannels((prev) => [...prev, data]);
       setInput('');
-      showToast(`✓ Added ${resolved.channelName || resolved.channelId} to your signal`);
+      showToast(`✓ Added ${resolved.channelName || resolved.channelId} to your digest`);
       // Kick off a background scan and show inline status
       setScanStatus({ name: resolved.channelName || resolved.channelId, state: 'scanning' });
       fetch('/api/videos/scan', { method: 'POST', credentials: 'include' }).then(() => {
@@ -110,7 +110,7 @@ export default function FollowingPage() {
   return (
     <div className="page-inner">
       {toast && <div className="toast">{toast}</div>}
-      <h1 className="page-title">My Signal</h1>
+      <h1 className="page-title">Following</h1>
 
       {/* Email digest toggle */}
       <div className="digest-toggle-row">
@@ -139,7 +139,7 @@ export default function FollowingPage() {
             disabled={loading}
           />
           <button className="btn-summarize" type="submit" disabled={loading}>
-            {loading ? 'Adding…' : 'Add to signal'}
+            {loading ? 'Adding…' : 'Add to digest'}
           </button>
         </div>
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
