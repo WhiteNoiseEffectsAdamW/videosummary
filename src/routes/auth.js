@@ -4,7 +4,9 @@ const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const passport = require('../middleware/passport');
 const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified, countAll } = require('../models/user');
-const { sendPasswordReset, sendVerificationEmail } = require('../services/email');
+const { sendPasswordReset, sendVerificationEmail, sendDigest } = require('../services/email');
+const { db } = require('../db');
+const { findByChannelIdsSince } = require('../models/summary');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -160,6 +162,23 @@ router.post('/resend-verification', async (req, res, next) => {
   try {
     if (req.user.email_verified) return res.status(400).json({ error: 'Email already verified.' });
     await issueVerification(req.user);
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/preview-digest — send a preview digest to the logged-in user
+router.post('/preview-digest', async (req, res, next) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
+  try {
+    const channelIds = await db('subscriptions')
+      .where({ user_id: req.user.id, active: true })
+      .pluck('channel_id');
+    if (!channelIds.length) return res.status(400).json({ error: 'No channels followed yet.' });
+    const summaries = await findByChannelIdsSince(channelIds, new Date(0)); // no date filter
+    if (!summaries.length) return res.status(400).json({ error: 'No summaries available yet.' });
+    await sendDigest(req.user.email, summaries.slice(0, 10));
     res.json({ ok: true });
   } catch (err) {
     next(err);

@@ -718,6 +718,30 @@ body {
 .digest-toggle-label { font-size: 14px; font-weight: 600; color: #e2e8f0; }
 .digest-toggle-sub { font-size: 12px; color: #475569; }
 
+.digest-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.digest-preview-sub { font-size: 12px; color: #475569; }
+.btn-preview-digest {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.btn-preview-digest:hover:not(:disabled) { color: #e2e8f0; border-color: rgba(255,255,255,0.2); }
+.btn-preview-digest:disabled { opacity: 0.5; cursor: default; }
+
 .toggle-btn {
   flex-shrink: 0;
   width: 44px;

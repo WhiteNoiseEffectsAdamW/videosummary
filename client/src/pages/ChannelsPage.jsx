@@ -11,6 +11,7 @@ export default function FollowingPage() {
   const [toast, setToast] = useState(null);
   const [togglingDigest, setTogglingDigest] = useState(false);
   const [scanStatus, setScanStatus] = useState(null);
+  const [previewSending, setPreviewSending] = useState(false);
 
   function showToast(msg) {
     setToast(msg);
@@ -105,6 +106,20 @@ export default function FollowingPage() {
     }
   }
 
+  async function handlePreviewDigest() {
+    setPreviewSending(true);
+    try {
+      const res = await fetch('/api/auth/preview-digest', { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      if (res.ok) showToast('Preview digest sent — check your inbox.');
+      else showToast(data.error || 'Could not send preview.');
+    } catch {
+      showToast('Could not send preview.');
+    } finally {
+      setPreviewSending(false);
+    }
+  }
+
   const digestOn = user?.emailDigest !== false;
 
   return (
@@ -125,6 +140,13 @@ export default function FollowingPage() {
           aria-label={digestOn ? 'Turn off daily digest' : 'Turn on daily digest'}
         >
           <span className="toggle-knob" />
+        </button>
+      </div>
+
+      <div className="digest-preview-row">
+        <span className="digest-preview-sub">See what your morning digest looks like — we'll send one to your inbox now.</span>
+        <button className="btn-preview-digest" onClick={handlePreviewDigest} disabled={previewSending}>
+          {previewSending ? 'Sending…' : 'Send me a preview'}
         </button>
       </div>
 
