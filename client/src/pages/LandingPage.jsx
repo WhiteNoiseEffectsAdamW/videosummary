@@ -228,7 +228,7 @@ export default function LandingPage() {
       </header>
 
       <div className="landing-hero">
-        <h1 className="landing-headline">The signal, before the<br />feed gets to it.</h1>
+        <h1 className="landing-headline">Stop watching<br />just to keep up.</h1>
         <p className="landing-sub">Paste any video link and get a Watch or Skip verdict, key topics, and standout quotes. Follow channels for a daily digest in your inbox.</p>
 
         <form className="landing-input-row" onSubmit={handleSubmit}>

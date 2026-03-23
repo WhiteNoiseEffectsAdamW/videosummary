@@ -81,7 +81,7 @@ function SummarizerPage() {
   return (
     <div className="page">
       <header className="hero">
-        <h1>The signal, before the<br /><span>feed gets to it.</span></h1>
+        <h1>Upstream of<br /><span>the algorithm.</span></h1>
         <p>Paste any video link and get a Watch or Skip verdict, key topics, and standout quotes. Follow channels for a daily digest in your inbox.</p>
         <div className="form-wrap">
           <form className="form-row" onSubmit={handleSubmit}>
