@@ -4,7 +4,6 @@ const FROM_ADDRESS = process.env.FROM_EMAIL || 'digest@headwater.app';
 const FROM_NAME = process.env.FROM_NAME || 'Headwater';
 const FROM = `${FROM_NAME} <${FROM_ADDRESS}>`;
 const APP_URL = process.env.APP_URL || 'https://headwater.app';
-const POSTAL_ADDRESS = process.env.POSTAL_ADDRESS || '548 Market St PMB 99999, San Francisco, CA 94104';
 const DIVIDER = '────────────────────────────────';
 
 function getResend() {
@@ -50,7 +49,6 @@ function renderDigestText(summaries) {
   lines.push('Summaries are AI-generated and may be incomplete or inaccurate.');
   lines.push(`To turn off these emails: ${APP_URL}/following`);
   lines.push('');
-  lines.push(POSTAL_ADDRESS);
 
   return lines.join('\n');
 }
@@ -109,7 +107,6 @@ function renderDigestHtml(summaries) {
       <a href="${APP_URL}" style="color:#999;font-weight:600;text-decoration:none;">Headwater</a><br>
       Summaries are AI-generated and may be incomplete or inaccurate.<br>
       <a href="${APP_URL}/following" style="color:#bbb;">Unsubscribe</a><br>
-      ${esc(POSTAL_ADDRESS)}
     </div>
 
   </div>
