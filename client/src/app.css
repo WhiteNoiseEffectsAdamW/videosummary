@@ -549,7 +549,7 @@ body {
   border-bottom: 1px solid #1e293b;
   background: #0c0f14;
 }
-.nav-brand { font-size: 15px; font-weight: 700; color: #fff; margin-right: auto; white-space: nowrap; }
+.nav-brand { font-size: 17px; font-weight: 700; color: #fff; margin-right: auto; white-space: nowrap; }
 .nav-links { display: flex; gap: 2px; }
 .nav-link { font-size: 14px; color: #888; text-decoration: none; padding: 5px 10px; border-radius: 6px; transition: color 0.15s, background 0.15s; white-space: nowrap; }
 .nav-link:hover { color: #fff; background: rgba(34,211,238,0.1); }
