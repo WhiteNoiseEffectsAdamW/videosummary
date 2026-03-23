@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext.jsx';
 import SummaryDisplay from '../components/SummaryDisplay.jsx';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
 
 export default function PublicSummaryPage() {
   const { videoId } = useParams();
+  const { user } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -52,7 +54,9 @@ export default function PublicSummaryPage() {
       {/* Minimal header */}
       <header className="public-header">
         <Link to="/" className="public-brand">Headwater</Link>
-        <Link to="/register" className="btn-primary public-cta">Try it free</Link>
+        {user
+          ? <Link to="/videos" className="btn-primary public-cta">← My Videos</Link>
+          : <Link to="/register" className="btn-primary public-cta">Try it free</Link>}
       </header>
 
       <div className="public-content">
@@ -66,10 +70,12 @@ export default function PublicSummaryPage() {
         {data && (
           <>
             <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>
-            <div className="public-signup-block">
-              <div className="public-signup-text">Get summaries like this every morning for the channels you follow.</div>
-              <Link to="/register" className="btn-primary">Try Headwater free →</Link>
-            </div>
+            {!user && (
+              <div className="public-signup-block">
+                <div className="public-signup-text">Get summaries like this every morning for the channels you follow.</div>
+                <Link to="/register" className="btn-primary">Try Headwater free →</Link>
+              </div>
+            )}
           </>
         )}
       </div>
