@@ -118,12 +118,10 @@ function esc(str) {
 async function sendDigest(toEmail, summaries) {
   if (!summaries.length) return;
 
-  const count = summaries.length;
-
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: `Your digest — ${count} new video${count !== 1 ? 's' : ''}`,
+    subject: 'Your morning signal',
     html: renderDigestHtml(summaries),
     text: renderDigestText(summaries),
     headers: {
