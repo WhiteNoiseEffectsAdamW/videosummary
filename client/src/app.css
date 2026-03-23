@@ -527,6 +527,17 @@ body {
   padding: 0;
   text-decoration: underline;
 }
+.verify-banner-dismiss {
+  background: none;
+  border: none;
+  color: #475569;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 0 0 0 12px;
+  line-height: 1;
+}
+.verify-banner-dismiss:hover { color: #94a3b8; }
 
 /* Nav */
 .nav {

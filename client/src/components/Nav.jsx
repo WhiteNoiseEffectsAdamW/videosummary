@@ -38,14 +38,27 @@ function VerifyBanner() {
   const { user } = useAuth();
   const [resent, setResent] = useState(false);
   const [resending, setResending] = useState(false);
+  const [resendError, setResendError] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
 
-  if (!user || user.emailVerified) return null;
+  if (!user || user.emailVerified || dismissed) return null;
 
   async function handleResend() {
     setResending(true);
-    await fetch('/api/auth/resend-verification', { method: 'POST', credentials: 'include' });
-    setResent(true);
-    setResending(false);
+    setResendError(false);
+    try {
+      const res = await fetch('/api/auth/resend-verification', { method: 'POST', credentials: 'include' });
+      if (res.ok) {
+        setResent(true);
+        setTimeout(() => setDismissed(true), 4000);
+      } else {
+        setResendError(true);
+      }
+    } catch {
+      setResendError(true);
+    } finally {
+      setResending(false);
+    }
   }
 
   return (
@@ -54,8 +67,9 @@ function VerifyBanner() {
         ? 'Verification email sent — check your inbox.'
         : <>Check your email to verify your address.{' '}
             <button className="verify-banner-resend" onClick={handleResend} disabled={resending}>
-              {resending ? 'Sending…' : 'Resend'}
+              {resending ? 'Sending…' : resendError ? 'Failed — try again' : 'Resend'}
             </button>
+            <button className="verify-banner-dismiss" onClick={() => setDismissed(true)}>✕</button>
           </>}
     </div>
   );
