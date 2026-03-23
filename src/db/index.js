@@ -78,6 +78,15 @@ async function migrate() {
         t.timestamp('reset_token_expires');
       });
     }
+    // Email verification columns
+    const hasEmailVerified = await db.schema.hasColumn('users', 'email_verified');
+    if (!hasEmailVerified) {
+      await db.schema.alterTable('users', (t) => {
+        t.boolean('email_verified').defaultTo(false);
+        t.string('verification_token');
+        t.timestamp('verification_token_expires');
+      });
+    }
   }
 
   const hasSaves = await db.schema.hasTable('user_saves');

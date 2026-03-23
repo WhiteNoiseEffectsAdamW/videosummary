@@ -141,10 +141,26 @@ async function sendPasswordReset(toEmail, resetUrl) {
 <div style="max-width:480px;margin:0 auto;padding:48px 24px;">
   <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:24px;">Reset your password</div>
   <p style="font-size:14px;color:#555;line-height:1.6;margin:0 0 24px;">Click the button below to set a new password. This link expires in 1 hour.</p>
-  <a href="${resetUrl}" style="display:inline-block;background:#7c6fff;color:#fff;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Reset password</a>
+  <a href="${resetUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Reset password</a>
   <p style="font-size:12px;color:#bbb;margin-top:32px;line-height:1.6;">If you didn't request this, ignore this email. Your password won't change.<br><br>${esc(POSTAL_ADDRESS)}</p>
 </div></body></html>`,
   });
 }
 
-module.exports = { sendDigest, sendPasswordReset };
+async function sendVerificationEmail(toEmail, verifyUrl) {
+  await getResend().emails.send({
+    from: FROM,
+    to: toEmail,
+    subject: 'Verify your Headwater email',
+    text: `Verify your email address to complete your Headwater account.\n\n${verifyUrl}\n\nThis link expires in 24 hours. If you didn't create an account, ignore this email.\n\n${POSTAL_ADDRESS}`,
+    html: `<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
+<div style="max-width:480px;margin:0 auto;padding:48px 24px;">
+  <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:24px;">Verify your email</div>
+  <p style="font-size:14px;color:#555;line-height:1.6;margin:0 0 24px;">Click the button below to verify your email address and complete your Headwater account. This link expires in 24 hours.</p>
+  <a href="${verifyUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Verify email</a>
+  <p style="font-size:12px;color:#bbb;margin-top:32px;line-height:1.6;">If you didn't create an account, ignore this email.<br><br>${esc(POSTAL_ADDRESS)}</p>
+</div></body></html>`,
+  });
+}
+
+module.exports = { sendDigest, sendPasswordReset, sendVerificationEmail };

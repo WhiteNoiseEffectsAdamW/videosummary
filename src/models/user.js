@@ -43,4 +43,16 @@ async function clearResetToken(id, newPasswordHash) {
   return db(TABLE).where({ id }).update({ password_hash: newPasswordHash, reset_token: null, reset_token_expires: null });
 }
 
-module.exports = { findById, findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken };
+async function setVerificationToken(id, token, expires) {
+  return db(TABLE).where({ id }).update({ verification_token: token, verification_token_expires: expires });
+}
+
+async function findByVerificationToken(token) {
+  return db(TABLE).where({ verification_token: token }).where('verification_token_expires', '>', new Date()).first();
+}
+
+async function markEmailVerified(id) {
+  return db(TABLE).where({ id }).update({ email_verified: true, verification_token: null, verification_token_expires: null });
+}
+
+module.exports = { findById, findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified };

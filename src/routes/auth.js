@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const passport = require('../middleware/passport');
-const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken } = require('../models/user');
-const { sendPasswordReset } = require('../services/email');
+const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified } = require('../models/user');
+const { sendPasswordReset, sendVerificationEmail } = require('../services/email');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -23,7 +23,15 @@ const registerLimiter = rateLimit({
 });
 
 function serializeUser(u) {
-  return { id: u.id, email: u.email, name: u.name, emailDigest: u.email_digest !== false };
+  return { id: u.id, email: u.email, name: u.name, emailDigest: u.email_digest !== false, emailVerified: !!u.email_verified };
+}
+
+async function issueVerification(user) {
+  const token = crypto.randomBytes(32).toString('hex');
+  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  await setVerificationToken(user.id, token, expires);
+  const APP_URL = process.env.APP_URL || 'https://headwater.app';
+  await sendVerificationEmail(user.email, `${APP_URL}/verify-email?token=${token}`);
 }
 
 // POST /api/auth/register
@@ -38,6 +46,9 @@ router.post('/register', registerLimiter, async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await create({ email, passwordHash, name, emailDigest: emailDigest === true });
+
+    // Send verification email (non-blocking — don't fail registration if email fails)
+    issueVerification(user).catch((err) => console.error('[verify] Failed to send verification email:', err));
 
     req.login(user, (err) => {
       if (err) return next(err);
@@ -117,6 +128,34 @@ router.post('/reset-password', async (req, res, next) => {
     if (!user) return res.status(400).json({ error: 'This reset link is invalid or has expired.' });
     const passwordHash = await bcrypt.hash(password, 12);
     await clearResetToken(user.id, passwordHash);
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/verify-email
+router.post('/verify-email', async (req, res, next) => {
+  try {
+    const { token } = req.body;
+    if (!token) return res.status(400).json({ error: 'Token is required.' });
+    const user = await findByVerificationToken(token);
+    if (!user) return res.status(400).json({ error: 'This verification link is invalid or has expired.' });
+    await markEmailVerified(user.id);
+    // Update session user if they're logged in
+    if (req.user?.id === user.id) req.user.email_verified = true;
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/auth/resend-verification
+router.post('/resend-verification', async (req, res, next) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
+  try {
+    if (req.user.email_verified) return res.status(400).json({ error: 'Email already verified.' });
+    await issueVerification(req.user);
     res.json({ ok: true });
   } catch (err) {
     next(err);

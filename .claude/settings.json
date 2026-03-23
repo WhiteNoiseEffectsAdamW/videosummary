@@ -42,7 +42,9 @@
       "WebFetch(domain:vela.com)",
       "WebFetch(domain:novu.com)",
       "WebFetch(domain:claro.com)",
-      "WebFetch(domain:felo.com)"
+      "WebFetch(domain:felo.com)",
+      "Bash(curl -s \"http://localhost:3001/api/summary?url=https://www.youtube.com/watch?v=UclrVWafRAI\")",
+      "Bash(xargs wc:*)"
     ]
   }
 }

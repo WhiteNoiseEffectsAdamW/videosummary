@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
 
@@ -34,6 +34,33 @@ const TABS = [
   },
 ];
 
+function VerifyBanner() {
+  const { user } = useAuth();
+  const [resent, setResent] = useState(false);
+  const [resending, setResending] = useState(false);
+
+  if (!user || user.emailVerified) return null;
+
+  async function handleResend() {
+    setResending(true);
+    await fetch('/api/auth/resend-verification', { method: 'POST', credentials: 'include' });
+    setResent(true);
+    setResending(false);
+  }
+
+  return (
+    <div className="verify-banner">
+      {resent
+        ? 'Verification email sent — check your inbox.'
+        : <>Check your email to verify your address.{' '}
+            <button className="verify-banner-resend" onClick={handleResend} disabled={resending}>
+              {resending ? 'Sending…' : 'Resend'}
+            </button>
+          </>}
+    </div>
+  );
+}
+
 export default function Nav() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -48,6 +75,7 @@ export default function Nav() {
 
   return (
     <>
+      <VerifyBanner />
       {/* Desktop top nav */}
       <nav className="nav">
         <span className="nav-brand">Headwater</span>
