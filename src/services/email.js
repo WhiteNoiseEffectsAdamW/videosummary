@@ -16,7 +16,7 @@ function renderDigestText(summaries) {
   const count = summaries.length;
   const lines = [];
 
-  lines.push(`Your daily digest — ${count} new video${count !== 1 ? 's' : ''} from your followed channels`);
+  lines.push(`${count} new video${count !== 1 ? 's' : ''} from your channels — worth your time?`);
   lines.push('');
 
   for (const s of summaries) {
@@ -89,7 +89,7 @@ function renderDigestHtml(summaries) {
 
     <!-- Header -->
     <div style="margin-bottom:40px;border-bottom:1px solid #ebebeb;padding-bottom:24px;">
-      <div style="font-size:13px;color:#999;margin-bottom:6px;">Daily digest</div>
+      <div style="font-size:13px;color:#999;margin-bottom:6px;">Headwater</div>
       <div style="font-size:22px;font-weight:700;color:#111;">${count} new video${count !== 1 ? 's' : ''} from your channels</div>
     </div>
 
@@ -123,7 +123,7 @@ async function sendDigest(toEmail, summaries) {
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: 'Your morning digest',
+    subject: `${summaries.length} new video${summaries.length !== 1 ? 's' : ''} from your channels — worth your time?`,
     html: renderDigestHtml(summaries),
     text: renderDigestText(summaries),
     headers: {
