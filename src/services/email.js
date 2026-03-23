@@ -16,7 +16,7 @@ function renderDigestText(summaries) {
   const count = summaries.length;
   const lines = [];
 
-  lines.push(`${count} new video${count !== 1 ? 's' : ''} from your channels — worth your time?`);
+  lines.push(`${count} new video${count !== 1 ? 's' : ''} from your channels`);
   lines.push('');
 
   for (const s of summaries) {
@@ -68,16 +68,24 @@ function renderDigestHtml(summaries) {
 
     return `${divider}
       <div>
-        <a href="${videoUrl}" style="display:block;line-height:0;margin-bottom:18px;">
-          <img src="${thumb}" alt="${esc(s.title || '')}" width="560"
-            style="width:100%;max-width:560px;height:160px;object-fit:cover;display:block;border-radius:6px;" />
-        </a>
-        ${s.channel_name ? `<div style="font-size:12px;font-weight:500;color:#999;margin-bottom:5px;">${esc(s.channel_name)}</div>` : ''}
-        <div style="font-size:17px;font-weight:700;color:#111;line-height:1.35;margin-bottom:12px;">${esc(s.title || s.video_id)}</div>
-        ${quote ? `<div style="color:#888;font-size:13px;font-style:italic;line-height:1.6;margin-bottom:14px;">&ldquo;${esc(quote.text)}&rdquo;</div>` : ''}
-        ${tldr ? `<div style="font-size:14px;color:#444;line-height:1.7;margin-bottom:14px;">${esc(tldr)}</div>` : ''}
-        <a href="${APP_URL}/s/${s.video_id}" style="font-size:13px;font-weight:600;color:#111;text-decoration:none;margin-right:16px;">Full summary &rarr;</a>
-        <a href="${videoUrl}" style="font-size:13px;color:#999;text-decoration:none;">Watch on YouTube &rarr;</a>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+          <tr>
+            <td width="120" valign="top" style="padding-right:16px;">
+              <a href="${videoUrl}" style="display:block;line-height:0;">
+                <img src="${thumb}" alt="${esc(s.title || '')}" width="120" height="68"
+                  style="display:block;width:120px;height:68px;object-fit:cover;border-radius:4px;" />
+              </a>
+            </td>
+            <td valign="top">
+              ${s.channel_name ? `<div style="font-size:11px;font-weight:500;color:#999;margin-bottom:4px;">${esc(s.channel_name)}</div>` : ''}
+              <div style="font-size:15px;font-weight:700;color:#111;line-height:1.35;margin-bottom:8px;">${esc(s.title || s.video_id)}</div>
+              ${tldr ? `<div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">${esc(tldr)}</div>` : ''}
+              ${quote ? `<div style="color:#888;font-size:12px;font-style:italic;line-height:1.5;margin-bottom:10px;">&ldquo;${esc(quote.text)}&rdquo;</div>` : ''}
+              <a href="${APP_URL}/s/${s.video_id}" style="font-size:12px;font-weight:600;color:#111;text-decoration:none;margin-right:12px;">Full summary &rarr;</a>
+              <a href="${videoUrl}" style="font-size:12px;color:#999;text-decoration:none;">Watch &rarr;</a>
+            </td>
+          </tr>
+        </table>
       </div>`;
   }).join('');
 
@@ -123,7 +131,7 @@ async function sendDigest(toEmail, summaries) {
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: `${summaries.length} new video${summaries.length !== 1 ? 's' : ''} from your channels — worth your time?`,
+    subject: `${summaries.length} new video${summaries.length !== 1 ? 's' : ''} from your channels`,
     html: renderDigestHtml(summaries),
     text: renderDigestText(summaries),
     headers: {
