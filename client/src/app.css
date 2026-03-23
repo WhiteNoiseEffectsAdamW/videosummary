@@ -1038,6 +1038,7 @@ body {
 .landing-url-input:focus { border-color: #22d3ee !important; box-shadow: 0 0 0 3px rgba(34,211,238,0.1) !important; outline: none; }
 .landing-submit-btn { padding: 11px 22px; font-size: 15px; flex-shrink: 0; }
 .landing-input-meta { font-size: 12px; color: #94a3b8; margin-top: 10px; }
+.landing-signin-hint { font-size: 13px; color: #475569; margin-top: 14px; }
 .landing-input-error { font-size: 13px; color: #ef4444; margin-top: 10px; }
 .landing-limit-box { margin-top: 14px; font-size: 14px; color: #888; background: #0c111d; border: 1px solid #1e293b; border-radius: 8px; padding: 12px 16px; }
 .landing-demo {

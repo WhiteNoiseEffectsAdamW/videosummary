@@ -223,13 +223,13 @@ export default function LandingPage() {
         <span className="landing-brand">Headwater</span>
         <div className="landing-nav-right">
           <Link to="/login" className="landing-nav-link">Sign in</Link>
-          <button className="btn-primary" onClick={() => document.querySelector('.landing-url-input')?.focus()}>Try it free</button>
+          <Link to="/register" className="btn-primary">Create account</Link>
         </div>
       </header>
 
       <div className="landing-hero">
-        <h1 className="landing-headline">Stop watching<br />just to keep up.</h1>
-        <p className="landing-sub">Paste any video link and get a Watch or Skip verdict, key topics, and standout quotes. Follow channels for a daily digest in your inbox.</p>
+        <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
+        <p className="landing-sub">Too many channels, not enough time. Get a morning digest of what's new across all of them — and paste any video for a quick summary before you commit to watching.</p>
 
         <form className="landing-input-row" onSubmit={handleSubmit}>
           <input
@@ -250,6 +250,8 @@ export default function LandingPage() {
             ? <span>{remaining} free summar{remaining === 1 ? 'y' : 'ies'} left — <Link to="/register" style={{ color: '#22d3ee' }}>sign up for unlimited</Link></span>
             : <span>3 free summaries · no account needed</span>}
         </div>
+
+        <div className="landing-signin-hint">Already have an account? <Link to="/login" style={{ color: '#22d3ee' }}>Sign in</Link></div>
 
         {error && <div className="landing-input-error">{error}</div>}
 
