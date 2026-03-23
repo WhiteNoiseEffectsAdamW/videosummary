@@ -182,7 +182,7 @@ export default function SummaryDisplay({ data }) {
               <div className="quote-meta">
                 {q.context}
                 {q.timestamp && (
-                  <a className="quote-ts" href={ytUrl(videoId, q.timestamp, 20)} target="_blank" rel="noopener noreferrer"> — {q.timestamp}</a>
+                  <a className="quote-ts" href={ytUrl(videoId, q.timestamp)} target="_blank" rel="noopener noreferrer"> — {q.timestamp}</a>
                 )}
               </div>
             </div>
