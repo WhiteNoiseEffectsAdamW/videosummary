@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
 
+function tsToSeconds(ts) {
+  if (!ts) return 0;
+  const parts = ts.trim().split(':').map(Number);
+  if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+  if (parts.length === 2) return parts[0] * 60 + parts[1];
+  return parts[0];
+}
+
+function ytUrl(videoId, ts, leadSeconds = 0) {
+  const secs = Math.max(0, tsToSeconds(ts) - leadSeconds);
+  return `https://www.youtube.com/watch?v=${videoId}&t=${secs}`;
+}
+
 const VERDICT_LABEL = {
   'Watch': 'Watch',
   'Skip': 'Summary covers it',
@@ -149,7 +162,11 @@ export default function SummaryDisplay({ data }) {
             <div key={i} className="topic-item">
               <div className="topic-title">{topic.title}</div>
               <div className="topic-desc">{topic.description}</div>
-              {topic.timestamp && <span className="topic-ts">{topic.timestamp}</span>}
+              {topic.timestamp && (
+                <a className="topic-ts" href={ytUrl(videoId, topic.timestamp)} target="_blank" rel="noopener noreferrer">
+                  {topic.timestamp}
+                </a>
+              )}
             </div>
           ))}
         </div>
@@ -164,7 +181,9 @@ export default function SummaryDisplay({ data }) {
               <div className="quote-text">"{q.text}"</div>
               <div className="quote-meta">
                 {q.context}
-                {q.timestamp && <span className="quote-ts"> — {q.timestamp}</span>}
+                {q.timestamp && (
+                  <a className="quote-ts" href={ytUrl(videoId, q.timestamp, 20)} target="_blank" rel="noopener noreferrer"> — {q.timestamp}</a>
+                )}
               </div>
             </div>
           ))}
