@@ -118,7 +118,7 @@ export default function WelcomePage() {
                 <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>
                 <div className="welcome-actions">
                   <button className="btn-primary" onClick={() => setStep(2)}>
-                    Follow channels for a daily digest →
+                    Build your morning signal →
                   </button>
                   <button className="welcome-skip" onClick={finish}>Skip setup</button>
                 </div>
@@ -136,7 +136,7 @@ export default function WelcomePage() {
         {step === 2 && (
           <>
             <div className="welcome-header">
-              <h1>Follow channels.</h1>
+              <h1>Build your signal.</h1>
               <p>We'll email you summaries of new videos every morning — no algorithm, no noise.</p>
             </div>
 
@@ -152,7 +152,7 @@ export default function WelcomePage() {
                   autoFocus
                 />
                 <button className="btn-summarize" type="submit" disabled={channelLoading}>
-                  {channelLoading ? 'Adding…' : 'Follow'}
+                  {channelLoading ? 'Adding…' : 'Add to signal'}
                 </button>
               </div>
               {channelError && <div className="auth-error" style={{ marginTop: 8 }}>{channelError}</div>}

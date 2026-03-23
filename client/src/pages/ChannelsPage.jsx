@@ -66,7 +66,7 @@ export default function FollowingPage() {
       if (!res.ok) throw new Error(data.error);
       setChannels((prev) => [...prev, data]);
       setInput('');
-      showToast(`✓ Following ${resolved.channelName || resolved.channelId}`);
+      showToast(`✓ Added ${resolved.channelName || resolved.channelId} to your signal`);
       // Kick off a background scan and show inline status
       setScanStatus({ name: resolved.channelName || resolved.channelId, state: 'scanning' });
       fetch('/api/videos/scan', { method: 'POST', credentials: 'include' }).then(() => {
@@ -84,7 +84,7 @@ export default function FollowingPage() {
     const res = await fetch(`/api/subscriptions/${id}`, { method: 'DELETE', credentials: 'include' });
     if (res.ok) {
       setChannels((prev) => prev.filter((c) => c.id !== id));
-      showToast(`Unfollowed ${name}`);
+      showToast(`Removed ${name}`);
     } else {
       showToast('Could not remove channel. Please try again.');
     }
@@ -110,7 +110,7 @@ export default function FollowingPage() {
   return (
     <div className="page-inner">
       {toast && <div className="toast">{toast}</div>}
-      <h1 className="page-title">Following</h1>
+      <h1 className="page-title">My Signal</h1>
 
       {/* Email digest toggle */}
       <div className="digest-toggle-row">
@@ -139,7 +139,7 @@ export default function FollowingPage() {
             disabled={loading}
           />
           <button className="btn-summarize" type="submit" disabled={loading}>
-            {loading ? 'Adding…' : 'Follow'}
+            {loading ? 'Adding…' : 'Add to signal'}
           </button>
         </div>
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
@@ -170,7 +170,7 @@ export default function FollowingPage() {
                   >
                     {digestOn ? 'Active' : 'Paused'}
                   </button>
-                  <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Unfollow</button>
+                  <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Remove</button>
                 </div>
               </li>
             );

@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const passport = require('../middleware/passport');
-const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified } = require('../models/user');
+const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified, countAll } = require('../models/user');
 const { sendPasswordReset, sendVerificationEmail } = require('../services/email');
 
 const loginLimiter = rateLimit({
@@ -40,6 +40,10 @@ router.post('/register', registerLimiter, async (req, res, next) => {
     const { email, password, name, emailDigest } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
     if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+
+    const maxUsers = parseInt(process.env.MAX_USERS || '50', 10);
+    const userCount = await countAll();
+    if (userCount >= maxUsers) return res.status(503).json({ error: 'Registration is currently closed. Check back soon.' });
 
     const existing = await findByEmail(email);
     if (existing) return res.status(409).json({ error: 'An account with that email already exists.' });

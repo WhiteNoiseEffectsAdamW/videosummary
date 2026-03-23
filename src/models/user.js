@@ -55,4 +55,9 @@ async function markEmailVerified(id) {
   return db(TABLE).where({ id }).update({ email_verified: true, verification_token: null, verification_token_expires: null });
 }
 
-module.exports = { findById, findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified };
+async function countAll() {
+  const row = await db(TABLE).count('id as n').first();
+  return parseInt(row.n, 10);
+}
+
+module.exports = { findById, findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified, countAll };

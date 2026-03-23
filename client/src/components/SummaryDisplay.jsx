@@ -91,13 +91,13 @@ export default function SummaryDisplay({ data }) {
               onClick={handleFollow}
               disabled={followState !== 'idle'}
             >
-              {followState === 'loading' ? 'Following…' : followState === 'following' ? '✓ Following' : followState === 'error' ? 'Error' : '+ Follow'}
+              {followState === 'loading' ? 'Adding…' : followState === 'following' ? '✓ Added to signal' : followState === 'error' ? 'Error' : '+ Add to signal'}
             </button>
           )}
         </div>
         <div className="summary-header-actions">
           <button className="btn-share" onClick={handleShare}>
-            {copied ? 'Copied!' : 'Share'}
+            {copied ? 'Copied!' : 'Send to a friend'}
           </button>
           <a
             className="btn-watch-yt"
