@@ -40,6 +40,7 @@ function renderDigestText(summaries) {
     lines.push('');
     if (quotes.length > 0) lines.push(`"${quotes[0].text}"`);
     lines.push('');
+    lines.push(`Full summary: ${APP_URL}/s/${s.video_id}`);
     lines.push(`Watch: ${videoUrl}`);
     lines.push('');
   }
@@ -75,7 +76,8 @@ function renderDigestHtml(summaries) {
         <div style="font-size:17px;font-weight:700;color:#111;line-height:1.35;margin-bottom:12px;">${esc(s.title || s.video_id)}</div>
         ${quote ? `<div style="color:#888;font-size:13px;font-style:italic;line-height:1.6;margin-bottom:14px;">&ldquo;${esc(quote.text)}&rdquo;</div>` : ''}
         ${tldr ? `<div style="font-size:14px;color:#444;line-height:1.7;margin-bottom:14px;">${esc(tldr)}</div>` : ''}
-        <a href="${videoUrl}" style="font-size:13px;font-weight:600;color:#111;text-decoration:none;">Watch &rarr;</a>
+        <a href="${APP_URL}/s/${s.video_id}" style="font-size:13px;font-weight:600;color:#111;text-decoration:none;margin-right:16px;">Full summary &rarr;</a>
+        <a href="${videoUrl}" style="font-size:13px;color:#999;text-decoration:none;">Watch on YouTube &rarr;</a>
       </div>`;
   }).join('');
 

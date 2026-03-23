@@ -600,7 +600,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 3px;
-    color: #555;
+    color: #64748b;
     text-decoration: none;
     font-size: 10px;
     font-family: inherit;
@@ -613,7 +613,7 @@ body {
   .mobile-tab span { font-weight: 500; }
   .mobile-tab.active { color: #22d3ee; }
   .mobile-tab:hover  { color: #aaa; }
-  .mobile-tab-logout { color: #555; }
+  .mobile-tab-logout { color: #64748b; }
   .mobile-tab-logout:hover { color: #ef4444; }
 
   /* Pad page content so it clears the tab bar */

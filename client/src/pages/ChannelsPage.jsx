@@ -39,7 +39,7 @@ export default function FollowingPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setUser(data);
-      showToast(next ? 'Daily digest enabled' : 'Daily digest turned off');
+      showToast(next ? 'Daily Digest enabled' : 'Daily Digest turned off');
     } catch {
       showToast('Could not update preference. Please try again.');
     } finally {
@@ -130,7 +130,7 @@ export default function FollowingPage() {
       {/* Email digest toggle */}
       <div className="digest-toggle-row">
         <div className="digest-toggle-info">
-          <span className="digest-toggle-label">Daily digest</span>
+          <span className="digest-toggle-label">Daily Digest</span>
           <span className="digest-toggle-sub">New videos from your channels, every morning at 7am UTC</span>
         </div>
         <button

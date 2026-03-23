@@ -35,7 +35,7 @@ function DigestSection({ data }) {
 
         {/* Copy */}
         <div className="digest-copy">
-          <div className="digest-eyebrow">Daily digest</div>
+          <div className="digest-eyebrow">Daily Digest</div>
           <h2 className="digest-heading">Set it on autopilot.</h2>
           <p className="digest-sub">Follow the channels you care about. Every morning, Headwater emails you summaries of what's new — so you can decide what's worth your time before you open YouTube.</p>
           <Link to="/register" className="btn-primary digest-cta">Follow your first channel →</Link>
@@ -245,11 +245,6 @@ export default function LandingPage() {
           </button>
         </form>
 
-        <div className="landing-input-meta">
-          {remaining !== null && !limitReached
-            ? <span>{remaining} free summar{remaining === 1 ? 'y' : 'ies'} left — <Link to="/register" style={{ color: '#22d3ee' }}>sign up for unlimited</Link></span>
-            : <span>3 free summaries · no account needed</span>}
-        </div>
 
         <div className="landing-signin-hint">Already have an account? <Link to="/login" style={{ color: '#22d3ee' }}>Sign in</Link></div>
 
@@ -265,7 +260,7 @@ export default function LandingPage() {
 
       {/* Result or demo */}
       <div className="landing-demo">
-        {!result && !loading && demoData && <div className="landing-example-label">Example output</div>}
+        {!result && !loading && demoData && <div className="landing-example-label">Example summary</div>}
         {loading && (
           <div className="loader" style={{ paddingTop: 32, paddingBottom: 32 }}>
             <div className="spinner" />

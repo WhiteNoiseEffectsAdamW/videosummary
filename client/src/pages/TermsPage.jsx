@@ -13,7 +13,7 @@ export default function TermsPage() {
         <p>By creating an account or using Headwater you agree to these terms. If you do not agree, do not use the service.</p>
 
         <h2>What Headwater does</h2>
-        <p>Headwater generates AI-powered summaries of YouTube videos and delivers them via a daily email digest. Summaries are produced by the Anthropic Claude API and may be incomplete or inaccurate. They are intended as a time-saving aid, not a substitute for watching the original video.</p>
+        <p>Headwater generates AI-powered summaries of online video content and delivers them via a daily email digest. Summaries are AI-generated, may be incomplete or inaccurate, and are intended as a convenience tool only.</p>
 
         <h2>Acceptable use</h2>
         <p>You may use Headwater for personal, non-commercial purposes. You may not:</p>
