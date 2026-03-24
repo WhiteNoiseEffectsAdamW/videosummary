@@ -263,7 +263,7 @@ export default function FollowingPage() {
             const digestOn = c.digest !== false;
             return (
               <li key={c.id} className="channel-item">
-                <div className="channel-name">{c.channel_name || c.channel_id}</div>
+                <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
                 <div className="channel-item-actions">
                   <button
                     className={`btn-digest-pill${digestOn ? ' pill-on' : ' pill-off'}`}
