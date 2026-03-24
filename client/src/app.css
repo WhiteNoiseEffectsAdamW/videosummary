@@ -1144,7 +1144,7 @@ body {
   max-width: 900px;
   margin: 0 auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 64px;
 }
 .digest-copy { flex: 1; }

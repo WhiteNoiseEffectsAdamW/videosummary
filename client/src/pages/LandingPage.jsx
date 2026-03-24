@@ -215,9 +215,9 @@ export default function LandingPage() {
       <div className="digest-section fade-in-visible">
         <div className="digest-section-inner">
           <div className="digest-copy">
-            <div className="digest-eyebrow">Daily Digest</div>
-            <h2 className="digest-heading">Here's what lands in your inbox.</h2>
-            <p className="digest-sub">One email, every morning: a summary of each new video from the channels you follow, with enough detail to decide if it's worth your time.</p>
+            <div className="digest-eyebrow">Every morning</div>
+            <h2 className="digest-heading">Every channel you follow, distilled.</h2>
+            <p className="digest-sub">New video from a channel you follow? You'll know if it's worth your time before you hit play.</p>
           </div>
           <div className="digest-email-wrap">
             <DigestEmailMockup data={demoData} />
