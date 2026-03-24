@@ -19,9 +19,7 @@ function useFadeIn() {
   return ref;
 }
 
-function DigestSection({ data }) {
-  const ref = useFadeIn();
-  // Grab first ~110 chars, trim to last word boundary — avoids abbreviation splits like "Dr."
+function DigestEmailMockup({ data }) {
   const tldrFirst = data?.tldr
     ? data.tldr.length <= 110
       ? data.tldr
@@ -30,77 +28,60 @@ function DigestSection({ data }) {
   const videoUrl = `https://www.youtube.com/watch?v=${data?.videoId}`;
 
   return (
-    <div className="digest-section" ref={ref}>
-      <div className="digest-section-inner">
-
-        {/* Copy */}
-        <div className="digest-copy">
-          <div className="digest-eyebrow">Daily Digest</div>
-          <h2 className="digest-heading">Set it on autopilot.</h2>
-          <p className="digest-sub">Follow the channels you care about. Every morning, Headwater emails you summaries of what's new — so you can decide what's worth your time before you open YouTube.</p>
-          <Link to="/register" className="btn-primary digest-cta">Follow your first channel →</Link>
+    <div className="digest-email-wrap">
+      <div className="digest-email-window">
+        <div className="digest-email-titlebar">
+          <span className="digest-email-dot" />
+          <span className="digest-email-dot" />
+          <span className="digest-email-dot" />
+          <span className="digest-email-titlebar-label">Inbox</span>
         </div>
-
-        {/* Email card mockup */}
-        <div className="digest-email-wrap">
-          <div className="digest-email-window">
-            <div className="digest-email-titlebar">
-              <span className="digest-email-dot" />
-              <span className="digest-email-dot" />
-              <span className="digest-email-dot" />
-              <span className="digest-email-titlebar-label">Inbox</span>
-            </div>
-            <div className="digest-email-chrome">
-              <div className="digest-email-from">
-                <div className="digest-email-sender">Headwater <span className="digest-email-addr">&lt;digest@headwaterhq.co&gt;</span></div>
-                <div className="digest-email-subject">Your daily digest — 3 new videos</div>
-              </div>
-              {data && (
-                <div className="digest-email-card">
-                  {/* Real video */}
-                  <div className="digest-email-row">
-                    <a href={videoUrl} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0 }}>
-                      <img src={data.thumbnailUrl} alt={data.title || ''} className="digest-email-thumb"
-                        onError={(e) => { e.target.style.display = 'none'; }} />
-                    </a>
-                    <div className="digest-email-content">
-                      {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
-                      <div className="digest-email-title">{data.title}</div>
-                      {data.verdict && (
-                        <div className="digest-email-verdict" style={{ color: data.verdict.action === 'Watch' ? '#22d3ee' : data.verdict.action === 'Skip' ? '#334155' : '#8aa4c8' }}>
-                          {data.verdict.action === 'Watch segment' ? `Watch ${data.verdict.segment}` : data.verdict.action}
-                          {data.verdict.reason && <span className="digest-email-verdict-reason"> — {data.verdict.reason}</span>}
-                        </div>
-                      )}
-                      {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
-                      <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
-                    </div>
-                  </div>
-                  {/* Placeholder rows to convey multi-video digest */}
-                  <div className="digest-email-divider" />
-                  <div className="digest-email-row digest-email-row-muted">
-                    <div className="digest-email-thumb-placeholder" />
-                    <div className="digest-email-content">
-                      <div className="digest-email-channel digest-placeholder-line" style={{ width: 80 }} />
-                      <div className="digest-placeholder-line" style={{ width: '90%' }} />
-                      <div className="digest-placeholder-line" style={{ width: '70%', marginTop: 4 }} />
-                    </div>
-                  </div>
-                  <div className="digest-email-divider" />
-                  <div className="digest-email-row digest-email-row-muted">
-                    <div className="digest-email-thumb-placeholder" />
-                    <div className="digest-email-content">
-                      <div className="digest-email-channel digest-placeholder-line" style={{ width: 64 }} />
-                      <div className="digest-placeholder-line" style={{ width: '80%' }} />
-                      <div className="digest-placeholder-line" style={{ width: '55%', marginTop: 4 }} />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
+        <div className="digest-email-chrome">
+          <div className="digest-email-from">
+            <div className="digest-email-sender">Headwater <span className="digest-email-addr">&lt;digest@headwaterhq.co&gt;</span></div>
+            <div className="digest-email-subject">3 new videos from your channels</div>
           </div>
+          {data && (
+            <div className="digest-email-card">
+              <div className="digest-email-row">
+                <a href={videoUrl} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0 }}>
+                  <img src={data.thumbnailUrl} alt={data.title || ''} className="digest-email-thumb"
+                    onError={(e) => { e.target.style.display = 'none'; }} />
+                </a>
+                <div className="digest-email-content">
+                  {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
+                  <div className="digest-email-title">{data.title}</div>
+                  {data.verdict && (
+                    <div className="digest-email-verdict" style={{ color: data.verdict.action === 'Watch' ? '#22d3ee' : data.verdict.action === 'Skip' ? '#334155' : '#8aa4c8' }}>
+                      {data.verdict.action === 'Watch segment' ? `Watch ${data.verdict.segment}` : data.verdict.action}
+                      {data.verdict.reason && <span className="digest-email-verdict-reason"> — {data.verdict.reason}</span>}
+                    </div>
+                  )}
+                  {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
+                  <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
+                </div>
+              </div>
+              <div className="digest-email-divider" />
+              <div className="digest-email-row digest-email-row-muted">
+                <div className="digest-email-thumb-placeholder" />
+                <div className="digest-email-content">
+                  <div className="digest-email-channel digest-placeholder-line" style={{ width: 80 }} />
+                  <div className="digest-placeholder-line" style={{ width: '90%' }} />
+                  <div className="digest-placeholder-line" style={{ width: '70%', marginTop: 4 }} />
+                </div>
+              </div>
+              <div className="digest-email-divider" />
+              <div className="digest-email-row digest-email-row-muted">
+                <div className="digest-email-thumb-placeholder" />
+                <div className="digest-email-content">
+                  <div className="digest-email-channel digest-placeholder-line" style={{ width: 64 }} />
+                  <div className="digest-placeholder-line" style={{ width: '80%' }} />
+                  <div className="digest-placeholder-line" style={{ width: '55%', marginTop: 4 }} />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-
       </div>
     </div>
   );
@@ -113,8 +94,6 @@ function CuratedSummary({ data }) {
   return (
     <div className="landing-demo-card">
       <div className="landing-demo-layout">
-
-        {/* Left: thumbnail + meta */}
         <div className="landing-demo-left">
           <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" className="landing-thumb-link">
             <img src={thumbnailUrl} alt={title || ''} className="landing-thumb"
@@ -130,14 +109,11 @@ function CuratedSummary({ data }) {
             </div>
           )}
         </div>
-
-        {/* Right: quote */}
         {quote && (
           <div className="landing-demo-right">
             <div className="landing-quote">"{quote.text}"</div>
           </div>
         )}
-
       </div>
 
       {titleClaim?.claim && titleClaim?.reality && (
@@ -181,7 +157,7 @@ export default function LandingPage() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [limitReached, setLimitReached] = useState(false);
-  const [remaining, setRemaining] = useState(null); // free summaries left
+  const [remaining, setRemaining] = useState(null);
 
   useEffect(() => {
     fetch(`/api/summary/${DEMO_VIDEO_ID}`)
@@ -227,9 +203,23 @@ export default function LandingPage() {
         </div>
       </header>
 
+      {/* Hero — digest first */}
       <div className="landing-hero">
         <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
-        <p className="landing-sub">Too many channels, not enough time. Get a morning digest of what's new across all of them — and paste any video for a quick summary before you commit to watching.</p>
+        <p className="landing-sub">Too many channels, not enough time. Follow the ones you care about and get a morning digest of what's new — so you know what's worth watching before you open YouTube.</p>
+        <Link to="/register" className="btn-primary landing-hero-cta">Follow your first channel →</Link>
+        <div className="landing-signin-hint">Already have an account? <Link to="/login" style={{ color: '#22d3ee' }}>Sign in</Link></div>
+      </div>
+
+      {/* Email mockup — shows what the product delivers */}
+      <div className="landing-mockup-section">
+        <DigestEmailMockup data={demoData} />
+      </div>
+
+      {/* Summarizer — secondary, below the fold */}
+      <div className="landing-summarizer-section">
+        <div className="landing-summarizer-eyebrow">Or try an instant summary</div>
+        <p className="landing-summarizer-desc">Paste any video URL and see what Headwater pulls out — verdict, key points, standout quotes.</p>
 
         <form className="landing-input-row" onSubmit={handleSubmit}>
           <input
@@ -245,9 +235,6 @@ export default function LandingPage() {
           </button>
         </form>
 
-
-        <div className="landing-signin-hint">Already have an account? <Link to="/login" style={{ color: '#22d3ee' }}>Sign in</Link></div>
-
         {error && <div className="landing-input-error">{error}</div>}
 
         {limitReached && (
@@ -256,11 +243,7 @@ export default function LandingPage() {
             <Link to="/register" style={{ color: '#22d3ee' }}>Sign up free</Link> to keep going.
           </div>
         )}
-      </div>
 
-      {/* Result or demo */}
-      <div className="landing-demo">
-        {!result && !loading && demoData && <div className="landing-example-label">Example summary</div>}
         {loading && (
           <div className="loader" style={{ paddingTop: 32, paddingBottom: 32 }}>
             <div className="spinner" />
@@ -269,28 +252,23 @@ export default function LandingPage() {
           </div>
         )}
 
+        {!result && !loading && demoData && (
+          <>
+            <div className="landing-example-label">Example summary</div>
+            <CuratedSummary data={demoData} />
+          </>
+        )}
+
         {result && !loading && (
           <>
             <CuratedSummary data={result} />
             <div className="landing-inline-cta">
-              <Link to="/register" className="btn-primary">Sign up to save this and follow channels →</Link>
-              <span className="landing-inline-cta-sub">Free. No credit card required.</span>
-            </div>
-          </>
-        )}
-
-        {!result && !loading && demoData && (
-          <>
-            <CuratedSummary data={demoData} />
-            <div className="landing-inline-cta">
-              <button className="btn-primary" onClick={() => document.querySelector('.landing-url-input')?.focus()}>Try it free →</button>
+              <Link to="/register" className="btn-primary">Get this every morning — follow your channels →</Link>
               <span className="landing-inline-cta-sub">Free. No credit card required.</span>
             </div>
           </>
         )}
       </div>
-
-      <DigestSection data={demoData} />
 
       <footer className="landing-footer">
         <span>© {new Date().getFullYear()} Headwater</span>
