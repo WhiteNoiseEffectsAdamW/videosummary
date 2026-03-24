@@ -39,7 +39,7 @@ function DigestEmailMockup({ data }) {
         </div>
         <div className="digest-email-chrome">
           <div className="digest-email-from">
-            <div className="digest-email-sender">Headwater <span className="digest-email-addr">&lt;digest@headwaterhq.co&gt;</span></div>
+            <div className="digest-email-sender">Headwater <span className="digest-email-addr">&lt;digest@headwaterapp.com&gt;</span></div>
             <div className="digest-email-subject">3 new videos from your channels</div>
           </div>
           {data && (
