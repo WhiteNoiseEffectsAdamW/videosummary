@@ -33,6 +33,7 @@ export default function FollowingPage() {
   const [scanStatus, setScanStatus] = useState(null);
   const [previewSending, setPreviewSending] = useState(false);
   const [addingPopular, setAddingPopular] = useState(null);
+  const [showPopular, setShowPopular] = useState(false);
 
   function showToast(msg) {
     setToast(msg);
@@ -74,7 +75,9 @@ export default function FollowingPage() {
     if (!input.trim()) return;
     setLoading(true);
     try {
-      const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(input.trim())}`, { credentials: 'include' });
+      const raw = input.trim();
+      const resolveUrl = raw.startsWith('@') ? `https://www.youtube.com/${raw}` : raw;
+      const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(resolveUrl)}`, { credentials: 'include' });
       const resolved = await resolveRes.json();
       if (!resolveRes.ok) throw new Error(resolved.error);
 
@@ -144,7 +147,7 @@ export default function FollowingPage() {
   async function handleAddPopular(ch) {
     setAddingPopular(ch.handle);
     try {
-      const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(`youtube.com/${ch.handle}`)}`, { credentials: 'include' });
+      const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(`https://www.youtube.com/${ch.handle}`)}`, { credentials: 'include' });
       const resolved = await resolveRes.json();
       if (!resolveRes.ok) throw new Error(resolved.error);
       const res = await fetch('/api/subscriptions', {
@@ -198,7 +201,7 @@ export default function FollowingPage() {
           <input
             className="url-input channel-url-input"
             type="text"
-            placeholder="youtube.com/@CalNewportMedia"
+            placeholder="@CalNewportMedia or youtube.com/..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
@@ -220,7 +223,10 @@ export default function FollowingPage() {
 
       {/* Popular channels */}
       <div className="popular-channels">
-        <div className="popular-channels-heading">Popular channels</div>
+        <button className="popular-channels-toggle" onClick={() => setShowPopular((v) => !v)}>
+          Browse popular channels {showPopular ? '↑' : '↓'}
+        </button>
+        {showPopular && <>
         {POPULAR_CATEGORIES.map((cat) => {
           const catChannels = POPULAR_CHANNELS.filter((ch) => ch.category === cat);
           const followedIds = channels.map((c) => c.channel_name);
@@ -245,6 +251,7 @@ export default function FollowingPage() {
             </div>
           );
         })}
+        </>}
       </div>
 
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}

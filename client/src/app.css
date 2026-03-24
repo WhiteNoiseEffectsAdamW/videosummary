@@ -784,8 +784,9 @@ body {
 }
 .channel-name-input { max-width: 180px; }
 /* Popular channels */
-.popular-channels { margin: 28px 0 8px; }
-.popular-channels-heading { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px; }
+.popular-channels { margin: 20px 0 8px; }
+.popular-channels-toggle { background: none; border: none; color: #475569; font-size: 13px; cursor: pointer; padding: 0; }
+.popular-channels-toggle:hover { color: #94a3b8; }
 .popular-category { margin-bottom: 16px; }
 .popular-category-label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
 .popular-channel-list { display: flex; flex-wrap: wrap; gap: 8px; }
