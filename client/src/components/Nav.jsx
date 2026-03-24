@@ -26,9 +26,8 @@ const TABS = [
     to: '/',
     label: 'Summarize',
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.636 5.636l1.414 1.414M16.95 16.95l1.414 1.414M5.636 18.364l1.414-1.414M16.95 7.05l1.414-1.414"/>
-        <circle cx="12" cy="12" r="4"/>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2c0 5-3 8-10 10 7 2 10 5 10 10 0-5 3-8 10-10-7-2-10-5-10-10z"/>
       </svg>
     ),
   },
