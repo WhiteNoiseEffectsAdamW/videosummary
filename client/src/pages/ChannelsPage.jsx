@@ -1,6 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../AuthContext.jsx';
 
+const POPULAR_CHANNELS = [
+  { name: 'Fireship', handle: '@Fireship', category: 'Tech & AI' },
+  { name: 'Andrej Karpathy', handle: '@AndrejKarpathy', category: 'Tech & AI' },
+  { name: 'Lex Fridman', handle: '@lexfridman', category: 'Tech & AI' },
+  { name: 'MKBHD', handle: '@mkbhd', category: 'Tech & AI' },
+  { name: 'Veritasium', handle: '@veritasium', category: 'Science & Learning' },
+  { name: 'Kurzgesagt', handle: '@kurzgesagt', category: 'Science & Learning' },
+  { name: 'CGP Grey', handle: '@CGPGrey', category: 'Science & Learning' },
+  { name: '3Blue1Brown', handle: '@3blue1brown', category: 'Science & Learning' },
+  { name: 'Cal Newport', handle: '@CalNewportMedia', category: 'Productivity' },
+  { name: 'Ali Abdaal', handle: '@aliabdaal', category: 'Productivity' },
+  { name: 'Huberman Lab', handle: '@hubermanlab', category: 'Health' },
+  { name: 'Peter Attia', handle: '@PeterAttiaMD', category: 'Health' },
+  { name: 'Graham Stephan', handle: '@GrahamStephan', category: 'Finance & Business' },
+  { name: 'Y Combinator', handle: '@ycombinator', category: 'Finance & Business' },
+  { name: 'Diary of a CEO', handle: '@TheDiaryOfACEO', category: 'Finance & Business' },
+];
+
+const POPULAR_CATEGORIES = ['Tech & AI', 'Science & Learning', 'Productivity', 'Health', 'Finance & Business'];
+
 export default function FollowingPage() {
   const { user, setUser } = useAuth();
   const [channels, setChannels] = useState([]);
@@ -12,6 +32,7 @@ export default function FollowingPage() {
   const [togglingDigest, setTogglingDigest] = useState(false);
   const [scanStatus, setScanStatus] = useState(null);
   const [previewSending, setPreviewSending] = useState(false);
+  const [addingPopular, setAddingPopular] = useState(null);
 
   function showToast(msg) {
     setToast(msg);
@@ -120,6 +141,28 @@ export default function FollowingPage() {
     }
   }
 
+  async function handleAddPopular(ch) {
+    setAddingPopular(ch.handle);
+    try {
+      const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(`youtube.com/${ch.handle}`)}`, { credentials: 'include' });
+      const resolved = await resolveRes.json();
+      if (!resolveRes.ok) throw new Error(resolved.error);
+      const res = await fetch('/api/subscriptions', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelId: resolved.channelId, channelName: ch.name }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setChannels((prev) => [...prev, data]);
+      showToast(`✓ Added ${ch.name} to your digest`);
+    } catch (err) {
+      showToast(err.message || 'Could not add channel.');
+    } finally {
+      setAddingPopular(null);
+    }
+  }
+
   const digestOn = user?.emailDigest !== false;
 
   return (
@@ -174,6 +217,35 @@ export default function FollowingPage() {
             : `Scan complete — check My Videos for new summaries.`}
         </div>
       )}
+
+      {/* Popular channels */}
+      <div className="popular-channels">
+        <div className="popular-channels-heading">Popular channels</div>
+        {POPULAR_CATEGORIES.map((cat) => {
+          const catChannels = POPULAR_CHANNELS.filter((ch) => ch.category === cat);
+          const followedIds = channels.map((c) => c.channel_name);
+          const available = catChannels.filter((ch) => !followedIds.includes(ch.name));
+          if (available.length === 0) return null;
+          return (
+            <div key={cat} className="popular-category">
+              <div className="popular-category-label">{cat}</div>
+              <div className="popular-channel-list">
+                {available.map((ch) => (
+                  <button
+                    key={ch.handle}
+                    className="popular-channel-btn"
+                    onClick={() => handleAddPopular(ch)}
+                    disabled={addingPopular === ch.handle}
+                  >
+                    {ch.name}
+                    <span className="popular-channel-add">{addingPopular === ch.handle ? '…' : '+'}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}
       {channels.length === 0 && !loadError ? (
