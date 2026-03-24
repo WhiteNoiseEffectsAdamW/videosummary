@@ -206,14 +206,23 @@ export default function LandingPage() {
       {/* Hero — digest first */}
       <div className="landing-hero">
         <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
-        <p className="landing-sub">Too many channels, not enough time. Follow the ones you care about and get a morning digest of what's new — so you know what's worth watching before you open YouTube.</p>
+        <p className="landing-sub">Too many channels, not enough time. Follow the ones you care about and get a morning digest of what's new — so you know what's worth watching before you hit play.</p>
         <Link to="/register" className="btn-primary landing-hero-cta">Follow your first channel →</Link>
         <div className="landing-signin-hint">Already have an account? <Link to="/login" style={{ color: '#22d3ee' }}>Sign in</Link></div>
       </div>
 
-      {/* Email mockup — shows what the product delivers */}
-      <div className="landing-mockup-section">
-        <DigestEmailMockup data={demoData} />
+      {/* Digest section — two-column with copy + email mockup */}
+      <div className="digest-section">
+        <div className="digest-section-inner">
+          <div className="digest-copy">
+            <div className="digest-eyebrow">Daily Digest</div>
+            <h2 className="digest-heading">Here's what lands in your inbox.</h2>
+            <p className="digest-sub">One email, every morning: a summary of each new video from the channels you follow, with enough detail to decide if it's worth your time.</p>
+          </div>
+          <div className="digest-email-wrap">
+            <DigestEmailMockup data={demoData} />
+          </div>
+        </div>
       </div>
 
       {/* Summarizer — secondary, below the fold */}
@@ -253,10 +262,10 @@ export default function LandingPage() {
         )}
 
         {!result && !loading && demoData && (
-          <>
+          <div style={{ marginTop: 40 }}>
             <div className="landing-example-label">Example summary</div>
             <CuratedSummary data={demoData} />
-          </>
+          </div>
         )}
 
         {result && !loading && (
