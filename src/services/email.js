@@ -6,6 +6,8 @@ const FROM = `${FROM_NAME} <${FROM_ADDRESS}>`;
 const APP_URL = process.env.APP_URL || 'https://headwater.app';
 const DIVIDER = '────────────────────────────────';
 
+const cleanName = (name) => (name || '').replace(/^@/, '');
+
 function getResend() {
   if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY not set');
   return new Resend(process.env.RESEND_API_KEY);
@@ -19,7 +21,7 @@ function renderDigestText(summaries) {
   lines.push('');
 
   for (const s of summaries) {
-    const prefix = s.channel_name ? `${s.channel_name} — ` : '';
+    const prefix = cleanName(s.channel_name) ? `${cleanName(s.channel_name)} — ` : '';
     lines.push(`· ${prefix}${s.title || s.video_id}`);
   }
   lines.push('');
@@ -32,7 +34,7 @@ function renderDigestText(summaries) {
     const videoUrl = `https://www.youtube.com/watch?v=${s.video_id}`;
 
     lines.push(DIVIDER);
-    if (s.channel_name) lines.push(s.channel_name);
+    if (cleanName(s.channel_name)) lines.push(cleanName(s.channel_name));
     lines.push(s.title || s.video_id);
     lines.push('');
     if (tldr) lines.push(tldr);
@@ -75,7 +77,7 @@ function renderDigestHtml(summaries) {
               </a>
             </td>
             <td valign="top">
-              ${s.channel_name ? `<div style="font-size:11px;font-weight:500;color:#999;margin-bottom:4px;">${esc(s.channel_name)}</div>` : ''}
+              ${cleanName(s.channel_name) ? `<div style="font-size:11px;font-weight:500;color:#999;margin-bottom:4px;">${esc(cleanName(s.channel_name))}</div>` : ''}
               <div style="font-size:15px;font-weight:700;color:#111;line-height:1.35;margin-bottom:8px;">${esc(s.title || s.video_id)}</div>
               ${tldr ? `<div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">${esc(tldr)}</div>` : ''}
               ${quote ? `<div style="color:#888;font-size:12px;font-style:italic;line-height:1.5;margin-bottom:10px;">&ldquo;${esc(quote.text)}&rdquo;</div>` : ''}
