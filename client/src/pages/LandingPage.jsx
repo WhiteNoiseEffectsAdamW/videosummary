@@ -20,11 +20,12 @@ function useFadeIn() {
 }
 
 function DigestEmailMockup({ data }) {
-  const tldrFirst = data?.tldr
-    ? data.tldr.length <= 110
-      ? data.tldr
-      : data.tldr.slice(0, 110).replace(/\s+\S*$/, '') + '…'
-    : '';
+  const tldrFirst = (() => {
+    const tldr = data?.tldr;
+    if (!tldr) return '';
+    const sentences = tldr.match(/^.+?[.!?](?:\s+.+?[.!?])?/);
+    return sentences ? sentences[0] : tldr;
+  })();
   const videoUrl = `https://www.youtube.com/watch?v=${data?.videoId}`;
 
   return (
@@ -51,23 +52,29 @@ function DigestEmailMockup({ data }) {
                 <div className="digest-email-content">
                   {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
                   <div className="digest-email-title">{data.title}</div>
-                  {data.verdict && (
-                    <div className="digest-email-verdict" style={{ color: data.verdict.action === 'Watch' ? '#22d3ee' : data.verdict.action === 'Skip' ? '#334155' : '#8aa4c8' }}>
-                      {data.verdict.action === 'Watch segment' ? `Watch ${data.verdict.segment}` : data.verdict.action}
-                      {data.verdict.reason && <span className="digest-email-verdict-reason"> — {data.verdict.reason}</span>}
-                    </div>
+                  {(data.titleClaim?.reality || tldrFirst) && (
+                    <div className="digest-email-tldr">{data.titleClaim?.reality || tldrFirst}</div>
                   )}
-                  {tldrFirst && <div className="digest-email-tldr">{tldrFirst}</div>}
-                  <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
+                  {data.quotes?.[0] && <div className="digest-email-quote">&ldquo;{data.quotes[0].text}&rdquo;</div>}
+                  <div className="digest-email-links">
+                    <a href={`/s/${data.videoId}`} className="digest-email-fullsummary">Full summary →</a>
+                    <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
+                  </div>
                 </div>
               </div>
               <div className="digest-email-peek">
                 <div className="digest-email-divider" />
                 <div className="digest-email-row">
-                  <div className="digest-email-thumb-placeholder" />
+                  <img src="https://img.youtube.com/vi/3E7hkPZ-HTk/mqdefault.jpg" alt="Cal Newport TEDx" className="digest-email-thumb" onError={(e) => { e.target.style.display = 'none'; }} />
                   <div className="digest-email-content">
-                    <div className="digest-email-channel">Kurzgesagt</div>
-                    <div className="digest-email-title">Why You're Always Tired (And What To Do About It)</div>
+                    <div className="digest-email-channel">Cal Newport</div>
+                    <div className="digest-email-title">Quit Social Media. Your Career May Depend on It.</div>
+                    <div className="digest-email-tldr">Title delivers. Newport's argument is cold career math: the people around you are too distracted to compete with, if you're willing to opt out of what distracts them.</div>
+                    <div className="digest-email-quote">&ldquo;The ability to focus without distraction is becoming increasingly rare and increasingly valuable.&rdquo;</div>
+                    <div className="digest-email-links">
+                      <span className="digest-email-fullsummary">Full summary →</span>
+                      <span className="digest-email-watch">Watch →</span>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -771,6 +771,7 @@ body {
 
 .add-channel-form { margin-bottom: 32px; }
 .add-channel-inputs { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+.channel-search-input { width: 100%; margin-bottom: 12px; background: #0c111d !important; border-color: #1e293b !important; }
 .channel-url-input {
   background: #0c111d !important;
   border: 1px solid #1e293b !important;
@@ -985,7 +986,7 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-.landing-brand { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+.landing-brand { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 0.01em; }
 .landing-nav-right { display: flex; align-items: center; gap: 12px; }
 .landing-nav-link {
   font-size: 13px;
@@ -1148,6 +1149,9 @@ body {
   gap: 64px;
 }
 .digest-copy { flex: 1; }
+.digest-features { list-style: none; padding: 0; margin: 20px 0 0; display: flex; flex-direction: column; gap: 10px; }
+.digest-features li { font-size: 14px; color: #64748b; padding-left: 18px; position: relative; line-height: 1.4; }
+.digest-features li::before { content: '→'; position: absolute; left: 0; color: #22d3ee; }
 .digest-eyebrow { font-size: 11px; font-weight: 600; color: #22d3ee; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
 .digest-heading { font-size: 32px; font-weight: 700; color: #f1f5f9; margin: 0 0 14px; letter-spacing: -0.02em; }
 .digest-sub { font-size: 15px; color: #666; line-height: 1.7; margin: 0 0 24px; }
@@ -1208,10 +1212,14 @@ body {
 .digest-email-verdict { font-size: 11px; font-weight: 700; margin-bottom: 5px; }
 .digest-email-verdict-reason { font-weight: 400; color: #666; }
 .digest-email-tldr { font-size: 12px; color: #555; line-height: 1.5; margin-bottom: 8px; }
-.digest-email-watch { font-size: 12px; font-weight: 600; color: #111; text-decoration: none; }
+.digest-email-watch { font-size: 12px; color: #999; text-decoration: none; }
 .digest-email-watch:hover { text-decoration: underline; }
 .digest-email-divider { height: 1px; background: #ebebeb; margin: 0 16px; }
 .digest-email-row-muted { padding: 14px 0; opacity: 0.5; }
+.digest-email-quote { color: #888; font-size: 12px; font-style: italic; line-height: 1.5; margin-bottom: 10px; }
+.digest-email-links { display: flex; gap: 12px; align-items: center; }
+.digest-email-fullsummary { font-size: 12px; font-weight: 600; color: #111; text-decoration: none; }
+.digest-email-fullsummary:hover { text-decoration: underline; }
 .digest-email-peek { position: relative; mask-image: linear-gradient(to bottom, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); }
 .digest-email-thumb-placeholder { width: 90px; height: 60px; border-radius: 4px; background: #ddd; flex-shrink: 0; }
 .digest-placeholder-line { height: 10px; border-radius: 4px; background: #ddd; margin-bottom: 6px; }
