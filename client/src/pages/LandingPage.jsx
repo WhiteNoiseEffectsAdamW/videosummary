@@ -212,7 +212,7 @@ export default function LandingPage() {
       </div>
 
       {/* Digest section — two-column with copy + email mockup */}
-      <div className="digest-section">
+      <div className="digest-section fade-in-visible">
         <div className="digest-section-inner">
           <div className="digest-copy">
             <div className="digest-eyebrow">Daily Digest</div>
@@ -262,20 +262,20 @@ export default function LandingPage() {
         )}
 
         {!result && !loading && demoData && (
-          <div style={{ marginTop: 40 }}>
+          <div style={{ marginTop: 40, textAlign: 'left' }}>
             <div className="landing-example-label">Example summary</div>
             <CuratedSummary data={demoData} />
           </div>
         )}
 
         {result && !loading && (
-          <>
+          <div style={{ textAlign: 'left' }}>
             <CuratedSummary data={result} />
             <div className="landing-inline-cta">
               <Link to="/register" className="btn-primary">Get this every morning — follow your channels →</Link>
               <span className="landing-inline-cta-sub">Free. No credit card required.</span>
             </div>
-          </>
+          </div>
         )}
       </div>
 
