@@ -846,8 +846,12 @@ body {
   margin-bottom: 20px;
 }
 
-.filter-bar { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.filter-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter-dropdowns { display: flex; gap: 8px; margin-left: auto; }
+.filter-select { background: #0c111d; border: 1px solid #1e293b; color: #94a3b8; font-size: 13px; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+.filter-select:focus { outline: none; border-color: #22d3ee; }
+.filter-select option { background: #0c111d; }
 .filter-pill {
   font-size: 12px;
   padding: 4px 10px;

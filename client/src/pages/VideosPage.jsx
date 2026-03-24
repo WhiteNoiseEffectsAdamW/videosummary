@@ -44,6 +44,7 @@ export default function VideosPage() {
   const [emailToast, setEmailToast] = useState(null);
   const [filterVerdict, setFilterVerdict] = useState(null);
   const [filterCategory, setFilterCategory] = useState(null);
+  const [filterChannel, setFilterChannel] = useState(null);
 
   function loadVideos() {
     setError(false);
@@ -107,9 +108,11 @@ export default function VideosPage() {
 
       {videos.length > 0 && (() => {
         const allCategories = [...new Set(videos.flatMap((v) => v.categories || []))].sort();
+        const allChannels = [...new Set(videos.map((v) => v.channelName).filter(Boolean))].sort();
         const filtered = videos.filter((v) => {
           if (filterVerdict && v.verdict?.action !== filterVerdict) return false;
           if (filterCategory && !(v.categories || []).includes(filterCategory)) return false;
+          if (filterChannel && v.channelName !== filterChannel) return false;
           return true;
         });
         return (
@@ -126,19 +129,20 @@ export default function VideosPage() {
                   </button>
                 ))}
               </div>
-              {allCategories.length > 0 && (
-                <div className="filter-group">
-                  {allCategories.map((c) => (
-                    <button
-                      key={c}
-                      className={`filter-pill${filterCategory === c ? ' filter-pill-active' : ''}`}
-                      onClick={() => setFilterCategory(filterCategory === c ? null : c)}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <div className="filter-dropdowns">
+                {allChannels.length > 0 && (
+                  <select className="filter-select" value={filterChannel || ''} onChange={(e) => setFilterChannel(e.target.value || null)}>
+                    <option value="">All channels</option>
+                    {allChannels.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                )}
+                {allCategories.length > 0 && (
+                  <select className="filter-select" value={filterCategory || ''} onChange={(e) => setFilterCategory(e.target.value || null)}>
+                    <option value="">All categories</option>
+                    {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                )}
+              </div>
             </div>
             {filtered.length === 0 ? (
               <p className="empty-state" style={{ marginTop: 24 }}>No videos match this filter.</p>
