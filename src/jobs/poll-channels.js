@@ -30,23 +30,26 @@ async function fetchChannelVideos(channelId) {
   return Array.isArray(entries) ? entries : [entries];
 }
 
-// Summarize a video if not already cached
-async function processVideo(videoId, channelId, channelName, title) {
-  const cached = await summaryModel.findByVideoId(videoId);
-  if (cached) return;
-
-  console.log(`[poll] summarizing ${videoId} — "${title}"`);
-  const { text, durationSeconds } = await getTranscript(videoId);
-  const summary = await summarize(text, durationSeconds, title);
-  await summaryModel.create({
-    videoId,
-    channelId,
-    channelName: channelName || null,
-    title: title || summary.tldr?.slice(0, 100) || videoId,
-    summary,
-    transcriptLength: text.length,
-  });
-  console.log(`[poll] done ${videoId}`);
+// Summarize a video if not already cached, then link to users
+async function processVideo(videoId, channelId, channelName, title, userIds = []) {
+  let cached = await summaryModel.findByVideoId(videoId);
+  if (!cached) {
+    console.log(`[poll] summarizing ${videoId} — "${title}"`);
+    const { text, durationSeconds } = await getTranscript(videoId);
+    const summary = await summarize(text, durationSeconds, title);
+    cached = await summaryModel.create({
+      videoId,
+      channelId,
+      channelName: channelName || null,
+      title: title || summary.tldr?.slice(0, 100) || videoId,
+      summary,
+      transcriptLength: text.length,
+    });
+    console.log(`[poll] done ${videoId}`);
+  }
+  for (const userId of userIds) {
+    await summaryModel.upsertUserSave(userId, videoId);
+  }
 }
 
 // Main poll — checks all followed channels for videos in the last 25h
@@ -67,6 +70,8 @@ async function pollAllChannels() {
   for (const row of rows) {
     const { channel_id: channelId, channel_name: channelName } = row;
     try {
+      const subscribers = await db('subscriptions').where({ channel_id: channelId, active: true }).select('user_id');
+      const userIds = subscribers.map((s) => s.user_id);
       const videos = await fetchChannelVideos(channelId);
       const recent = videos.filter((v) => new Date(v.published) > cutoff);
       console.log(`[poll] ${channelId}: ${recent.length} new video(s)`);
@@ -76,7 +81,7 @@ async function pollAllChannels() {
         const title = typeof video.title === 'string' ? video.title : videoId;
         try {
           if (!checkPollCap()) { console.warn('[poll] daily API cap reached, stopping'); return; }
-          await processVideo(videoId, channelId, channelName, title);
+          await processVideo(videoId, channelId, channelName, title, userIds);
         } catch (err) {
           console.error(`[poll] failed to process ${videoId}:`, err.message);
         }
@@ -90,8 +95,9 @@ async function pollAllChannels() {
 }
 
 // Scan a single channel for recent videos — used on first follow
-async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60 * 1000) {
+async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60 * 1000, userId = null) {
   const cutoff = new Date(Date.now() - lookbackMs);
+  const userIds = userId ? [userId] : [];
   try {
     const videos = await fetchChannelVideos(channelId);
     const recent = videos.filter((v) => new Date(v.published) > cutoff);
@@ -100,7 +106,7 @@ async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60
       const videoId = video['yt:videoId'];
       const title = typeof video.title === 'string' ? video.title : videoId;
       try {
-        await processVideo(videoId, channelId, channelName, title);
+        await processVideo(videoId, channelId, channelName, title, userIds);
       } catch (err) {
         console.error(`[scan] failed ${videoId}:`, err.message);
       }

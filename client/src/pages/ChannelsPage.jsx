@@ -221,8 +221,8 @@ export default function FollowingPage() {
       {scanStatus && (
         <div className="scan-status">
           {scanStatus.state === 'scanning'
-            ? `Scanning ${scanStatus.name} for recent videos…`
-            : `Scan complete — check My Videos for new summaries.`}
+            ? `Distilling recent videos from ${scanStatus.name}…`
+            : `Done — check My Videos for new summaries.`}
         </div>
       )}
 
