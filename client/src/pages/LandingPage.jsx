@@ -61,22 +61,14 @@ function DigestEmailMockup({ data }) {
                   <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
                 </div>
               </div>
-              <div className="digest-email-divider" />
-              <div className="digest-email-row digest-email-row-muted">
-                <div className="digest-email-thumb-placeholder" />
-                <div className="digest-email-content">
-                  <div className="digest-email-channel digest-placeholder-line" style={{ width: 80 }} />
-                  <div className="digest-placeholder-line" style={{ width: '90%' }} />
-                  <div className="digest-placeholder-line" style={{ width: '70%', marginTop: 4 }} />
-                </div>
-              </div>
-              <div className="digest-email-divider" />
-              <div className="digest-email-row digest-email-row-muted">
-                <div className="digest-email-thumb-placeholder" />
-                <div className="digest-email-content">
-                  <div className="digest-email-channel digest-placeholder-line" style={{ width: 64 }} />
-                  <div className="digest-placeholder-line" style={{ width: '80%' }} />
-                  <div className="digest-placeholder-line" style={{ width: '55%', marginTop: 4 }} />
+              <div className="digest-email-peek">
+                <div className="digest-email-divider" />
+                <div className="digest-email-row">
+                  <div className="digest-email-thumb-placeholder" />
+                  <div className="digest-email-content">
+                    <div className="digest-email-channel">Kurzgesagt</div>
+                    <div className="digest-email-title">Why You're Always Tired (And What To Do About It)</div>
+                  </div>
                 </div>
               </div>
             </div>

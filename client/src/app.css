@@ -1212,6 +1212,7 @@ body {
 .digest-email-watch:hover { text-decoration: underline; }
 .digest-email-divider { height: 1px; background: #ebebeb; margin: 0 16px; }
 .digest-email-row-muted { padding: 14px 0; opacity: 0.5; }
+.digest-email-peek { position: relative; mask-image: linear-gradient(to bottom, black 0%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%); }
 .digest-email-thumb-placeholder { width: 90px; height: 60px; border-radius: 4px; background: #ddd; flex-shrink: 0; }
 .digest-placeholder-line { height: 10px; border-radius: 4px; background: #ddd; margin-bottom: 6px; }
 
