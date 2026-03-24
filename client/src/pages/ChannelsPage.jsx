@@ -159,6 +159,11 @@ export default function FollowingPage() {
       if (!res.ok) throw new Error(data.error);
       setChannels((prev) => [...prev, data]);
       showToast(`✓ Added ${ch.name} to your digest`);
+      setScanStatus({ name: ch.name, state: 'scanning' });
+      fetch('/api/videos/scan', { method: 'POST', credentials: 'include' }).then(() => {
+        setScanStatus((s) => s ? { ...s, state: 'done' } : null);
+        setTimeout(() => setScanStatus(null), 5000);
+      }).catch(() => setScanStatus(null));
     } catch (err) {
       showToast(err.message || 'Could not add channel.');
     } finally {
