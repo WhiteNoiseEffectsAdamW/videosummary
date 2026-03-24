@@ -83,7 +83,7 @@ function SummarizerPage() {
     <div className="page">
       <header className="hero">
         <h1>Upstream of<br /><span>the algorithm.</span></h1>
-        <p>Too many channels, not enough time. Get a morning digest of what's new across all of them — and paste any video for a quick summary before you commit to watching.</p>
+        <p>Paste any video link for an instant summary.</p>
         <div className="form-wrap">
           <form className="form-row" onSubmit={handleSubmit}>
             <input

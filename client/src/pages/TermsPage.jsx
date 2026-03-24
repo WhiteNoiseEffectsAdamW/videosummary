@@ -42,7 +42,7 @@ export default function TermsPage() {
         <p>We may update these terms. Continued use of the service after changes constitutes acceptance.</p>
 
         <h2>Contact</h2>
-        <p>Questions? Email <a href="mailto:hello@headwater.app">hello@headwater.app</a>.</p>
+        <p>Questions? Email <a href="mailto:hello@headwaterapp.com">hello@headwaterapp.com</a>.</p>
       </div>
     </div>
   );
