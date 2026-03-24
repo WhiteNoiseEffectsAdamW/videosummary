@@ -771,7 +771,6 @@ body {
 
 .add-channel-form { margin-bottom: 32px; }
 .add-channel-inputs { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
-.channel-search-input { width: 100%; margin-bottom: 12px; background: #0c111d !important; border-color: #1e293b !important; }
 .channel-url-input {
   background: #0c111d !important;
   border: 1px solid #1e293b !important;

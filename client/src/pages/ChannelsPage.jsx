@@ -121,10 +121,6 @@ export default function FollowingPage() {
   }
 
   const digestOn = user?.emailDigest !== false;
-  const [search, setSearch] = useState('');
-  const filtered = search.trim()
-    ? channels.filter((c) => (c.channel_name || c.channel_id).toLowerCase().includes(search.toLowerCase()))
-    : channels;
 
   return (
     <div className="page-inner">
@@ -180,22 +176,11 @@ export default function FollowingPage() {
       )}
 
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}
-      {channels.length > 0 && (
-        <input
-          className="url-input channel-search-input"
-          type="text"
-          placeholder="Search channels…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      )}
       {channels.length === 0 && !loadError ? (
         <p className="empty-state">No channels yet — add one above to get started.</p>
-      ) : filtered.length === 0 ? (
-        <p className="empty-state">No channels match "{search}".</p>
       ) : (
         <ul className="channel-list">
-          {filtered.map((c) => {
+          {channels.map((c) => {
             const digestOn = c.digest !== false;
             return (
               <li key={c.id} className="channel-item">
