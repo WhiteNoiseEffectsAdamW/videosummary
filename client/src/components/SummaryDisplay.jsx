@@ -64,7 +64,8 @@ export default function SummaryDisplay({ data }) {
     const action = verdict.action === 'Watch the first X minutes' && verdict.segment
       ? `Watch the first ${verdict.segment}`
       : verdict.action;
-    return verdict.condition ? `${action} ${verdict.condition}` : action;
+    const detail = verdict.condition || verdict.reason || null;
+    return detail ? `${action} ${detail}` : action;
   }
 
   return (
