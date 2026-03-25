@@ -190,7 +190,7 @@ export default function FollowingPage() {
       <div className="digest-toggle-row">
         <div className="digest-toggle-info">
           <span className="digest-toggle-label">Daily Digest</span>
-          <span className="digest-toggle-sub">New videos from your channels, every morning at 7am UTC</span>
+          <span className="digest-toggle-sub">New videos from your channels, every morning at 7am ET</span>
         </div>
         <button
           className={`toggle-btn${digestOn ? ' toggle-on' : ''}`}

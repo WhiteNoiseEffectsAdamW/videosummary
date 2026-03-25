@@ -50,9 +50,9 @@ async function sendAllDigests() {
 }
 
 function startDigestJob() {
-  // Run at 7am UTC every day
-  cron.schedule('0 7 * * *', sendAllDigests);
-  console.log('[digest] scheduled — runs daily at 7am UTC');
+  // Run at 11am UTC every day (7am ET / 4am PT)
+  cron.schedule('0 11 * * *', sendAllDigests);
+  console.log('[digest] scheduled — runs daily at 11am UTC');
 }
 
 module.exports = { startDigestJob, sendAllDigests };
