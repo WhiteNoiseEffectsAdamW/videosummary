@@ -90,7 +90,6 @@ export default function Nav() {
 
   return (
     <>
-      <VerifyBanner />
       {/* Desktop top nav */}
       <nav className="nav">
         <span className="nav-brand">Headwater</span>

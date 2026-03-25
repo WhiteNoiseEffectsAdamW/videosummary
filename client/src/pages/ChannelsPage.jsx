@@ -1,25 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../AuthContext.jsx';
-
-const POPULAR_CHANNELS = [
-  { name: 'Fireship', handle: '@Fireship', category: 'Tech & AI' },
-  { name: 'Andrej Karpathy', handle: '@AndrejKarpathy', category: 'Tech & AI' },
-  { name: 'Lex Fridman', handle: '@lexfridman', category: 'Tech & AI' },
-  { name: 'MKBHD', handle: '@mkbhd', category: 'Tech & AI' },
-  { name: 'Veritasium', handle: '@veritasium', category: 'Science & Learning' },
-  { name: 'Kurzgesagt', handle: '@kurzgesagt', category: 'Science & Learning' },
-  { name: 'CGP Grey', handle: '@CGPGrey', category: 'Science & Learning' },
-  { name: '3Blue1Brown', handle: '@3blue1brown', category: 'Science & Learning' },
-  { name: 'Cal Newport', handle: '@CalNewportMedia', category: 'Productivity' },
-  { name: 'Ali Abdaal', handle: '@aliabdaal', category: 'Productivity' },
-  { name: 'Huberman Lab', handle: '@hubermanlab', category: 'Health' },
-  { name: 'Peter Attia', handle: '@PeterAttiaMD', category: 'Health' },
-  { name: 'Graham Stephan', handle: '@GrahamStephan', category: 'Finance & Business' },
-  { name: 'Y Combinator', handle: '@ycombinator', category: 'Finance & Business' },
-  { name: 'Diary of a CEO', handle: '@TheDiaryOfACEO', category: 'Finance & Business' },
-];
-
-const POPULAR_CATEGORIES = ['Tech & AI', 'Science & Learning', 'Productivity', 'Health', 'Finance & Business'];
+import PopularChannelSelect from '../components/PopularChannelSelect.jsx';
 
 export default function FollowingPage() {
   const { user, setUser } = useAuth();
@@ -33,7 +14,6 @@ export default function FollowingPage() {
   const [scanStatus, setScanStatus] = useState(null);
   const [previewSending, setPreviewSending] = useState(false);
   const [addingPopular, setAddingPopular] = useState(null);
-  const [showPopular, setShowPopular] = useState(false);
 
   function showToast(msg) {
     setToast(msg);
@@ -234,43 +214,15 @@ export default function FollowingPage() {
         </div>
       )}
 
-      {/* Popular channels */}
-      <div className="popular-channels">
-        <button className="popular-channels-toggle" onClick={() => setShowPopular((v) => !v)}>
-          <span>Browse popular channels</span>
-          <span style={{ fontSize: 11, opacity: 0.6 }}>{showPopular ? '▲' : '▼'}</span>
-        </button>
-        {showPopular && <>
-        {POPULAR_CATEGORIES.map((cat) => {
-          const catChannels = POPULAR_CHANNELS.filter((ch) => ch.category === cat);
-          const followedIds = channels.map((c) => c.channel_name);
-          const available = catChannels.filter((ch) => !followedIds.includes(ch.name));
-          if (available.length === 0) return null;
-          return (
-            <div key={cat} className="popular-category">
-              <div className="popular-category-label">{cat}</div>
-              <div className="popular-channel-list">
-                {available.map((ch) => (
-                  <button
-                    key={ch.handle}
-                    className="popular-channel-btn"
-                    onClick={() => handleAddPopular(ch)}
-                    disabled={addingPopular === ch.handle}
-                  >
-                    {ch.name}
-                    <span className="popular-channel-add">{addingPopular === ch.handle ? '…' : '+'}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-        </>}
-      </div>
+      <PopularChannelSelect
+        followedNames={channels.map((c) => c.channel_name)}
+        onAdd={handleAddPopular}
+        disabled={!!addingPopular}
+      />
 
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}
       {channels.length === 0 && !loadError ? (
-        <p className="empty-state">No channels yet — add one above to get started.</p>
+        <p className="empty-state">Add your first channel and we'll send you a digest tomorrow morning.</p>
       ) : (
         <ul className="channel-list">
           {channels.map((c) => {

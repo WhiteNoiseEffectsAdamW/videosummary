@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
+import PopularChannelSelect from '../components/PopularChannelSelect.jsx';
 import SummaryDisplay from '../components/SummaryDisplay.jsx';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
 
@@ -20,6 +21,7 @@ export default function WelcomePage() {
   const [channelLoading, setChannelLoading] = useState(false);
   const [channelError, setChannelError] = useState(null);
   const [followed, setFollowed] = useState([]);
+  const [addingPopular, setAddingPopular] = useState(null);
 
   function finish() {
     localStorage.setItem('onboarded', '1');
@@ -45,6 +47,27 @@ export default function WelcomePage() {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleAddPopular(ch) {
+    setAddingPopular(ch.handle);
+    try {
+      const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(`https://www.youtube.com/${ch.handle}`)}`, { credentials: 'include' });
+      const resolved = await resolveRes.json();
+      if (!resolveRes.ok) throw new Error(resolved.error);
+      const res = await fetch('/api/subscriptions', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelId: resolved.channelId, channelName: ch.name }),
+      });
+      const data = await res.json();
+      if (!res.ok && res.status !== 409) throw new Error(data.error);
+      setFollowed((prev) => prev.includes(ch.name) ? prev : [...prev, ch.name]);
+    } catch {
+      // silently ignore — not worth blocking onboarding
+    } finally {
+      setAddingPopular(null);
     }
   }
 
@@ -140,19 +163,24 @@ export default function WelcomePage() {
               <p>We'll email you summaries of new videos every morning — no algorithm, no noise.</p>
             </div>
 
+            <PopularChannelSelect
+              followedNames={followed}
+              onAdd={handleAddPopular}
+              disabled={!!addingPopular}
+            />
+
             <form className="add-channel-form" onSubmit={handleFollow}>
               <div className="add-channel-inputs">
                 <input
                   className="url-input channel-url-input"
                   type="text"
-                  placeholder="youtube.com/@CalNewportMedia"
+                  placeholder="@CalNewportMedia or youtube.com/..."
                   value={channelInput}
                   onChange={(e) => setChannelInput(e.target.value)}
                   disabled={channelLoading}
-                  autoFocus
                 />
                 <button className="btn-summarize" type="submit" disabled={channelLoading}>
-                  {channelLoading ? 'Adding…' : 'Add to digest'}
+                  {channelLoading ? 'Adding…' : 'Add'}
                 </button>
               </div>
               {channelError && <div className="auth-error" style={{ marginTop: 8 }}>{channelError}</div>}
