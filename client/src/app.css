@@ -330,6 +330,8 @@ body {
 .btn-follow:hover:not(:disabled) { background: rgba(34,211,238,0.1); border-color: #22d3ee; }
 .btn-follow:disabled { opacity: 0.6; cursor: default; }
 .btn-follow-done { color: #22c55e; border-color: rgba(34,197,94,0.35); }
+.btn-follow-wrap { display: flex; flex-direction: column; gap: 4px; }
+.btn-follow-sub { font-size: 11px; color: #475569; }
 .summary-header-actions { display: flex; align-items: center; gap: 10px; }
 .btn-share {
   font-size: 12px;
@@ -377,6 +379,7 @@ body {
   text-decoration: none;
 }
 .summary-disclaimer a:hover { color: #94a3b8; }
+.summary-share-row { margin-top: 24px; padding-bottom: 40px; }
 
 /* Title vs Reality */
 .card-title-claim { border-left: 2px solid rgba(34,211,238,0.4); }
@@ -1429,7 +1432,9 @@ body {
   padding: 20px 32px;
   border-bottom: 1px solid #0f172a;
 }
+.public-brand-group { display: flex; flex-direction: column; gap: 2px; }
 .public-brand { font-size: 16px; font-weight: 700; color: #e2e8f0; text-decoration: none; }
+.public-brand-sub { font-size: 11px; color: #475569; }
 .public-cta { font-size: 14px; }
 .public-content { max-width: 720px; margin: 0 auto; padding: 40px 24px 80px; }
 .public-content-with-bar { padding-bottom: 100px; }

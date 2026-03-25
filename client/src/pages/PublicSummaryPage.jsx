@@ -53,7 +53,10 @@ export default function PublicSummaryPage() {
     <div className="public-summary-page">
       {/* Minimal header */}
       <header className="public-header">
-        <Link to="/" className="public-brand">Headwater</Link>
+        <div className="public-brand-group">
+          <Link to="/" className="public-brand">Headwater</Link>
+          {!user && <span className="public-brand-sub">Know what's worth watching before you click.</span>}
+        </div>
         {user
           ? <Link to="/videos" className="btn-primary public-cta">← My Videos</Link>
           : <Link to="/register" className="btn-primary public-cta">Try it free</Link>}
@@ -75,7 +78,7 @@ export default function PublicSummaryPage() {
       {/* Sticky signup bar — only for logged-out users */}
       {!user && (
         <div className="public-sticky-bar">
-          <span className="public-sticky-tagline">Upstream of the algorithm.</span>
+          <span className="public-sticky-tagline">Follow your channels. Get summaries like this every morning.</span>
           <Link to="/register" className="btn-primary public-sticky-cta">Try Headwater free →</Link>
         </div>
       )}

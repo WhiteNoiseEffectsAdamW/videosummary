@@ -1,4 +1,6 @@
 import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext.jsx';
 
 function CopyQuoteButton({ text, timestamp }) {
   const [copied, setCopied] = useState(false);
@@ -33,6 +35,7 @@ function ytUrl(videoId, ts, leadSeconds = 0) {
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
   const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName } = data;
+  const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
 
@@ -97,19 +100,23 @@ export default function SummaryDisplay({ data }) {
         <div className="summary-channel-group">
           {channelName && <span className="summary-channel">{channelName}</span>}
           {channelName && (
-            <button
-              className={`btn-follow${followState === 'following' ? ' btn-follow-done' : ''}`}
-              onClick={handleFollow}
-              disabled={followState !== 'idle'}
-            >
-              {followState === 'loading' ? 'Adding…' : followState === 'following' ? '✓ Added to digest' : followState === 'error' ? 'Error' : '+ Add to digest'}
-            </button>
+            <div className="btn-follow-wrap">
+              {user ? (
+                <button
+                  className={`btn-follow${followState === 'following' ? ' btn-follow-done' : ''}`}
+                  onClick={handleFollow}
+                  disabled={followState !== 'idle'}
+                >
+                  {followState === 'loading' ? 'Following…' : followState === 'following' ? '✓ Following' : followState === 'error' ? 'Error' : 'Follow this channel'}
+                </button>
+              ) : (
+                <Link to="/register" className="btn-follow">Follow this channel</Link>
+              )}
+              {followState === 'idle' && <span className="btn-follow-sub">Get new video summaries by email</span>}
+            </div>
           )}
         </div>
         <div className="summary-header-actions">
-          <button className="btn-share" onClick={handleShare}>
-            {copied ? 'Copied!' : 'Send to a friend'}
-          </button>
           <a
             className="btn-watch-yt"
             href={`https://www.youtube.com/watch?v=${videoId}`}
@@ -203,6 +210,13 @@ export default function SummaryDisplay({ data }) {
         Summary is AI-generated and may be incomplete or inaccurate. Watch the full video for complete context.{' '}
         <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
       </p>
+
+      {/* Share — after content, when user has decided it's worth sharing */}
+      <div className="summary-share-row">
+        <button className="btn-share" onClick={handleShare}>
+          {copied ? 'Copied!' : 'Send to a friend'}
+        </button>
+      </div>
     </div>
   );
 }
