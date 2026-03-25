@@ -170,10 +170,6 @@ async function sendNudge(toEmail) {
     subject: 'Finish setting up Headwater',
     html,
     text,
-    headers: {
-      'List-Unsubscribe': `<${followUrl}>`,
-      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
-    },
   });
 }
 
