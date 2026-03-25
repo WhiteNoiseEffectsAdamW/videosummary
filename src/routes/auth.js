@@ -211,4 +211,30 @@ router.post('/preview-nudge', async (req, res, next) => {
   }
 });
 
+// POST /api/auth/admin-nudge-all — one-time nudge blast (admin only)
+router.post('/admin-nudge-all', async (req, res, next) => {
+  if (!req.user || req.user.email !== 'whitear2@gmail.com') return res.status(403).json({ error: 'Forbidden.' });
+  try {
+    const users = await db('users')
+      .whereNotIn('id', db('subscriptions').select('user_id').whereNotNull('user_id'))
+      .whereNotIn('id', db('user_saves').select('user_id').where('dismissed', false))
+      .select('id', 'email');
+
+    const results = [];
+    for (const user of users) {
+      try {
+        const { sendNudge } = require('../services/email');
+        await sendNudge(user.email);
+        await db('users').where('id', user.id).update({ nudge_sent_at: new Date() });
+        results.push({ email: user.email, ok: true });
+      } catch (err) {
+        results.push({ email: user.email, ok: false, error: err.message });
+      }
+    }
+    res.json({ sent: results.length, results });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
