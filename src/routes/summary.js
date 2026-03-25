@@ -48,7 +48,7 @@ router.get('/', anonLimit, async (req, res, next) => {
     const videoId = extractVideoId(url);
     if (!videoId) return res.status(400).json({ error: 'Could not parse a YouTube video ID from that URL.' });
 
-    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     const userId = req.user?.id || null;
 
     // Per-user daily cap for authenticated users
@@ -94,7 +94,7 @@ router.get('/:videoId', async (req, res, next) => {
     const { videoId } = req.params;
     const cached = await summaryModel.findByVideoId(videoId);
     if (!cached) return res.status(404).json({ error: 'Summary not found.' });
-    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+    const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, ...cached.summary });
   } catch (err) {
     next(err);

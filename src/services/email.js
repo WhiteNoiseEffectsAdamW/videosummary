@@ -62,7 +62,7 @@ function renderDigestHtml(summaries) {
     const data = JSON.parse(s.summary_json);
     const { tldr, quotes = [] } = data;
     const videoUrl = `https://www.youtube.com/watch?v=${s.video_id}`;
-    const thumb = `https://img.youtube.com/vi/${s.video_id}/maxresdefault.jpg`;
+    const thumb = `https://img.youtube.com/vi/${s.video_id}/hqdefault.jpg`;
     const quote = quotes[0];
     const divider = i > 0 ? `<div style="border-top:1px solid #ebebeb;margin:36px 0;"></div>` : '';
 

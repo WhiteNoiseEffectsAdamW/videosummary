@@ -64,7 +64,13 @@ export default function SummaryDisplay({ data }) {
               className="thumbnail"
               src={thumbnailUrl}
               alt="Video thumbnail"
-              onError={(e) => { e.target.closest('.thumbnail-wrap').style.display = 'none'; }}
+              onError={(e) => {
+                if (e.target.src.includes('maxresdefault')) {
+                  e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
+                } else {
+                  e.target.closest('.thumbnail-wrap').style.display = 'none';
+                }
+              }}
             />
           </a>
         </div>
