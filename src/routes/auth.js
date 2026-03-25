@@ -56,6 +56,13 @@ router.post('/register', registerLimiter, async (req, res, next) => {
     // Send verification email (non-blocking — don't fail registration if email fails)
     issueVerification(user).catch((err) => console.error('[verify] Failed to send verification email:', err));
 
+    // Notify admin of new signup (non-blocking)
+    if (process.env.RESEND_API_KEY && process.env.ADMIN_EMAIL) {
+      const { sendAdminNotify } = require('../services/email');
+      sendAdminNotify(`New signup: ${email}`, `New Headwater account created.\n\nEmail: ${email}\nName: ${name || '(not provided)'}\nDigest opted in: ${emailDigest ? 'yes' : 'no'}\n\nTotal users: ${userCount + 1}`)
+        .catch((err) => console.error('[signup-notify] Failed:', err));
+    }
+
     req.login(user, (err) => {
       if (err) return next(err);
       res.status(201).json(serializeUser(user));

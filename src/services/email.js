@@ -205,4 +205,13 @@ async function sendVerificationEmail(toEmail, verifyUrl) {
   });
 }
 
-module.exports = { sendDigest, sendNudge, sendPasswordReset, sendVerificationEmail };
+async function sendAdminNotify(subject, text) {
+  await getResend().emails.send({
+    from: FROM,
+    to: process.env.ADMIN_EMAIL,
+    subject,
+    text,
+  });
+}
+
+module.exports = { sendDigest, sendNudge, sendPasswordReset, sendVerificationEmail, sendAdminNotify };
