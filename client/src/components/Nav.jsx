@@ -166,14 +166,14 @@ export default function Nav() {
             </Link>
           );
         })}
-        <button className="mobile-tab mobile-tab-logout" onClick={handleLogout}>
+        <Link to="/account" className={`mobile-tab${pathname === '/account' ? ' active' : ''}`}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" y1="12" x2="9" y2="12"/>
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="9" r="3"/>
+            <path d="M7 19.5c.8-2.5 2.7-4 5-4s4.2 1.5 5 4"/>
           </svg>
-          <span>Log out</span>
-        </button>
+          <span>Account</span>
+        </Link>
       </nav>
     </>
   );
