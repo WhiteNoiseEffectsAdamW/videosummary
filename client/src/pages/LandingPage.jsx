@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const DEMO_VIDEO_ID = 'UclrVWafRAI';
-const VERDICT_COLOR = { Watch: '#22d3ee', Skip: '#334155', 'Watch segment': '#8aa4c8' };
 
 function useFadeIn() {
   const ref = useRef(null);
@@ -87,7 +86,7 @@ function DigestEmailMockup({ data }) {
 }
 
 function CuratedSummary({ data }) {
-  const { titleClaim, tldr, verdict, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
+  const { titleClaim, tldr, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
   const quote = quotes[0];
 
   return (
@@ -96,7 +95,13 @@ function CuratedSummary({ data }) {
         <div className="landing-demo-left">
           <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" className="landing-thumb-link">
             <img src={thumbnailUrl} alt={title || ''} className="landing-thumb"
-              onError={(e) => { e.target.closest('.landing-thumb-link').style.display = 'none'; }} />
+              onError={(e) => {
+                if (e.target.src.includes('hqdefault')) {
+                  e.target.closest('.landing-thumb-link').style.display = 'none';
+                } else {
+                  e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
+                }
+              }} />
           </a>
           {(channelName || title) && (
             <div className="landing-video-ref">
@@ -135,15 +140,6 @@ function CuratedSummary({ data }) {
           <p className="tldr-text">{tldr}</p>
         </div>
       )}
-
-      {verdict && (
-        <div className="landing-verdict">
-          <span className="landing-verdict-action" style={{ color: VERDICT_COLOR[verdict.action] || '#aaa' }}>
-            {verdict.action === 'Watch segment' ? `Watch ${verdict.segment}` : verdict.action}
-          </span>
-          <span className="landing-verdict-reason">{verdict.reason}</span>
-        </div>
-      )}
     </div>
   );
 }
@@ -156,7 +152,6 @@ export default function LandingPage() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [limitReached, setLimitReached] = useState(false);
-  const [remaining, setRemaining] = useState(null);
 
   useEffect(() => {
     fetch(`/api/summary/${DEMO_VIDEO_ID}`)
@@ -181,8 +176,6 @@ export default function LandingPage() {
       const json = await res.json();
       if (json.limitReached) { setLimitReached(true); return; }
       if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
-      const rem = res.headers.get('RateLimit-Remaining');
-      if (rem !== null) setRemaining(Number(rem));
       setResult(json);
     } catch (err) {
       setError(err.message);
@@ -202,15 +195,81 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero — digest first */}
+      {/* Hero — lean, let the demo sell it */}
       <div className="landing-hero">
         <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
-        <p className="landing-sub">Too many channels, not enough time. Follow the ones you care about and get a morning digest of what's new — so you know what's worth watching before you hit play.</p>
-        <Link to="/register" className="btn-primary landing-hero-cta">Follow your first channel →</Link>
-        <div className="landing-signin-hint">Already have an account? <Link to="/login" style={{ color: '#22d3ee' }}>Sign in</Link></div>
+        <p className="landing-sub">Know what's worth watching before you decide to click.</p>
       </div>
 
-      {/* Digest section — two-column with copy + email mockup */}
+      {/* Summarizer — demo first, input below */}
+      <div className="landing-summarizer-section">
+
+        {/* Demo summary — visible immediately, no URL required */}
+        {!result && !loading && demoData && (
+          <div style={{ textAlign: 'left', marginBottom: 32 }}>
+            <div className="landing-example-label">Here's what Headwater does</div>
+            <CuratedSummary data={demoData} />
+          </div>
+        )}
+
+        {/* User's result */}
+        {result && !loading && (
+          <div style={{ textAlign: 'left' }}>
+            <CuratedSummary data={result} />
+            <div className="landing-digest-pitch">
+              <div className="landing-digest-pitch-headline">Upstream of the algorithm.</div>
+              <p className="landing-digest-pitch-body">Follow the channels you care about and get a morning digest of what's new — title, summary, standout quote. Set it up once and know what's worth your time every morning.</p>
+              <Link to="/register" className="btn-primary">Follow your first channel →</Link>
+              <span className="landing-inline-cta-sub">Free. No credit card required.</span>
+            </div>
+          </div>
+        )}
+
+        {/* Loader */}
+        {loading && (
+          <div className="loader" style={{ paddingTop: 32, paddingBottom: 32 }}>
+            <div className="spinner" />
+            <span>Reading the source.</span>
+            <span className="loader-hint">Pulling the transcript and distilling what matters — usually about 15 seconds.</span>
+          </div>
+        )}
+
+        {/* Input — try your own */}
+        {!result && (
+          <>
+            <div className="landing-try-label">Try it with your own video</div>
+            <form className="landing-input-row" onSubmit={handleSubmit}>
+              <input
+                className="url-input landing-url-input"
+                type="text"
+                placeholder="https://www.youtube.com/watch?v=..."
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                disabled={loading}
+              />
+              <button className="btn-primary landing-submit-btn" type="submit" disabled={loading}>
+                {loading ? 'Summarizing…' : 'Summarize'}
+              </button>
+            </form>
+
+            {error && <div className="landing-input-error">{error}</div>}
+
+            {limitReached && (
+              <div className="landing-limit-box">
+                You've used your 3 free summaries.{' '}
+                <Link to="/register" style={{ color: '#22d3ee' }}>Sign up free</Link> to keep going.
+              </div>
+            )}
+
+            <div className="landing-or-signup">
+              <Link to="/register" className="btn-primary" style={{ marginRight: 12 }}>Follow your first channel →</Link>
+              <span className="landing-inline-cta-sub">Set up your morning digest — free.</span>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Digest section — what happens after you sign up */}
       <div className="digest-section fade-in-visible">
         <div className="digest-section-inner">
           <div className="digest-copy">
@@ -222,62 +281,6 @@ export default function LandingPage() {
             <DigestEmailMockup data={demoData} />
           </div>
         </div>
-      </div>
-
-      {/* Summarizer — secondary, below the fold */}
-      <div className="landing-summarizer-section">
-        <div className="landing-summarizer-eyebrow">Or try an instant summary</div>
-        <p className="landing-summarizer-desc">Paste any video URL and see what Headwater pulls out — verdict, key points, standout quotes.</p>
-
-        <form className="landing-input-row" onSubmit={handleSubmit}>
-          <input
-            className="url-input landing-url-input"
-            type="text"
-            placeholder="https://www.youtube.com/watch?v=..."
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            disabled={loading}
-          />
-          <button className="btn-primary landing-submit-btn" type="submit" disabled={loading}>
-            {loading ? 'Summarizing…' : 'Summarize'}
-          </button>
-        </form>
-
-        {error && <div className="landing-input-error">{error}</div>}
-
-        {limitReached && (
-          <div className="landing-limit-box">
-            You've used your 3 free summaries.{' '}
-            <Link to="/register" style={{ color: '#22d3ee' }}>Sign up free</Link> to keep going.
-          </div>
-        )}
-
-        {loading && (
-          <div className="loader" style={{ paddingTop: 32, paddingBottom: 32 }}>
-            <div className="spinner" />
-            <span>Reading the source.</span>
-            <span className="loader-hint">Pulling the transcript and distilling what matters — usually about 15 seconds.</span>
-          </div>
-        )}
-
-        {!result && !loading && demoData && (
-          <div style={{ marginTop: 40, textAlign: 'left' }}>
-            <div className="landing-example-label">Example summary</div>
-            <CuratedSummary data={demoData} />
-          </div>
-        )}
-
-        {result && !loading && (
-          <div style={{ textAlign: 'left' }}>
-            <CuratedSummary data={result} />
-            <div className="landing-digest-pitch">
-              <div className="landing-digest-pitch-headline">Upstream of the algorithm.</div>
-              <p className="landing-digest-pitch-body">Follow the channels you care about and get a morning digest of what's new — title, summary, standout quote. Know what's worth your time before you decide to watch.</p>
-              <Link to="/register" className="btn-primary">Follow your first channel →</Link>
-              <span className="landing-inline-cta-sub">Free. No credit card required.</span>
-            </div>
-          </div>
-        )}
       </div>
 
       <footer className="landing-footer">
