@@ -1,4 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
+
+function CopyQuoteButton({ text, timestamp }) {
+  const [copied, setCopied] = useState(false);
+  const handle = useCallback(() => {
+    const content = timestamp ? `"${text}" — ${timestamp}` : `"${text}"`;
+    navigator.clipboard.writeText(content).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [text, timestamp]);
+  return (
+    <button className="quote-copy-btn" onClick={handle} title="Copy quote">
+      {copied ? 'Copied' : 'Copy'}
+    </button>
+  );
+}
 
 function tsToSeconds(ts) {
   if (!ts) return 0;
@@ -176,6 +192,7 @@ export default function SummaryDisplay({ data }) {
                   <a className="quote-ts" href={ytUrl(videoId, q.timestamp)} target="_blank" rel="noopener noreferrer"> — {q.timestamp}</a>
                 )}
               </div>
+              <CopyQuoteButton text={q.text} timestamp={q.timestamp} />
             </div>
           ))}
         </div>

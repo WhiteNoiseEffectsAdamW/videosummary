@@ -59,7 +59,7 @@ export default function PublicSummaryPage() {
           : <Link to="/register" className="btn-primary public-cta">Try it free</Link>}
       </header>
 
-      <div className="public-content">
+      <div className={`public-content${!user ? ' public-content-with-bar' : ''}`}>
         {error && <p style={{ color: '#ef4444', padding: '48px 0' }}>{error}</p>}
         {!data && !error && (
           <div className="loader" style={{ paddingTop: 64 }}>
@@ -68,18 +68,17 @@ export default function PublicSummaryPage() {
           </div>
         )}
         {data && (
-          <>
-            <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>
-            {!user && (
-              <div className="public-signup-block">
-                <div className="public-signup-tagline">Upstream of the algorithm.</div>
-                <div className="public-signup-text">Get summaries like this every morning for the channels you follow.</div>
-                <Link to="/register" className="btn-primary">Try Headwater free →</Link>
-              </div>
-            )}
-          </>
+          <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>
         )}
       </div>
+
+      {/* Sticky signup bar — only for logged-out users */}
+      {!user && (
+        <div className="public-sticky-bar">
+          <span className="public-sticky-tagline">Upstream of the algorithm.</span>
+          <Link to="/register" className="btn-primary public-sticky-cta">Try Headwater free →</Link>
+        </div>
+      )}
     </div>
   );
 }
