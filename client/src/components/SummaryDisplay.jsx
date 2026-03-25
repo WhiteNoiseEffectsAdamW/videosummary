@@ -13,10 +13,10 @@ function ytUrl(videoId, ts, leadSeconds = 0) {
   return `https://www.youtube.com/watch?v=${videoId}&t=${secs}`;
 }
 
-const VERDICT_LABEL = {
-  'Watch': 'Watch',
-  'Skip': 'Summary covers it',
-  'Watch segment': null, // handled inline
+const VERDICT_COLOR = {
+  'Watch if': '#22d3ee',
+  'Skip if': '#475569',
+  'Watch the first X minutes': '#8aa4c8',
 };
 
 export default function SummaryDisplay({ data }) {
@@ -59,10 +59,12 @@ export default function SummaryDisplay({ data }) {
     });
   }
 
-  function verdictLabel() {
+  function verdictText() {
     if (!verdict) return null;
-    if (verdict.action === 'Watch segment') return `Watch ${verdict.segment}`;
-    return VERDICT_LABEL[verdict.action] ?? verdict.action;
+    const action = verdict.action === 'Watch the first X minutes' && verdict.segment
+      ? `Watch the first ${verdict.segment}`
+      : verdict.action;
+    return verdict.condition ? `${action} ${verdict.condition}` : action;
   }
 
   return (
@@ -117,10 +119,9 @@ export default function SummaryDisplay({ data }) {
       {title && <div className="summary-title">{title}</div>}
 
       {/* Verdict */}
-      {verdict && (
-        <div className={`verdict verdict-${verdict.action.toLowerCase().replace(' ', '-')}`}>
-          <span className="verdict-action">{verdictLabel()}</span>
-          <span className="verdict-reason">{verdict.reason}</span>
+      {verdict && verdictText() && (
+        <div className="verdict" style={{ color: VERDICT_COLOR[verdict.action] || '#22d3ee' }}>
+          {verdictText()}
         </div>
       )}
 

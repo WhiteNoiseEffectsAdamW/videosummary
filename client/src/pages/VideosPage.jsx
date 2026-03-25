@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const VERDICT_LABEL = { Watch: '▶ Watch', Skip: '✕ Skip', 'Watch segment': '◎ Segment' };
-const VERDICT_CLS = { Watch: 'vbadge-watch', Skip: 'vbadge-skip', 'Watch segment': 'vbadge-segment' };
+const VERDICT_CLS = { 'Watch if': 'vbadge-watch', 'Skip if': 'vbadge-skip', 'Watch the first X minutes': 'vbadge-segment' };
 
 function VideoRow({ video, onDelete }) {
   const navigate = useNavigate();
   const date = new Date(video.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  const verdictLabel = video.verdict ? (VERDICT_LABEL[video.verdict.action] || video.verdict.action) : null;
-  const verdictCls = video.verdict ? (VERDICT_CLS[video.verdict.action] || '') : '';
+  const verdictLabel = video.verdict ? video.verdict.action : null;
+  const verdictCls = video.verdict ? (VERDICT_CLS[video.verdict.action] || 'vbadge-watch') : '';
 
   function handleClick(e) {
     if (e.target.closest('.vrow-delete')) return;
@@ -119,7 +118,7 @@ export default function VideosPage() {
           <>
             <div className="filter-bar">
               <div className="filter-group">
-                {['Watch', 'Watch segment', 'Skip'].map((v) => (
+                {['Watch if', 'Skip if', 'Watch the first X minutes'].map((v) => (
                   <button
                     key={v}
                     className={`filter-pill${filterVerdict === v ? ' filter-pill-active' : ''}`}
