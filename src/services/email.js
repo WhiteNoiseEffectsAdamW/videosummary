@@ -48,8 +48,10 @@ function renderDigestText(summaries) {
 
   lines.push(DIVIDER);
   lines.push('');
+  lines.push('You only receive this when there\'s something new from your channels.');
   lines.push('Summaries are AI-generated and may be incomplete or inaccurate.');
-  lines.push(`To turn off these emails: ${APP_URL}/following`);
+  lines.push(`Manage your channels: ${APP_URL}/following`);
+  lines.push(`Unsubscribe: ${APP_URL}/following`);
   lines.push('');
 
   return lines.join('\n');
@@ -107,7 +109,10 @@ function renderDigestHtml(summaries) {
     <!-- Footer -->
     <div style="border-top:1px solid #ebebeb;margin-top:48px;padding-top:24px;font-size:12px;color:#bbb;line-height:1.8;">
       <a href="${APP_URL}" style="color:#999;font-weight:600;text-decoration:none;">Headwater</a><br>
+      You only receive this when there's something new from your channels.<br>
       Summaries are AI-generated and may be incomplete or inaccurate.<br>
+      <a href="${APP_URL}/following" style="color:#999;font-weight:500;text-decoration:none;">Manage your channels</a>
+      &nbsp;&middot;&nbsp;
       <a href="${APP_URL}/following" style="color:#bbb;">Unsubscribe</a><br>
     </div>
 
