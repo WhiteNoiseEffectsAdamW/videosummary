@@ -13,6 +13,18 @@ function VideoRow({ video, onDelete }) {
   return (
     <div className="vrow" onClick={handleClick} role="button" tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && navigate(`/?v=${video.videoId}`)}>
+      {video.thumbnailUrl && (
+        <div className="vrow-thumb-wrap">
+          <img className="vrow-thumb" src={video.thumbnailUrl} alt=""
+            onError={(e) => {
+              if (e.target.src.includes('maxresdefault')) {
+                e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
+              } else {
+                e.target.closest('.vrow-thumb-wrap').style.display = 'none';
+              }
+            }} />
+        </div>
+      )}
       <div className="vrow-main">
         <div className="vrow-title">{video.title || video.videoId}</div>
         {video.channelName && <div className="vrow-channel">{video.channelName}</div>}

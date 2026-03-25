@@ -229,7 +229,8 @@ export default function FollowingPage() {
       {/* Popular channels */}
       <div className="popular-channels">
         <button className="popular-channels-toggle" onClick={() => setShowPopular((v) => !v)}>
-          Browse popular channels {showPopular ? '↑' : '↓'}
+          <span>Browse popular channels</span>
+          <span style={{ fontSize: 11, opacity: 0.6 }}>{showPopular ? '▲' : '▼'}</span>
         </button>
         {showPopular && <>
         {POPULAR_CATEGORIES.map((cat) => {

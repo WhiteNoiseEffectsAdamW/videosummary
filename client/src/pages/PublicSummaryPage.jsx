@@ -72,6 +72,7 @@ export default function PublicSummaryPage() {
             <ErrorBoundary><SummaryDisplay data={data} /></ErrorBoundary>
             {!user && (
               <div className="public-signup-block">
+                <div className="public-signup-tagline">Upstream of the algorithm.</div>
                 <div className="public-signup-text">Get summaries like this every morning for the channels you follow.</div>
                 <Link to="/register" className="btn-primary">Try Headwater free →</Link>
               </div>
