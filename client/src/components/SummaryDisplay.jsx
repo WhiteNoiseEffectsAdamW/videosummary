@@ -13,15 +13,10 @@ function ytUrl(videoId, ts, leadSeconds = 0) {
   return `https://www.youtube.com/watch?v=${videoId}&t=${secs}`;
 }
 
-const VERDICT_COLOR = {
-  'Watch if': '#22d3ee',
-  'Skip if': '#475569',
-  'Watch the first X minutes': '#8aa4c8',
-};
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], verdict, cached, videoId, thumbnailUrl, title, titleClaim, channelName } = data;
+  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName } = data;
   const [copied, setCopied] = useState(false);
   const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
 
@@ -57,15 +52,6 @@ export default function SummaryDisplay({ data }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
-  }
-
-  function verdictText() {
-    if (!verdict) return null;
-    const action = verdict.action === 'Watch the first X minutes' && verdict.segment
-      ? `Watch the first ${verdict.segment}`
-      : verdict.action;
-    const detail = verdict.condition || verdict.reason || null;
-    return detail ? `${action} ${detail}` : action;
   }
 
   return (
@@ -119,12 +105,6 @@ export default function SummaryDisplay({ data }) {
       {/* Title */}
       {title && <div className="summary-title">{title}</div>}
 
-      {/* Verdict */}
-      {verdict && verdictText() && (
-        <div className="verdict" style={{ color: VERDICT_COLOR[verdict.action] || '#22d3ee' }}>
-          {verdictText()}
-        </div>
-      )}
 
       {/* Categories */}
       {categories.length > 0 && (

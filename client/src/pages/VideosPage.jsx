@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const VERDICT_CLS = { 'Watch if': 'vbadge-watch', 'Skip if': 'vbadge-skip', 'Watch the first X minutes': 'vbadge-segment' };
-
 function VideoRow({ video, onDelete }) {
   const navigate = useNavigate();
   const date = new Date(video.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  const verdictLabel = video.verdict ? video.verdict.action : null;
-  const verdictCls = video.verdict ? (VERDICT_CLS[video.verdict.action] || 'vbadge-watch') : '';
 
   function handleClick(e) {
     if (e.target.closest('.vrow-delete')) return;
@@ -28,7 +24,6 @@ function VideoRow({ video, onDelete }) {
         </div>
       </div>
       <div className="vrow-right">
-        {verdictLabel && <span className={`vbadge ${verdictCls}`}>{verdictLabel}</span>}
         <button className="vrow-delete" title="Remove" onClick={(e) => { e.stopPropagation(); onDelete(video.videoId); }}>×</button>
       </div>
     </div>
@@ -41,7 +36,6 @@ export default function VideosPage() {
   const [error, setError] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailToast, setEmailToast] = useState(null);
-  const [filterVerdict, setFilterVerdict] = useState(null);
   const [filterCategory, setFilterCategory] = useState(null);
   const [filterChannel, setFilterChannel] = useState(null);
 
@@ -109,7 +103,6 @@ export default function VideosPage() {
         const allCategories = [...new Set(videos.flatMap((v) => v.categories || []))].sort();
         const allChannels = [...new Set(videos.map((v) => v.channelName).filter(Boolean))].sort();
         const filtered = videos.filter((v) => {
-          if (filterVerdict && v.verdict?.action !== filterVerdict) return false;
           if (filterCategory && !(v.categories || []).includes(filterCategory)) return false;
           if (filterChannel && v.channelName !== filterChannel) return false;
           return true;
@@ -117,17 +110,6 @@ export default function VideosPage() {
         return (
           <>
             <div className="filter-bar">
-              <div className="filter-group">
-                {['Watch if', 'Skip if', 'Watch the first X minutes'].map((v) => (
-                  <button
-                    key={v}
-                    className={`filter-pill${filterVerdict === v ? ' filter-pill-active' : ''}`}
-                    onClick={() => setFilterVerdict(filterVerdict === v ? null : v)}
-                  >
-                    {VERDICT_LABEL[v] || v}
-                  </button>
-                ))}
-              </div>
               <div className="filter-dropdowns">
                 {allChannels.length > 0 && (
                   <select className="filter-select" value={filterChannel || ''} onChange={(e) => setFilterChannel(e.target.value || null)}>

@@ -37,11 +37,6 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
     }
   ],
   "categories": ["<tag>", "<tag>"],
-  "verdict": {
-    "action": "<one of: 'Watch if', 'Skip if', 'Watch the first X minutes'>",
-    "condition": "<complete the action — e.g. 'you want a first-principles take on deep work' or 'you already follow a low-carb diet' or 'Watch the first 8 minutes for the framework, the rest is Q&A'>",
-    "segment": "<if action is 'Watch the first X minutes', the timestamp range e.g. '0:00–8:30', otherwise null>"
-  }
 }
 
 RULES:
@@ -49,7 +44,6 @@ RULES:
 - quotes: select 2–5 of the most insightful, surprising, or quotable lines.
 - titleClaim: only include if the title can be evaluated against the content (i.e. it makes a specific promise, tease, or claim). If the title is straightforward and accurately describes the video, set both fields to null. Be honest — note if it's clickbait, misleading, or accurate.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
-- verdict: be decisive. Use 'Watch if' for videos worth watching with a specific viewer condition — name *who* the video is for, not just what it's about (e.g. "Watch if you're new to the topic" not "Watch if you like productivity"). Use 'Skip if' when the summary captures everything of value — name the viewer who can safely skip (e.g. "Skip if you've already read the book"). Use 'Watch the first X minutes' when one portion justifies the time but the rest is filler — specify the exact timestamp range in the segment field. The condition must describe a specific viewer state, not the video's subject matter. Never write a generic condition like "Watch if you're interested in this topic."
 - tldr: must directly address the title's implied question or promise. If the title asks "Is X worth it?", open with the answer. If it teases a discovery, state what was actually found. Never open with "This video covers..." or "The creator discusses...". Write as if answering the title in two plain sentences.
 - Keep all text factual — no editorialising beyond what the speaker says. No promotional language.
 
