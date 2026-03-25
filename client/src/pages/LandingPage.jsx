@@ -270,8 +270,10 @@ export default function LandingPage() {
         {result && !loading && (
           <div style={{ textAlign: 'left' }}>
             <CuratedSummary data={result} />
-            <div className="landing-inline-cta">
-              <Link to="/register" className="btn-primary">Get this every morning — follow your channels →</Link>
+            <div className="landing-digest-pitch">
+              <div className="landing-digest-pitch-headline">Upstream of the algorithm.</div>
+              <p className="landing-digest-pitch-body">Follow the channels you care about and get a morning digest of what's new — title, summary, standout quote. Know what's worth your time before you decide to watch.</p>
+              <Link to="/register" className="btn-primary">Follow your first channel →</Link>
               <span className="landing-inline-cta-sub">Free. No credit card required.</span>
             </div>
           </div>

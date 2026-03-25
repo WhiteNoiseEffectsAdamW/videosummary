@@ -105,7 +105,15 @@ export default function FollowingPage() {
     }
   }
 
+  const [confirmRemove, setConfirmRemove] = useState(null); // { id, name }
+
   async function handleRemove(id, name) {
+    setConfirmRemove({ id, name });
+  }
+
+  async function confirmRemoveChannel() {
+    const { id, name } = confirmRemove;
+    setConfirmRemove(null);
     const res = await fetch(`/api/subscriptions/${id}`, { method: 'DELETE', credentials: 'include' });
     if (res.ok) {
       setChannels((prev) => prev.filter((c) => c.id !== id));
@@ -283,6 +291,23 @@ export default function FollowingPage() {
             );
           })}
         </ul>
+      )}
+      {confirmRemove && (
+        <div className="modal-backdrop" onClick={() => setConfirmRemove(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-title">Remove {confirmRemove.name}?</div>
+            <p className="modal-body">You'll stop receiving new summaries from this channel. You can also just pause it if you want to come back later.</p>
+            <div className="modal-actions">
+              <button className="modal-btn-secondary" onClick={() => {
+                const ch = channels.find((c) => c.id === confirmRemove.id);
+                if (ch) handleToggleChannel(ch.id, true);
+                setConfirmRemove(null);
+                showToast('Feed paused');
+              }}>Pause instead</button>
+              <button className="modal-btn-danger" onClick={confirmRemoveChannel}>Remove</button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
