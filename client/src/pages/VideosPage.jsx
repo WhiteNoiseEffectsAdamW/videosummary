@@ -16,6 +16,11 @@ function VideoRow({ video, onDelete }) {
       {video.thumbnailUrl && (
         <div className="vrow-thumb-wrap">
           <img className="vrow-thumb" src={video.thumbnailUrl} alt=""
+            onLoad={(e) => {
+              if (e.target.src.includes('maxresdefault') && e.target.naturalWidth <= 120) {
+                e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
+              }
+            }}
             onError={(e) => {
               if (e.target.src.includes('maxresdefault')) {
                 e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');

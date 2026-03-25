@@ -95,6 +95,11 @@ function CuratedSummary({ data }) {
         <div className="landing-demo-left">
           <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer" className="landing-thumb-link">
             <img src={thumbnailUrl} alt={title || ''} className="landing-thumb"
+              onLoad={(e) => {
+                if (e.target.src.includes('maxresdefault') && e.target.naturalWidth <= 120) {
+                  e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
+                }
+              }}
               onError={(e) => {
                 if (e.target.src.includes('hqdefault')) {
                   e.target.closest('.landing-thumb-link').style.display = 'none';

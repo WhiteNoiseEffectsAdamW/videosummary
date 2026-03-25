@@ -21,7 +21,7 @@ router.get('/', requireAuth, async (req, res, next) => {
       channelName: row.channel_name || (row.channel_id ? (channelMap[row.channel_id] || null) : null),
       title: row.title,
       savedAt: row.saved_at || row.created_at,
-      thumbnailUrl: `https://img.youtube.com/vi/${row.video_id}/hqdefault.jpg`,
+      thumbnailUrl: `https://img.youtube.com/vi/${row.video_id}/maxresdefault.jpg`,
       tldr: row.summary?.tldr || null,
       verdict: row.summary?.verdict || null,
       categories: row.summary?.categories || [],

@@ -83,6 +83,11 @@ export default function SummaryDisplay({ data }) {
               className="thumbnail"
               src={thumbnailUrl}
               alt="Video thumbnail"
+              onLoad={(e) => {
+                if (e.target.src.includes('maxresdefault') && e.target.naturalWidth <= 120) {
+                  e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
+                }
+              }}
               onError={(e) => {
                 if (e.target.src.includes('maxresdefault')) {
                   e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
