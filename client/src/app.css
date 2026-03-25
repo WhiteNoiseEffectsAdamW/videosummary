@@ -585,6 +585,18 @@ body {
 .nav-email { font-size: 12px; color: #777; }
 .nav-logout { font-size: 12px; color: #777; background: none; border: none; cursor: pointer; padding: 4px 0; transition: color 0.15s; white-space: nowrap; }
 .nav-logout:hover { color: #ef4444; }
+.nav-account-wrap { position: relative; }
+.nav-email-btn { font-size: 12px; color: #777; background: none; border: none; cursor: pointer; padding: 4px 0; transition: color 0.15s; white-space: nowrap; }
+.nav-email-btn:hover { color: #94a3b8; }
+.nav-email-caret { font-size: 10px; margin-left: 3px; }
+.nav-account-menu { position: absolute; right: 0; top: calc(100% + 8px); background: #0f1520; border: 1px solid #1e293b; border-radius: 8px; min-width: 180px; padding: 6px; z-index: 100; box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+.nav-menu-item { display: block; width: 100%; text-align: left; background: none; border: none; font-size: 13px; color: #94a3b8; padding: 8px 10px; border-radius: 6px; cursor: pointer; transition: background 0.1s, color 0.1s; }
+.nav-menu-item:hover { background: rgba(255,255,255,0.05); color: #e2e8f0; }
+.nav-menu-danger { color: #f87171; }
+.nav-menu-danger:hover { background: rgba(239,68,68,0.08); color: #ef4444; }
+.nav-menu-divider { border-top: 1px solid #1e293b; margin: 4px 0; }
+.nav-menu-delete-confirm p { font-size: 12px; color: #94a3b8; padding: 6px 10px 4px; line-height: 1.5; }
+.nav-menu-delete-actions { display: flex; flex-direction: column; gap: 2px; }
 
 /* ── Mobile bottom tab bar ───────────────────────────────── */
 .mobile-tabs { display: none; }
@@ -594,6 +606,7 @@ body {
   .nav-links { display: none; }
   .nav-email  { display: none; }
   .nav-logout { display: none; }
+  .nav-account-wrap { display: none; }
   .nav { padding: 0 16px; height: 48px; }
   .nav-brand { font-size: 14px; }
 
@@ -688,6 +701,7 @@ body {
 .auth-card .btn-primary { width: 100%; padding: 11px; margin-top: 0; text-align: center; }
 .auth-switch { font-size: 13px; color: #555; margin-top: 20px; text-align: center; }
 .auth-switch a { color: #22d3ee; text-decoration: none; }
+.auth-privacy-pledge { font-size: 12px; color: #64748b; margin-top: 20px; text-align: center; line-height: 1.6; border-top: 1px solid #1e293b; padding-top: 16px; }
 .auth-legal { font-size: 11px; color: #374151; margin-top: 12px; text-align: center; }
 .auth-legal a { color: #555; text-decoration: underline; }
 .field.field-checkbox { margin-top: 24px !important; margin-bottom: 20px; }
@@ -983,11 +997,17 @@ body {
 
 .filter-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
-.filter-dropdowns { display: flex; gap: 8px; margin-left: auto; }
+.filter-dropdowns { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
 .videos-search { flex: 1; min-width: 160px; max-width: 280px; padding: 7px 12px; font-size: 13px; }
-.filter-select { background: #0c111d; border: 1px solid #1e293b; color: #94a3b8; font-size: 13px; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+.filter-select { background: #0c111d; border: 1px solid #1e293b; color: #94a3b8; font-size: 13px; padding: 5px 10px; border-radius: 6px; cursor: pointer; max-width: 160px; }
 .filter-select:focus { outline: none; border-color: #22d3ee; }
 .filter-select option { background: #0c111d; }
+@media (max-width: 480px) {
+  .filter-bar { flex-direction: column; align-items: stretch; }
+  .filter-dropdowns { margin-left: 0; }
+  .filter-select { max-width: 100%; flex: 1; }
+  .videos-search { max-width: 100%; }
+}
 .filter-pill {
   font-size: 12px;
   padding: 4px 10px;

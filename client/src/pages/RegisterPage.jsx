@@ -60,6 +60,7 @@ export default function RegisterPage() {
           </button>
         </form>
         <p className="auth-switch">Already have an account? <Link to="/login">Sign in</Link></p>
+        <p className="auth-privacy-pledge">Your data is yours. No tracking, no ads, no selling your information — ever. Delete your account anytime, no questions asked.</p>
         <p className="auth-legal">By creating an account you agree to our <Link to="/terms">Terms</Link> and <Link to="/privacy">Privacy Policy</Link>.</p>
       </div>
     </div>

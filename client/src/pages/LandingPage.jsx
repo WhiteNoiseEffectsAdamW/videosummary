@@ -203,8 +203,7 @@ export default function LandingPage() {
       {/* Hero — lean, let the demo sell it */}
       <div className="landing-hero">
         <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
-        <p className="landing-sub">Know what's worth watching before you decide to click.</p>
-        <p className="landing-hero-mechanic">Follow channels. We summarize what's new. Skip the rest.</p>
+        <p className="landing-sub">Follow channels. We summarize what's new. Skip the rest.</p>
         <div className="landing-hero-beta">Free while we're in beta.</div>
       </div>
 
