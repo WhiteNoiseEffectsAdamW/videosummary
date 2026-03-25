@@ -199,11 +199,8 @@ export default function LandingPage() {
       <div className="landing-hero">
         <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
         <p className="landing-sub">Know what's worth watching before you decide to click.</p>
-        <div className="landing-hero-cta-row">
-          <a href="#demo" className="landing-hero-cta">See how it works ↓</a>
-          <span className="landing-hero-cta-dot">·</span>
-          <span className="landing-hero-beta">Free while we're in beta.</span>
-        </div>
+        <p className="landing-hero-mechanic">Follow channels. We summarize what's new. Skip the rest.</p>
+        <div className="landing-hero-beta">Free while we're in beta.</div>
       </div>
 
       {/* Summarizer — demo first, input below */}
@@ -212,9 +209,8 @@ export default function LandingPage() {
         {/* Demo summary — visible immediately, no URL required */}
         {!result && !loading && demoData && (
           <div style={{ textAlign: 'left', marginBottom: 32 }}>
-            <div className="landing-example-label">Here's what Headwater does</div>
+            <div className="landing-demo-trust">The video, not the title.</div>
             <CuratedSummary data={demoData} />
-            <div className="landing-demo-trust">What you get is what the video actually delivered.</div>
           </div>
         )}
 
@@ -277,12 +273,6 @@ export default function LandingPage() {
               </div>
             )}
 
-            <div className="landing-or-signup">
-              <div className="landing-or-signup-how">Add any YouTube channel by name or URL — no Google account needed.</div>
-              <div className="landing-or-signup-ctas">
-                <Link to="/register" className="btn-primary">Follow your first channel →</Link>
-              </div>
-            </div>
           </>
         )}
       </div>
@@ -293,12 +283,17 @@ export default function LandingPage() {
           <div className="digest-copy">
             <div className="digest-eyebrow">Every morning</div>
             <h2 className="digest-heading">Every channel you follow, distilled.</h2>
-            <p className="digest-sub">Every morning, before the algorithm picks for you.</p>
+            <p className="digest-sub">Before the algorithm picks for you.</p>
           </div>
           <div className="digest-email-wrap">
             <DigestEmailMockup data={demoData} />
           </div>
         </div>
+      </div>
+
+      <div className="landing-digest-cta">
+        <div className="landing-or-signup-how">Add any YouTube channel by name or URL — no Google account needed.</div>
+        <Link to="/register" className="btn-primary">Follow your first channel →</Link>
       </div>
 
       <footer className="landing-footer">
