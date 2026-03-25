@@ -37,6 +37,7 @@ export default function SummaryDisplay({ data }) {
   const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName } = data;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
+  const [toast, setToast] = useState(null);
   const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
 
   async function handleFollow() {
@@ -68,8 +69,8 @@ export default function SummaryDisplay({ data }) {
   function handleShare() {
     const url = `${window.location.origin}/s/${videoId}`;
     navigator.clipboard.writeText(url).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setToast('Link copied to clipboard');
+      setTimeout(() => setToast(null), 2500);
     });
   }
 
@@ -100,7 +101,7 @@ export default function SummaryDisplay({ data }) {
         </div>
       )}
 
-      {/* Channel + Watch CTA + Share */}
+      {/* Channel + Actions */}
       <div className="summary-header">
         <div className="summary-channel-group">
           {channelName && <span className="summary-channel">{channelName}</span>}
@@ -122,17 +123,22 @@ export default function SummaryDisplay({ data }) {
           )}
         </div>
         <div className="summary-header-actions">
-          <a
-            className="btn-watch-yt"
-            href={`https://www.youtube.com/watch?v=${videoId}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
-            </svg>
-            Watch on YouTube
-          </a>
+          <div className="summary-header-actions-col">
+            <a
+              className="btn-watch-yt"
+              href={`https://www.youtube.com/watch?v=${videoId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
+              </svg>
+              Watch on YouTube
+            </a>
+            <button className="btn-share-subtle" onClick={handleShare}>
+              {toast ? 'Copied!' : 'Send to a friend'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -216,12 +222,6 @@ export default function SummaryDisplay({ data }) {
         <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">Watch on YouTube →</a>
       </p>
 
-      {/* Share — after content, when user has decided it's worth sharing */}
-      <div className="summary-share-row">
-        <button className="btn-share" onClick={handleShare}>
-          {copied ? 'Copied!' : 'Send to a friend'}
-        </button>
-      </div>
     </div>
   );
 }

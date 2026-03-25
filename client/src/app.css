@@ -379,7 +379,9 @@ body {
   text-decoration: none;
 }
 .summary-disclaimer a:hover { color: #94a3b8; }
-.summary-share-row { margin-top: 24px; padding-bottom: 40px; }
+.summary-header-actions-col { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.btn-share-subtle { font-size: 12px; font-weight: 500; color: #22d3ee; background: none; border: none; cursor: pointer; padding: 0; text-align: right; }
+.btn-share-subtle:hover { opacity: 0.75; }
 
 /* Title vs Reality */
 .card-title-claim { border-left: 2px solid rgba(34,211,238,0.4); }
