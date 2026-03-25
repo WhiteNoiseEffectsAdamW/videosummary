@@ -2,6 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../AuthContext.jsx';
 import PopularChannelSelect from '../components/PopularChannelSelect.jsx';
 
+function formatRelative(dateStr) {
+  const days = Math.floor((Date.now() - new Date(dateStr)) / 86400000);
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 7) return `${days} days ago`;
+  if (days < 30) return `${Math.floor(days / 7)} week${Math.floor(days / 7) > 1 ? 's' : ''} ago`;
+  return `${Math.floor(days / 30)} month${Math.floor(days / 30) > 1 ? 's' : ''} ago`;
+}
+
 export default function FollowingPage() {
   const { user, setUser } = useAuth();
   const [channels, setChannels] = useState([]);
@@ -229,7 +238,12 @@ export default function FollowingPage() {
             const digestOn = c.digest !== false;
             return (
               <li key={c.id} className="channel-item">
-                <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
+                <div>
+                  <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
+                  {c.lastPosted && (
+                    <div className="channel-last-posted">Last posted {formatRelative(c.lastPosted)}</div>
+                  )}
+                </div>
                 <div className="channel-item-actions">
                   <button
                     className={`btn-digest-pill${digestOn ? ' pill-on' : ' pill-off'}`}

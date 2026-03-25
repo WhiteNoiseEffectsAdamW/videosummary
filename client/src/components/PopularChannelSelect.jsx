@@ -29,6 +29,7 @@ function getDismissed() {
 export default function PopularChannelSelect({ followedNames = [], onAdd, disabled }) {
   const [open, setOpen] = useState(false);
   const [dismissed, setDismissed] = useState(getDismissed);
+  const [pendingDismiss, setPendingDismiss] = useState(null); // { handle, name, timerId }
   const ref = useRef(null);
 
   useEffect(() => {
@@ -40,23 +41,43 @@ export default function PopularChannelSelect({ followedNames = [], onAdd, disabl
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
-  function handleDismiss(e, handle) {
+  function handleDismiss(e, handle, name) {
     e.stopPropagation();
-    const next = [...getDismissed(), handle];
-    localStorage.setItem(DISMISSED_KEY, JSON.stringify(next));
-    setDismissed(next);
+    // Cancel any existing pending dismiss
+    if (pendingDismiss) clearTimeout(pendingDismiss.timerId);
+    const timerId = setTimeout(() => {
+      const next = [...getDismissed(), handle];
+      localStorage.setItem(DISMISSED_KEY, JSON.stringify(next));
+      setDismissed(next);
+      setPendingDismiss(null);
+    }, 4000);
+    setPendingDismiss({ handle, name, timerId });
   }
 
+  function handleUndo() {
+    if (!pendingDismiss) return;
+    clearTimeout(pendingDismiss.timerId);
+    setPendingDismiss(null);
+  }
+
+  const allDismissed = pendingDismiss ? [...dismissed, pendingDismiss.handle] : dismissed;
   const categories = POPULAR_CATEGORIES.map((cat) => ({
     label: cat,
     channels: POPULAR_CHANNELS.filter(
-      (ch) => ch.category === cat && !followedNames.includes(ch.name) && !dismissed.includes(ch.handle)
+      (ch) => ch.category === cat && !followedNames.includes(ch.name) && !allDismissed.includes(ch.handle)
     ),
   })).filter((c) => c.channels.length > 0);
 
   if (categories.length === 0) return null;
 
   return (
+    <>
+    {pendingDismiss && (
+      <div className="pcs-undo-toast">
+        <span>Removed {pendingDismiss.name}</span>
+        <button className="pcs-undo-btn" onClick={handleUndo}>Undo</button>
+      </div>
+    )}
     <div className="pcs-wrap" ref={ref}>
       <button
         className={`pcs-trigger${open ? ' pcs-trigger-open' : ''}`}
@@ -86,7 +107,7 @@ export default function PopularChannelSelect({ followedNames = [], onAdd, disabl
                     className="pcs-dismiss"
                     type="button"
                     title="Don't show this"
-                    onClick={(e) => handleDismiss(e, ch.handle)}
+                    onClick={(e) => handleDismiss(e, ch.handle, ch.name)}
                   >×</button>
                 </div>
               ))}
@@ -95,5 +116,6 @@ export default function PopularChannelSelect({ followedNames = [], onAdd, disabl
         </div>
       )}
     </div>
+    </>
   );
 }

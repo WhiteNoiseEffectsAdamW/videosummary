@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const requireAuth = require('../middleware/requireAuth');
 const { findByUserId, create, remove, setDigest } = require('../models/subscription');
+const { db } = require('../db');
 
 // All routes require login
 router.use(requireAuth);
@@ -9,7 +10,16 @@ router.use(requireAuth);
 router.get('/', async (req, res, next) => {
   try {
     const subs = await findByUserId(req.user.id);
-    res.json(subs);
+    const channelIds = subs.map((s) => s.channel_id).filter(Boolean);
+    let lastPostedMap = {};
+    if (channelIds.length) {
+      const rows = await db('summaries')
+        .whereIn('channel_id', channelIds)
+        .groupBy('channel_id')
+        .select('channel_id', db.raw('max(created_at) as last_posted'));
+      rows.forEach((r) => { lastPostedMap[r.channel_id] = r.last_posted; });
+    }
+    res.json(subs.map((s) => ({ ...s, lastPosted: lastPostedMap[s.channel_id] || null })));
   } catch (err) {
     next(err);
   }

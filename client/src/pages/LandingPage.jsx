@@ -252,7 +252,17 @@ export default function LandingPage() {
               </button>
             </form>
 
-            {error && <div className="landing-input-error">{error}</div>}
+            {error && (
+          error.toLowerCase().includes('transcript') ? (
+            <div className="landing-transcript-error">
+              <div className="landing-transcript-error-title">No transcript available</div>
+              <p className="landing-transcript-error-body">This video doesn't have captions we can read — the creator may have disabled them, or it's a live stream or short. Try a different video.</p>
+              <button className="landing-transcript-error-retry" onClick={() => { setError(null); setUrl(''); }}>Try another video</button>
+            </div>
+          ) : (
+            <div className="landing-input-error">{error}</div>
+          )
+        )}
 
             {limitReached && (
               <div className="landing-limit-box">
