@@ -199,4 +199,16 @@ router.delete('/me', async (req, res, next) => {
   }
 });
 
+// POST /api/auth/preview-nudge — send the nudge email to the logged-in user for preview
+router.post('/preview-nudge', async (req, res, next) => {
+  if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
+  try {
+    const { sendNudge } = require('../services/email');
+    await sendNudge(req.user.email);
+    res.json({ ok: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

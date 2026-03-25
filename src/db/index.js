@@ -87,6 +87,11 @@ async function migrate() {
         t.timestamp('verification_token_expires');
       });
     }
+    // Nudge email tracking
+    const hasNudgeSentAt = await db.schema.hasColumn('users', 'nudge_sent_at');
+    if (!hasNudgeSentAt) {
+      await db.schema.alterTable('users', (t) => t.timestamp('nudge_sent_at'));
+    }
   }
 
   const hasSaves = await db.schema.hasTable('user_saves');

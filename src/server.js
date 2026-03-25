@@ -21,6 +21,7 @@ const videosRouter = require('./routes/videos');
 const { errorHandler } = require('./middleware/errorHandler');
 const { startPolling } = require('./jobs/poll-channels');
 const { startDigestJob } = require('./jobs/send-digests');
+const { startNudgeJob } = require('./jobs/send-nudges');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -109,6 +110,7 @@ async function start() {
 
   startPolling();
   startDigestJob();
+  startNudgeJob();
 
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

@@ -22,6 +22,7 @@ export default function FollowingPage() {
   const [togglingDigest, setTogglingDigest] = useState(false);
   const [scanStatus, setScanStatus] = useState(null);
   const [previewSending, setPreviewSending] = useState(false);
+  const [nudgeSending, setNudgeSending] = useState(false);
   const [addingPopular, setAddingPopular] = useState(null);
 
   function showToast(msg) {
@@ -141,6 +142,20 @@ export default function FollowingPage() {
     }
   }
 
+  async function handlePreviewNudge() {
+    setNudgeSending(true);
+    try {
+      const res = await fetch('/api/auth/preview-nudge', { method: 'POST', credentials: 'include' });
+      const data = await res.json();
+      if (res.ok) showToast('Nudge email sent — check your inbox.');
+      else showToast(data.error || 'Could not send nudge.');
+    } catch {
+      showToast('Could not send nudge.');
+    } finally {
+      setNudgeSending(false);
+    }
+  }
+
   async function handleAddPopular(ch) {
     setAddingPopular(ch.handle);
     try {
@@ -195,6 +210,13 @@ export default function FollowingPage() {
         <span className="digest-preview-sub">See what your morning digest looks like — we'll send one to your inbox now.</span>
         <button className="btn-preview-digest" onClick={handlePreviewDigest} disabled={previewSending}>
           {previewSending ? 'Sending…' : 'Send me a preview'}
+        </button>
+      </div>
+
+      <div className="digest-preview-row">
+        <span className="digest-preview-sub">Preview the nudge email sent to users who haven't followed a channel yet.</span>
+        <button className="btn-preview-digest" onClick={handlePreviewNudge} disabled={nudgeSending}>
+          {nudgeSending ? 'Sending…' : 'Preview nudge email'}
         </button>
       </div>
 

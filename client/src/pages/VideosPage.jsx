@@ -50,6 +50,7 @@ export default function VideosPage() {
   const [emailToast, setEmailToast] = useState(null);
   const [filterCategory, setFilterCategory] = useState(null);
   const [filterChannel, setFilterChannel] = useState(null);
+  const [search, setSearch] = useState('');
 
   function loadVideos() {
     setError(false);
@@ -114,14 +115,23 @@ export default function VideosPage() {
       {videos.length > 0 && (() => {
         const allCategories = [...new Set(videos.flatMap((v) => v.categories || []))].sort();
         const allChannels = [...new Set(videos.map((v) => v.channelName).filter(Boolean))].sort();
+        const q = search.trim().toLowerCase();
         const filtered = videos.filter((v) => {
           if (filterCategory && !(v.categories || []).includes(filterCategory)) return false;
           if (filterChannel && v.channelName !== filterChannel) return false;
+          if (q && !`${v.title || ''} ${v.channelName || ''}`.toLowerCase().includes(q)) return false;
           return true;
         });
         return (
           <>
             <div className="filter-bar">
+              <input
+                className="url-input videos-search"
+                type="text"
+                placeholder="Search videos…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
               <div className="filter-dropdowns">
                 {allChannels.length > 0 && (
                   <select className="filter-select" value={filterChannel || ''} onChange={(e) => setFilterChannel(e.target.value || null)}>

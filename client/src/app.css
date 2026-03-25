@@ -304,12 +304,12 @@ body {
 /* Summary header: channel + Watch CTA */
 .summary-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
 }
-.summary-channel-group { display: flex; align-items: center; gap: 10px; }
+.summary-channel-group { display: flex; align-items: flex-start; gap: 10px; }
 .summary-channel {
   font-size: 13px;
   color: #22d3ee;
@@ -982,6 +982,7 @@ body {
 .filter-bar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
 .filter-dropdowns { display: flex; gap: 8px; margin-left: auto; }
+.videos-search { flex: 1; min-width: 160px; max-width: 280px; padding: 7px 12px; font-size: 13px; }
 .filter-select { background: #0c111d; border: 1px solid #1e293b; color: #94a3b8; font-size: 13px; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
 .filter-select:focus { outline: none; border-color: #22d3ee; }
 .filter-select option { background: #0c111d; }

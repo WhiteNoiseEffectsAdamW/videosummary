@@ -145,6 +145,37 @@ async function sendDigest(toEmail, summaries) {
   });
 }
 
+async function sendNudge(toEmail) {
+  const followUrl = `${APP_URL}/following`;
+  const tryUrl = APP_URL;
+
+  const html = `<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
+<div style="max-width:480px;margin:0 auto;padding:48px 24px;">
+  <div style="font-size:13px;color:#999;margin-bottom:24px;">Headwater</div>
+  <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 12px;">Thanks for signing up — glad you're here.</p>
+  <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 24px;">You haven't added any channels yet, so your digest is empty. It only takes 30 seconds: add one channel you already follow on YouTube and tomorrow morning you'll have a summary of anything new.</p>
+  <a href="${followUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:24px;">Follow your first channel →</a>
+  <p style="font-size:14px;color:#555;line-height:1.7;margin:0 0 16px;">Not ready yet? Paste any YouTube URL and see what a summary looks like first.</p>
+  <a href="${tryUrl}" style="font-size:14px;font-weight:600;color:#22d3ee;text-decoration:none;">Try a video →</a>
+  <p style="font-size:12px;color:#bbb;margin-top:40px;line-height:1.6;">— Adam at Headwater<br><a href="${followUrl}" style="color:#bbb;">Unsubscribe</a></p>
+</div>
+</body></html>`;
+
+  const text = `Thanks for signing up — glad you're here.\n\nYou haven't added any channels yet, so your digest is empty. It only takes 30 seconds: add one channel you already follow on YouTube and tomorrow morning you'll have a summary of anything new.\n\nFollow your first channel: ${followUrl}\n\nNot ready yet? Paste any YouTube URL and see what a summary looks like first.\n\nTry a video: ${tryUrl}\n\n— Adam at Headwater\nUnsubscribe: ${followUrl}`;
+
+  await getResend().emails.send({
+    from: FROM,
+    to: toEmail,
+    subject: 'Finish setting up Headwater',
+    html,
+    text,
+    headers: {
+      'List-Unsubscribe': `<${followUrl}>`,
+      'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
+    },
+  });
+}
+
 async function sendPasswordReset(toEmail, resetUrl) {
   await getResend().emails.send({
     from: FROM,
@@ -177,4 +208,4 @@ async function sendVerificationEmail(toEmail, verifyUrl) {
   });
 }
 
-module.exports = { sendDigest, sendPasswordReset, sendVerificationEmail };
+module.exports = { sendDigest, sendNudge, sendPasswordReset, sendVerificationEmail };
