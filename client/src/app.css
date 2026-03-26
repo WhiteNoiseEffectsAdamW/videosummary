@@ -742,6 +742,19 @@ body {
 }
 .btn-test-email:hover { color: #e2e8f0; background: rgba(255,255,255,0.09); }
 .btn-test-email:disabled { opacity: 0.5; cursor: default; }
+.btn-icon-refresh {
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s, background 0.15s;
+}
+.btn-icon-refresh:hover { color: #e2e8f0; background: rgba(255,255,255,0.09); }
+.btn-icon-refresh:disabled { opacity: 0.4; cursor: default; }
 
 /* Email digest toggle */
 .digest-toggle-row {
