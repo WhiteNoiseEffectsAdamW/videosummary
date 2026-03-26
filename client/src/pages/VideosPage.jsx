@@ -56,6 +56,7 @@ export default function VideosPage() {
   const [filterCategory, setFilterCategory] = useState(null);
   const [filterChannel, setFilterChannel] = useState(null);
   const [search, setSearch] = useState('');
+  const [sortOrder, setSortOrder] = useState('newest');
 
   function loadVideos() {
     setError(false);
@@ -121,12 +122,17 @@ export default function VideosPage() {
         const allCategories = [...new Set(videos.flatMap((v) => v.categories || []))].sort();
         const allChannels = [...new Set(videos.map((v) => v.channelName).filter(Boolean))].sort();
         const q = search.trim().toLowerCase();
-        const filtered = videos.filter((v) => {
-          if (filterCategory && !(v.categories || []).includes(filterCategory)) return false;
-          if (filterChannel && v.channelName !== filterChannel) return false;
-          if (q && !`${v.title || ''} ${v.channelName || ''}`.toLowerCase().includes(q)) return false;
-          return true;
-        });
+        const filtered = videos
+          .filter((v) => {
+            if (filterCategory && !(v.categories || []).includes(filterCategory)) return false;
+            if (filterChannel && v.channelName !== filterChannel) return false;
+            if (q && !`${v.title || ''} ${v.channelName || ''}`.toLowerCase().includes(q)) return false;
+            return true;
+          })
+          .sort((a, b) => {
+            const da = new Date(a.savedAt), db = new Date(b.savedAt);
+            return sortOrder === 'oldest' ? da - db : db - da;
+          });
         return (
           <>
             <div className="filter-bar">
@@ -150,6 +156,10 @@ export default function VideosPage() {
                     {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 )}
+                <select className="filter-select" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                </select>
               </div>
             </div>
             {filtered.length === 0 ? (
