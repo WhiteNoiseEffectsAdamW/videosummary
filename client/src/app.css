@@ -801,7 +801,7 @@ body {
 }
 .channel-menu-item:hover { background: rgba(255,255,255,0.07); color: #e2e8f0; }
 .channel-menu-shorts { cursor: pointer; }
-.channel-menu-shorts input { accent-color: #22d3ee; cursor: pointer; }
+.channel-menu-shorts input { accent-color: #fff; cursor: pointer; }
 .channel-menu-divider { border-top: 1px solid rgba(255,255,255,0.07); margin: 4px 0; }
 .channel-menu-danger { color: #f87171; }
 .channel-menu-danger:hover { background: rgba(248,113,113,0.1); color: #f87171; }
