@@ -12,7 +12,6 @@ const POPULAR_CHANNELS = [
   { name: 'Cal Newport', handle: '@CalNewportMedia', category: 'Productivity' },
   { name: 'Ali Abdaal', handle: '@aliabdaal', category: 'Productivity' },
   { name: 'Huberman Lab', handle: '@hubermanlab', category: 'Health' },
-  { name: 'Peter Attia', handle: '@PeterAttiaMD', category: 'Health' },
   { name: 'Graham Stephan', handle: '@GrahamStephan', category: 'Finance & Business' },
   { name: 'Y Combinator', handle: '@ycombinator', category: 'Finance & Business' },
   { name: 'Diary of a CEO', handle: '@TheDiaryOfACEO', category: 'Finance & Business' },
