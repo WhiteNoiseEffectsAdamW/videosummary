@@ -61,13 +61,16 @@ router.post('/send-test-digest', requireAuth, async (req, res, next) => {
   }
 });
 
-// POST /api/videos/scan — manually trigger scan of all followed channels
+// POST /api/videos/scan — manually trigger scan of followed channels
+// Optional body: { channelId } to scan a single channel
 router.post('/scan', requireAuth, async (req, res, next) => {
   try {
     const subs = await subscriptionModel.findByUserId(req.user.id);
-    if (!subs.length) return res.json({ ok: true, message: 'No channels to scan.' });
-    subs.forEach((s) => scanChannel(s.channel_id, s.channel_name, 3 * 24 * 60 * 60 * 1000, req.user.id).catch(() => {}));
-    res.json({ ok: true, message: `Scanning ${subs.length} channel(s)…` });
+    if (!subs.length) return res.json({ ok: true });
+    const { channelId } = req.body || {};
+    const toScan = channelId ? subs.filter((s) => s.channel_id === channelId) : subs;
+    toScan.forEach((s) => scanChannel(s.channel_id, s.channel_name, 3 * 24 * 60 * 60 * 1000, req.user.id).catch(() => {}));
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

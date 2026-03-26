@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../AuthContext.jsx';
 import PopularChannelSelect from '../components/PopularChannelSelect.jsx';
 
@@ -183,17 +183,34 @@ export default function FollowingPage() {
     }
   }
 
-  const [updating, setUpdating] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
+  const [scanningChannel, setScanningChannel] = useState(null);
+  const menuRefs = useRef({});
 
-  async function handleUpdate() {
-    setUpdating(true);
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (openMenu && menuRefs.current[openMenu] && !menuRefs.current[openMenu].contains(e.target)) {
+        setOpenMenu(null);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openMenu]);
+
+  async function handleScanChannel(channelId, channelName) {
+    setOpenMenu(null);
+    setScanningChannel(channelId);
     try {
-      await fetch('/api/videos/scan', { method: 'POST', credentials: 'include' });
-      showToast('Updated — check My Videos shortly.');
+      await fetch('/api/videos/scan', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ channelId }),
+      });
+      showToast(`Refreshing ${(channelName || channelId).replace(/^@/, '')} — check My Videos shortly.`);
     } catch {
-      showToast('Could not update. Please try again.');
+      showToast('Could not refresh channel.');
     } finally {
-      setUpdating(false);
+      setScanningChannel(null);
     }
   }
 
@@ -202,17 +219,7 @@ export default function FollowingPage() {
   return (
     <div className="page-inner">
       {toast && <div className="toast">{toast}</div>}
-      <div className="videos-header">
-        <h1 className="page-title" style={{ margin: 0 }}>Following</h1>
-        {channels.length > 0 && (
-          <button className="btn-icon-refresh" onClick={handleUpdate} disabled={updating} title="Check for new videos">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block', transition: 'transform 0.6s ease', transform: updating ? 'rotate(360deg)' : 'none' }}>
-              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-              <path d="M21 3v5h-5" />
-            </svg>
-          </button>
-        )}
-      </div>
+      <h1 className="page-title">Following</h1>
 
       {/* Email digest toggle */}
       <div className="digest-toggle-row">
@@ -276,6 +283,7 @@ export default function FollowingPage() {
           {channels.map((c) => {
             const digestOn = c.digest !== false;
             const shortsOn = c.include_shorts === true;
+            const isScanning = scanningChannel === c.channel_id;
             return (
               <li key={c.id} className="channel-item">
                 <div>
@@ -291,14 +299,42 @@ export default function FollowingPage() {
                   >
                     {digestOn ? 'Active' : 'Paused'}
                   </button>
-                  <button
-                    className={`btn-digest-pill${shortsOn ? ' pill-on' : ' pill-off'}`}
-                    onClick={() => handleToggleShorts(c.id, shortsOn)}
-                    title={shortsOn ? 'Shorts included — click to exclude' : 'Shorts excluded — click to include'}
-                  >
-                    {shortsOn ? 'Shorts' : 'No shorts'}
-                  </button>
-                  <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Remove</button>
+                  <div className="channel-menu-wrap" ref={(el) => { menuRefs.current[c.id] = el; }}>
+                    <button
+                      className="channel-menu-btn"
+                      onClick={() => setOpenMenu(openMenu === c.id ? null : c.id)}
+                      disabled={isScanning}
+                      title="Channel settings"
+                    >
+                      {isScanning ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="spin">
+                          <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
+                        </svg>
+                      ) : '⋯'}
+                    </button>
+                    {openMenu === c.id && (
+                      <div className="channel-menu">
+                        <button className="channel-menu-item" onClick={() => handleScanChannel(c.channel_id, c.channel_name)}>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
+                          </svg>
+                          Refresh
+                        </button>
+                        <label className="channel-menu-item channel-menu-shorts">
+                          <input
+                            type="checkbox"
+                            checked={shortsOn}
+                            onChange={() => { handleToggleShorts(c.id, shortsOn); setOpenMenu(null); }}
+                          />
+                          Include Shorts
+                        </label>
+                        <div className="channel-menu-divider" />
+                        <button className="channel-menu-item channel-menu-danger" onClick={() => { setOpenMenu(null); handleRemove(c.id, c.channel_name || c.channel_id); }}>
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </li>
             );
