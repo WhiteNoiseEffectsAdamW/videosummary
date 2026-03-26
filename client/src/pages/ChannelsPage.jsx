@@ -184,7 +184,7 @@ export default function FollowingPage() {
   }
 
   const [openMenu, setOpenMenu] = useState(null);
-  const [scanningChannel, setScanningChannel] = useState(null);
+  const [channelStatus, setChannelStatus] = useState({});
   const menuRefs = useRef({});
 
   useEffect(() => {
@@ -197,20 +197,19 @@ export default function FollowingPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [openMenu]);
 
-  async function handleScanChannel(channelId, channelName) {
+  async function handleScanChannel(channelId) {
     setOpenMenu(null);
-    setScanningChannel(channelId);
+    setChannelStatus((prev) => ({ ...prev, [channelId]: 'scanning' }));
     try {
       await fetch('/api/videos/scan', {
         method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ channelId }),
       });
-      showToast(`Refreshing ${(channelName || channelId).replace(/^@/, '')} — check My Videos shortly.`);
+      setChannelStatus((prev) => ({ ...prev, [channelId]: 'done' }));
+      setTimeout(() => setChannelStatus((prev) => { const n = { ...prev }; delete n[channelId]; return n; }), 5000);
     } catch {
-      showToast('Could not refresh channel.');
-    } finally {
-      setScanningChannel(null);
+      setChannelStatus((prev) => { const n = { ...prev }; delete n[channelId]; return n; });
     }
   }
 
@@ -283,12 +282,14 @@ export default function FollowingPage() {
           {channels.map((c) => {
             const digestOn = c.digest !== false;
             const shortsOn = c.include_shorts === true;
-            const isScanning = scanningChannel === c.channel_id;
+            const status = channelStatus[c.channel_id];
             return (
               <li key={c.id} className="channel-item">
                 <div>
                   <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
-                  {c.lastPosted && (
+                  {status === 'scanning' && <div className="channel-scan-status">Checking for new videos…</div>}
+                  {status === 'done' && <div className="channel-scan-status">Done — check My Videos shortly.</div>}
+                  {!status && c.lastPosted && (
                     <div className="channel-last-posted">Last posted {formatRelative(c.lastPosted)}</div>
                   )}
                 </div>
@@ -303,10 +304,10 @@ export default function FollowingPage() {
                     <button
                       className="channel-menu-btn"
                       onClick={() => setOpenMenu(openMenu === c.id ? null : c.id)}
-                      disabled={isScanning}
+                      disabled={status === 'scanning'}
                       title="Channel settings"
                     >
-                      {isScanning ? (
+                      {status === 'scanning' ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="spin">
                           <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
                         </svg>
@@ -314,7 +315,7 @@ export default function FollowingPage() {
                     </button>
                     {openMenu === c.id && (
                       <div className="channel-menu">
-                        <button className="channel-menu-item" onClick={() => handleScanChannel(c.channel_id, c.channel_name)}>
+                        <button className="channel-menu-item" onClick={() => handleScanChannel(c.channel_id)}>
                           <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                             <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
                           </svg>
@@ -324,7 +325,7 @@ export default function FollowingPage() {
                           <input
                             type="checkbox"
                             checked={shortsOn}
-                            onChange={() => { handleToggleShorts(c.id, shortsOn); setOpenMenu(null); }}
+                            onChange={() => handleToggleShorts(c.id, shortsOn)}
                           />
                           Include Shorts
                         </label>
