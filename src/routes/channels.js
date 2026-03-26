@@ -26,7 +26,8 @@ async function resolveChannelUrl(url) {
   if (!match) throw new Error('Could not find a channel ID on that page. Try using the channel URL from the About tab.');
 
   const nameMatch = html.match(/"canonicalBaseUrl":"\/@([^"]+)"/);
-  const channelName = nameMatch ? nameMatch[1] : null;
+  const titleMatch = html.match(/"channelMetadataRenderer":\{"title":"([^"]+)"/);
+  const channelName = titleMatch ? titleMatch[1] : (nameMatch ? nameMatch[1] : null);
   return { channelId: match[1], channelName };
 }
 

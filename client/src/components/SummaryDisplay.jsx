@@ -101,6 +101,9 @@ export default function SummaryDisplay({ data }) {
         </div>
       )}
 
+      {/* Title */}
+      {title && <div className="summary-title">{title}</div>}
+
       {/* Channel + Actions */}
       <div className="summary-header">
         <div className="summary-channel-group">
@@ -141,9 +144,6 @@ export default function SummaryDisplay({ data }) {
           </div>
         </div>
       </div>
-
-      {/* Title */}
-      {title && <div className="summary-title">{title}</div>}
 
 
       {/* Categories */}
