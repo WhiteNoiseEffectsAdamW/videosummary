@@ -115,6 +115,7 @@ async function migrate() {
       t.string('channel_name');
       t.boolean('active').defaultTo(true);
       t.boolean('digest').defaultTo(true);
+      t.boolean('include_shorts').defaultTo(false);
       t.timestamps(true, true);
       t.unique(['user_id', 'channel_id']);
     });
@@ -122,6 +123,10 @@ async function migrate() {
     const hasDigest = await db.schema.hasColumn('subscriptions', 'digest');
     if (!hasDigest) {
       await db.schema.alterTable('subscriptions', (t) => t.boolean('digest').defaultTo(true));
+    }
+    const hasIncludeShorts = await db.schema.hasColumn('subscriptions', 'include_shorts');
+    if (!hasIncludeShorts) {
+      await db.schema.alterTable('subscriptions', (t) => t.boolean('include_shorts').defaultTo(false));
     }
   }
 }

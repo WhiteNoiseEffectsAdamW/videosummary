@@ -19,8 +19,12 @@ async function setDigest({ userId, subscriptionId, digest }) {
   return db(TABLE).where({ id: subscriptionId, user_id: userId }).update({ digest });
 }
 
+async function setIncludeShorts({ userId, subscriptionId, includeShorts }) {
+  return db(TABLE).where({ id: subscriptionId, user_id: userId }).update({ include_shorts: includeShorts });
+}
+
 async function findAll() {
   return db(TABLE).where({ active: true });
 }
 
-module.exports = { findByUserId, create, remove, findAll, setDigest };
+module.exports = { findByUserId, create, remove, findAll, setDigest, setIncludeShorts };

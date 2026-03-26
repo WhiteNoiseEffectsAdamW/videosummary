@@ -127,6 +127,21 @@ export default function FollowingPage() {
     }
   }
 
+  async function handleToggleShorts(id, current) {
+    const next = !current;
+    const res = await fetch(`/api/subscriptions/${id}`, {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ include_shorts: next }),
+    });
+    if (res.ok) {
+      setChannels((prev) => prev.map((c) => c.id === id ? { ...c, include_shorts: next } : c));
+    } else {
+      showToast('Could not update channel. Please try again.');
+    }
+  }
+
   async function handlePreviewDigest() {
     setPreviewSending(true);
     try {
@@ -168,12 +183,33 @@ export default function FollowingPage() {
     }
   }
 
+  const [updating, setUpdating] = useState(false);
+
+  async function handleUpdate() {
+    setUpdating(true);
+    try {
+      await fetch('/api/videos/scan', { method: 'POST', credentials: 'include' });
+      showToast('Updated — check My Videos shortly.');
+    } catch {
+      showToast('Could not update. Please try again.');
+    } finally {
+      setUpdating(false);
+    }
+  }
+
   const digestOn = user?.emailDigest !== false;
 
   return (
     <div className="page-inner">
       {toast && <div className="toast">{toast}</div>}
-      <h1 className="page-title">Following</h1>
+      <div className="videos-header">
+        <h1 className="page-title" style={{ margin: 0 }}>Following</h1>
+        {channels.length > 0 && (
+          <button className="btn-test-email" onClick={handleUpdate} disabled={updating}>
+            {updating ? 'Updating…' : 'Update'}
+          </button>
+        )}
+      </div>
 
       {/* Email digest toggle */}
       <div className="digest-toggle-row">
@@ -236,6 +272,7 @@ export default function FollowingPage() {
         <ul className="channel-list">
           {channels.map((c) => {
             const digestOn = c.digest !== false;
+            const shortsOn = c.include_shorts === true;
             return (
               <li key={c.id} className="channel-item">
                 <div>
@@ -250,6 +287,13 @@ export default function FollowingPage() {
                     onClick={() => handleToggleChannel(c.id, digestOn)}
                   >
                     {digestOn ? 'Active' : 'Paused'}
+                  </button>
+                  <button
+                    className={`btn-digest-pill${shortsOn ? ' pill-on' : ' pill-off'}`}
+                    onClick={() => handleToggleShorts(c.id, shortsOn)}
+                    title={shortsOn ? 'Shorts included — click to exclude' : 'Shorts excluded — click to include'}
+                  >
+                    {shortsOn ? 'Shorts' : 'No shorts'}
                   </button>
                   <button className="btn-remove" onClick={() => handleRemove(c.id, c.channel_name || c.channel_id)}>Remove</button>
                 </div>

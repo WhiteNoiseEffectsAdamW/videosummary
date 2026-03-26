@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const requireAuth = require('../middleware/requireAuth');
-const { findByUserId, create, remove, setDigest } = require('../models/subscription');
+const { findByUserId, create, remove, setDigest, setIncludeShorts } = require('../models/subscription');
 const { db } = require('../db');
 
 // All routes require login
@@ -47,13 +47,19 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// PATCH /api/subscriptions/:id — update digest flag
+// PATCH /api/subscriptions/:id — update digest or include_shorts flag
 router.patch('/:id', async (req, res, next) => {
   try {
-    const { digest } = req.body;
-    if (typeof digest !== 'boolean') return res.status(400).json({ error: 'digest must be a boolean.' });
-    await setDigest({ userId: req.user.id, subscriptionId: req.params.id, digest });
-    res.json({ ok: true, digest });
+    const { digest, include_shorts } = req.body;
+    if (digest !== undefined) {
+      if (typeof digest !== 'boolean') return res.status(400).json({ error: 'digest must be a boolean.' });
+      await setDigest({ userId: req.user.id, subscriptionId: req.params.id, digest });
+    }
+    if (include_shorts !== undefined) {
+      if (typeof include_shorts !== 'boolean') return res.status(400).json({ error: 'include_shorts must be a boolean.' });
+      await setIncludeShorts({ userId: req.user.id, subscriptionId: req.params.id, includeShorts: include_shorts });
+    }
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }
