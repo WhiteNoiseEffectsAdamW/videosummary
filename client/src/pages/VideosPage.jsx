@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 function VideoRow({ video, onDelete }) {
   const navigate = useNavigate();
-  const date = new Date(video.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const date = new Date(video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
   function handleClick(e) {
     if (e.target.closest('.vrow-delete')) return;
