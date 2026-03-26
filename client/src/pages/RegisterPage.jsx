@@ -29,7 +29,7 @@ export default function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1 className="auth-title">Join the beta</h1>
+        <h1 className="auth-title">Get early access</h1>
         <p className="auth-sub">The signal, before the feed gets to it.</p>
         <form onSubmit={handleSubmit}>
           <div className="field">
@@ -56,7 +56,7 @@ export default function RegisterPage() {
           </div>
           {error && <div className="auth-error">{error}</div>}
           <button className="btn-primary" type="submit" disabled={loading}>
-            {loading ? 'Joining…' : 'Join the beta'}
+            {loading ? 'Getting access…' : 'Get early access'}
           </button>
         </form>
         <p className="auth-switch">Already have an account? <Link to="/login">Sign in</Link></p>

@@ -196,7 +196,7 @@ export default function LandingPage() {
         <span className="landing-brand">Headwater</span>
         <div className="landing-nav-right">
           <Link to="/login" className="landing-nav-link">Sign in</Link>
-          <Link to="/register" className="btn-primary">Join the beta</Link>
+          <Link to="/register" className="btn-primary">Get early access</Link>
         </div>
       </header>
 
