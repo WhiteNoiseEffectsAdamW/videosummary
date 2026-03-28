@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './AuthContext.jsx';
 import Nav from './components/Nav.jsx';
 import ErrorBoundary from './components/ErrorBoundary.jsx';
@@ -39,6 +39,7 @@ function SummarizerPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+  const navigate = useNavigate();
 
   // Auto-load if ?v=VIDEO_ID is in the URL (e.g. from My Videos)
   useEffect(() => {
@@ -52,7 +53,7 @@ function SummarizerPage() {
       .then((r) => r.json())
       .then((json) => {
         if (json.error) throw new Error(json.error);
-        setData(json);
+        navigate(`/s/${json.videoId}`, { replace: true });
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -72,7 +73,7 @@ function SummarizerPage() {
       const res = await fetch(`/api/summary?url=${encodeURIComponent(url.trim())}`, { credentials: 'include' });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
-      setData(json);
+      navigate(`/s/${json.videoId}`);
     } catch (err) {
       setError(err.message);
     } finally {

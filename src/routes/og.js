@@ -77,7 +77,8 @@ function buildSvg(summary, videoId) {
       </linearGradient>
     </defs>
 
-    <!-- Gradient overlays -->
+    <!-- Uniform dark base + gradient overlays -->
+    <rect x="0" y="0" width="${W}" height="${H}" fill="${NAV_BG}" fill-opacity="0.45"/>
     <rect x="0" y="0" width="${W}" height="${H}" fill="url(#topfade)"/>
     <rect x="0" y="0" width="${W}" height="${H}" fill="url(#botfade)"/>
 
