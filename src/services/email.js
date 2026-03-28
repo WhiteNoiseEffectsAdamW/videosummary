@@ -81,8 +81,8 @@ function renderDigestHtml(summaries) {
             <td valign="top">
               ${cleanName(s.channel_name) ? `<div style="font-size:11px;font-weight:500;color:#999;margin-bottom:4px;">${esc(cleanName(s.channel_name))}</div>` : ''}
               <div style="font-size:15px;font-weight:700;color:#111;line-height:1.35;margin-bottom:8px;">${esc(s.title || s.video_id)}</div>
-              ${tldr ? `<div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">${esc(tldr)}</div>` : ''}
-              ${quote ? `<div style="color:#888;font-size:12px;font-style:italic;line-height:1.5;margin-bottom:10px;">&ldquo;${esc(quote.text)}&rdquo;</div>` : ''}
+              ${tldr ? `<div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">${esc(tldr.length > 280 ? tldr.slice(0, 280) + '…' : tldr)}</div>` : ''}
+              ${quote ? `<div style="color:#888;font-size:12px;font-style:italic;line-height:1.5;margin-bottom:10px;">&ldquo;${esc(quote.text.length > 200 ? quote.text.slice(0, 200) + '…' : quote.text)}&rdquo;</div>` : ''}
               <a href="${APP_URL}/s/${s.video_id}" style="font-size:12px;font-weight:600;color:#111;text-decoration:none;margin-right:12px;">Full summary &rarr;</a>
               <a href="${videoUrl}" style="font-size:12px;color:#999;text-decoration:none;">Watch &rarr;</a>
             </td>
@@ -132,12 +132,15 @@ function esc(str) {
 async function sendDigest(toEmail, summaries) {
   if (!summaries.length) return;
 
+  // Cap at 12 to stay well under Gmail's ~102KB clip threshold
+  const capped = summaries.slice(0, 12);
+
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: 'Your morning digest',
-    html: renderDigestHtml(summaries),
-    text: renderDigestText(summaries),
+    subject: `Headwater — ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`,
+    html: renderDigestHtml(capped),
+    text: renderDigestText(capped),
     headers: {
       'List-Unsubscribe': `<${APP_URL}/following>`,
       'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click',
