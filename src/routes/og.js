@@ -52,10 +52,10 @@ function buildSvg(summary, videoId) {
   const TITLE_LINE_H = 80;
 
   // Badge
-  const BADGE_W = 220;
-  const BADGE_H = 66;
+  const BADGE_W = 248;
+  const BADGE_H = 74;
   const BADGE_X = W - PAD - BADGE_W;
-  const BADGE_Y = 42;
+  const BADGE_Y = 38;
 
   // Wordmark baseline
   const WM_Y = 110;
@@ -90,10 +90,10 @@ function buildSvg(summary, videoId) {
 
     <!-- Summary badge (filled cyan) -->
     <rect x="${BADGE_X}" y="${BADGE_Y}" width="${BADGE_W}" height="${BADGE_H}" rx="8" fill="${CYAN}"/>
-    <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 44}" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
+    <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 49}" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
 
     <!-- Channel name -->
-    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="700" fill="${CYAN}" letter-spacing="3" filter="url(#shadow)">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="800" fill="${CYAN}" letter-spacing="3" filter="url(#shadow)">${escXml(channelName)}</text>` : ''}
 
     <!-- Title -->
     ${titleLines.map((line, i) => `<text x="${PAD}" y="${titleFirstY + i * TITLE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TITLE_FONT}" font-weight="800" fill="#ffffff" letter-spacing="-1" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}

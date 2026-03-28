@@ -22,7 +22,7 @@ export default function PublicSummaryPage() {
 
   useEffect(() => {
     if (!data) return;
-    const title = data.title ? `${data.title} — Headwater` : 'Headwater';
+    const title = data.title ? `Headwater Summary — ${data.title}` : 'Headwater Summary';
     const desc = data.tldr?.slice(0, 160) || 'AI-generated video summary';
     const image = data.thumbnailUrl;
 
