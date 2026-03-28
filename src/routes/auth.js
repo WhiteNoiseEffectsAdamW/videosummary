@@ -6,7 +6,7 @@ const passport = require('../middleware/passport');
 const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified, countAll } = require('../models/user');
 const { sendPasswordReset, sendVerificationEmail, sendWelcome, sendDigest } = require('../services/email');
 const { db } = require('../db');
-const { findSavedByUserId } = require('../models/summary');
+const { findSavedByUserIdSince } = require('../models/summary');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -179,8 +179,9 @@ router.post('/resend-verification', async (req, res, next) => {
 router.post('/preview-digest', async (req, res, next) => {
   if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
   try {
-    const summaries = await findSavedByUserId(req.user.id, 10);
-    if (!summaries.length) return res.status(400).json({ error: 'No summaries available yet. Add some channels first.' });
+    const since = new Date(Date.now() - 25 * 60 * 60 * 1000);
+    const summaries = await findSavedByUserIdSince(req.user.id, since);
+    if (!summaries.length) return res.status(400).json({ error: 'No new videos in the last 25 hours — nothing to send yet.' });
     await sendDigest(req.user.email, summaries);
     res.json({ ok: true });
   } catch (err) {
