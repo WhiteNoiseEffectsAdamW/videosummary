@@ -39,11 +39,19 @@ async function processVideo(videoId, channelId, channelName, title, userIds = []
     console.log(`[poll] summarizing ${videoId} — "${title}"`);
     const { text, durationSeconds } = await getTranscript(videoId);
     const summary = await summarize(text, durationSeconds, title);
-    cached = await summaryModel.create({
-      videoId, channelId, channelName: channelName || null,
-      title: title || summary.tldr?.slice(0, 100) || videoId,
-      summary, transcriptLength: text.length, durationSeconds,
-    });
+    try {
+      cached = await summaryModel.create({
+        videoId, channelId, channelName: channelName || null,
+        title: title || summary.tldr?.slice(0, 100) || videoId,
+        summary, transcriptLength: text.length, durationSeconds,
+      });
+    } catch (err) {
+      if (err.message?.includes('duplicate') || err.message?.includes('UNIQUE') || err.code === '23505') {
+        cached = await summaryModel.findByVideoId(videoId);
+      } else {
+        throw err;
+      }
+    }
     console.log(`[poll] done ${videoId} (${durationSeconds}s)`);
 
     // Only save shorts for users who opted in
