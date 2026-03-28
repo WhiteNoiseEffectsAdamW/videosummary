@@ -15,9 +15,8 @@ const NAV_BG = '#0c0f14';
 const CYAN = '#22d3ee';
 
 // Load font files once at startup
-const FONT_700 = fs.readFileSync(path.join(__dirname, '../fonts/inter-700.woff'));
-const FONT_900 = fs.readFileSync(path.join(__dirname, '../fonts/inter-900.woff'));
-console.log('[og] fonts loaded — 700:', FONT_700.length, '900:', FONT_900.length);
+const FONT = fs.readFileSync(path.join(__dirname, '../fonts/inter.ttf'));
+console.log('[og] font loaded — inter.ttf:', FONT.length);
 
 function escXml(str) {
   return String(str || '')
@@ -135,7 +134,7 @@ router.get('/:videoId', async (req, res) => {
     const resvg = new Resvg(svg, {
       font: {
         loadSystemFonts: false,
-        fontBuffers: [FONT_700, FONT_900],
+        fontBuffers: [FONT],
       },
     });
     const overlayPng = resvg.render().asPng();
