@@ -135,7 +135,7 @@ async function sendDigest(toEmail, summaries) {
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: `${summaries.length} new video${summaries.length !== 1 ? 's' : ''} from your channels`,
+    subject: 'Your morning digest',
     html: renderDigestHtml(summaries),
     text: renderDigestText(summaries),
     headers: {
