@@ -10,12 +10,13 @@ async function findByEmail(email) {
   return db(TABLE).where({ email: email.toLowerCase() }).first();
 }
 
-async function create({ email, passwordHash, name, emailDigest }) {
+async function create({ email, passwordHash, name, emailDigest, emailVerified }) {
   await db(TABLE).insert({
     email: email.toLowerCase(),
     password_hash: passwordHash,
     name: name || null,
     email_digest: emailDigest === true,
+    email_verified: emailVerified === true,
   });
   return findByEmail(email);
 }

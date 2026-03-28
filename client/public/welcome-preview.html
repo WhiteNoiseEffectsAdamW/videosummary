@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome Email Preview — Headwater</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .browser-chrome { max-width: 640px; margin: 32px auto; }
+    .subject-bar { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px 8px 0 0; padding: 14px 20px; font-size: 13px; color: #555; border-bottom: none; }
+    .subject-bar strong { color: #111; }
+    .subject-bar .meta { display: flex; gap: 16px; margin-top: 6px; font-size: 12px; color: #999; }
+    .email-wrap { background: #fff; border: 1px solid #e0e0e0; border-radius: 0 0 8px 8px; padding: 48px 40px 56px; }
+    .sender { font-size: 12px; color: #999; margin-bottom: 32px; }
+    p { font-size: 15px; color: #333; line-height: 1.75; margin: 0 0 20px; }
+    .cta { display: inline-block; background: #22d3ee; color: #0c0f14; font-size: 14px; font-weight: 600; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin: 8px 0 28px; }
+    .sign { font-size: 15px; color: #555; margin: 0 0 16px; }
+    .footer { border-top: 1px solid #ebebeb; padding-top: 20px; font-size: 12px; color: #bbb; line-height: 1.8; }
+    .footer a { color: #bbb; text-decoration: none; }
+    @media (max-width: 600px) {
+      .browser-chrome { margin: 0; }
+      .email-wrap { padding: 32px 24px 40px; border-radius: 0; border-left: none; border-right: none; }
+      .subject-bar { border-radius: 0; border-left: none; border-right: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="browser-chrome">
+    <div class="subject-bar">
+      <strong>I was reading YouTube comments to decide what to watch</strong>
+      <div class="meta">
+        <span>From: <strong>Adam at Headwater</strong> &lt;digest@headwater.app&gt;</span>
+        <span>To: you</span>
+      </div>
+    </div>
+    <div class="email-wrap">
+      <div class="sender">Headwater</div>
+
+      <p>That's when I knew something was broken. YouTube is built to pull you in, not help you decide. So I built the opposite.</p>
+
+      <p>Headwater follows your channels and sends a digest each morning — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose. Email-first, because your inbox doesn't have an algorithm working against you.</p>
+
+      <p>Your first digest lands tomorrow morning.</p>
+
+      <a href="#" class="cta">Add your channels →</a>
+
+      <p class="sign">— Adam</p>
+
+      <p style="font-size:13px;color:#888;font-style:italic;margin:0 0 40px;line-height:1.75;">P.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.</p>
+
+      <div class="footer">
+        <a href="#">Headwater</a><br>
+        You're receiving this because you created a Headwater account.<br>
+        <a href="#">Unsubscribe</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

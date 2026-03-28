@@ -205,6 +205,33 @@ async function sendVerificationEmail(toEmail, verifyUrl) {
   });
 }
 
+async function sendWelcome(toEmail) {
+  const followUrl = `${APP_URL}/following`;
+
+  const html = `<!DOCTYPE html><html lang="en"><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
+<div style="max-width:480px;margin:0 auto;padding:48px 24px;">
+  <div style="font-size:13px;color:#999;margin-bottom:32px;">Headwater</div>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">That's when I knew something was broken. YouTube is built to pull you in, not help you decide. So I built the opposite.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Headwater follows your channels and sends a digest each morning — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose. Email-first, because your inbox doesn't have an algorithm working against you.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 28px;">Your first digest lands tomorrow morning.</p>
+  <a href="${followUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:32px;">Add your channels →</a>
+  <p style="font-size:15px;color:#555;margin:0 0 16px;line-height:1.6;">— Adam</p>
+  <p style="font-size:13px;color:#888;margin:0 0 48px;line-height:1.75;"><em>P.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.</em></p>
+  <p style="font-size:12px;color:#bbb;line-height:1.6;">You're receiving this because you created a Headwater account.<br><a href="${followUrl}" style="color:#bbb;">Unsubscribe</a></p>
+</div>
+</body></html>`;
+
+  const text = `That's when I knew something was broken. YouTube is built to pull you in, not help you decide. So I built the opposite.\n\nHeadwater follows your channels and sends a digest each morning — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose. Email-first, because your inbox doesn't have an algorithm working against you.\n\nYour first digest lands tomorrow morning.\n\nAdd your channels: ${followUrl}\n\n— Adam\n\nP.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.\n\nYou're receiving this because you created a Headwater account.\nUnsubscribe: ${followUrl}`;
+
+  await getResend().emails.send({
+    from: FROM,
+    to: toEmail,
+    subject: 'I was reading YouTube comments to decide what to watch',
+    html,
+    text,
+  });
+}
+
 async function sendAdminNotify(subject, text) {
   await getResend().emails.send({
     from: FROM,
@@ -214,4 +241,4 @@ async function sendAdminNotify(subject, text) {
   });
 }
 
-module.exports = { sendDigest, sendNudge, sendPasswordReset, sendVerificationEmail, sendAdminNotify };
+module.exports = { sendDigest, sendNudge, sendWelcome, sendPasswordReset, sendVerificationEmail, sendAdminNotify };

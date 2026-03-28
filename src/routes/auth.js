@@ -4,9 +4,9 @@ const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const passport = require('../middleware/passport');
 const { findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified, countAll } = require('../models/user');
-const { sendPasswordReset, sendVerificationEmail, sendDigest } = require('../services/email');
+const { sendPasswordReset, sendVerificationEmail, sendWelcome, sendDigest } = require('../services/email');
 const { db } = require('../db');
-const { findByChannelIdsSince } = require('../models/summary');
+const { findSavedByUserId } = require('../models/summary');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -51,10 +51,10 @@ router.post('/register', registerLimiter, async (req, res, next) => {
     if (existing) return res.status(409).json({ error: 'An account with that email already exists.' });
 
     const passwordHash = await bcrypt.hash(password, 12);
-    const user = await create({ email, passwordHash, name, emailDigest: emailDigest === true });
+    const user = await create({ email, passwordHash, name, emailDigest: emailDigest === true, emailVerified: true });
 
-    // Send verification email (non-blocking — don't fail registration if email fails)
-    issueVerification(user).catch((err) => console.error('[verify] Failed to send verification email:', err));
+    // Send welcome email (non-blocking — don't fail registration if email fails)
+    sendWelcome(user.email).catch((err) => console.error('[welcome] Failed to send welcome email:', err));
 
     // Notify admin of new signup (non-blocking)
     if (process.env.RESEND_API_KEY && process.env.ADMIN_EMAIL) {
@@ -179,13 +179,9 @@ router.post('/resend-verification', async (req, res, next) => {
 router.post('/preview-digest', async (req, res, next) => {
   if (!req.user) return res.status(401).json({ error: 'Not authenticated.' });
   try {
-    const channelIds = await db('subscriptions')
-      .where({ user_id: req.user.id, active: true })
-      .pluck('channel_id');
-    if (!channelIds.length) return res.status(400).json({ error: 'No channels followed yet.' });
-    const summaries = await findByChannelIdsSince(channelIds, new Date(0)); // no date filter
-    if (!summaries.length) return res.status(400).json({ error: 'No summaries available yet.' });
-    await sendDigest(req.user.email, summaries.slice(0, 10));
+    const summaries = await findSavedByUserId(req.user.id, 10);
+    if (!summaries.length) return res.status(400).json({ error: 'No summaries available yet. Add some channels first.' });
+    await sendDigest(req.user.email, summaries);
     res.json({ ok: true });
   } catch (err) {
     next(err);
