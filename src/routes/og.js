@@ -63,37 +63,40 @@ function buildSvg(summary, videoId) {
   // Bottom text — anchor last title line at H - 56
   const titleLastY = H - 56;
   const titleFirstY = titleLastY - (titleLines.length - 1) * TITLE_LINE_H;
-  const channelY = titleFirstY - 44;
+  const channelY = titleFirstY - 72;
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0.96"/>
+        <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0.82"/>
         <stop offset="42%" stop-color="${NAV_BG}" stop-opacity="0"/>
       </linearGradient>
       <linearGradient id="botfade" x1="0" y1="0" x2="0" y2="1">
         <stop offset="38%" stop-color="${NAV_BG}" stop-opacity="0"/>
-        <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="0.97"/>
+        <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="0.82"/>
       </linearGradient>
+      <filter id="shadow">
+        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.75"/>
+      </filter>
     </defs>
 
     <!-- Uniform dark base + gradient overlays -->
-    <rect x="0" y="0" width="${W}" height="${H}" fill="${NAV_BG}" fill-opacity="0.45"/>
+    <rect x="0" y="0" width="${W}" height="${H}" fill="${NAV_BG}" fill-opacity="0.52"/>
     <rect x="0" y="0" width="${W}" height="${H}" fill="url(#topfade)"/>
     <rect x="0" y="0" width="${W}" height="${H}" fill="url(#botfade)"/>
 
     <!-- Wordmark: Head(white)water(cyan) -->
-    <text x="${PAD}" y="${WM_Y}" font-family="Inter,Arial,sans-serif" font-size="64" font-weight="800" fill="#ffffff" letter-spacing="-1">Head<tspan fill="${CYAN}">water</tspan></text>
+    <text x="${PAD}" y="${WM_Y}" font-family="Inter,Arial,sans-serif" font-size="64" font-weight="800" fill="#ffffff" letter-spacing="-1" filter="url(#shadow)">Head<tspan fill="${CYAN}">water</tspan></text>
 
     <!-- Summary badge (filled cyan) -->
     <rect x="${BADGE_X}" y="${BADGE_Y}" width="${BADGE_W}" height="${BADGE_H}" rx="8" fill="${CYAN}"/>
     <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 44}" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
 
     <!-- Channel name -->
-    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="38" font-weight="700" fill="${CYAN}" letter-spacing="3">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="700" fill="${CYAN}" letter-spacing="3" filter="url(#shadow)">${escXml(channelName)}</text>` : ''}
 
     <!-- Title -->
-    ${titleLines.map((line, i) => `<text x="${PAD}" y="${titleFirstY + i * TITLE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TITLE_FONT}" font-weight="800" fill="#ffffff" letter-spacing="-1">${escXml(line)}</text>`).join('\n    ')}
+    ${titleLines.map((line, i) => `<text x="${PAD}" y="${titleFirstY + i * TITLE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TITLE_FONT}" font-weight="800" fill="#ffffff" letter-spacing="-1" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
   </svg>`;
 }
 
