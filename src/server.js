@@ -18,6 +18,7 @@ const authRouter = require('./routes/auth');
 const subscriptionsRouter = require('./routes/subscriptions');
 const channelsRouter = require('./routes/channels');
 const videosRouter = require('./routes/videos');
+const ogRouter = require('./routes/og');
 const { errorHandler } = require('./middleware/errorHandler');
 const { startPolling } = require('./jobs/poll-channels');
 const { startDigestJob } = require('./jobs/send-digests');
@@ -77,6 +78,7 @@ app.use('/api/subscriptions', subscriptionsRouter);
 app.use('/api/channels', channelsRouter);
 app.use('/api/videos', videosRouter);
 app.use('/api/summary', summaryRouter);
+app.use('/api/og', ogRouter);
 
 // Serve React build in production
 if (process.env.NODE_ENV === 'production') {
@@ -99,7 +101,7 @@ if (process.env.NODE_ENV === 'production') {
 
       const title = escAttr(`Headwater · "${summary.title || req.params.videoId}"`);
       const description = escAttr(summary.summary?.tldr || 'AI-generated video summary from Headwater.');
-      const image = `https://img.youtube.com/vi/${req.params.videoId}/maxresdefault.jpg`;
+      const image = `${APP_URL}/api/og/${req.params.videoId}`;
       const url = `${APP_URL}/s/${req.params.videoId}`;
 
       let html = fs.readFileSync(path.join(clientDist, 'index.html'), 'utf8');
