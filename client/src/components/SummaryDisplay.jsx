@@ -72,12 +72,18 @@ export default function SummaryDisplay({ data }) {
     }
   }
 
-  function handleShare() {
+  async function handleShare() {
     const url = `${window.location.origin}/s/${videoId}`;
-    navigator.clipboard.writeText(url).then(() => {
-      setToast('Link copied to clipboard');
-      setTimeout(() => setToast(null), 2500);
-    });
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: title || 'Video summary', url });
+      } catch {}
+    } else {
+      navigator.clipboard.writeText(url).then(() => {
+        setToast('Copied!');
+        setTimeout(() => setToast(null), 2500);
+      });
+    }
   }
 
   return (
@@ -144,8 +150,13 @@ export default function SummaryDisplay({ data }) {
               </svg>
               Watch on YouTube
             </a>
-            <button className="btn-share-subtle" onClick={handleShare}>
-              {toast ? 'Copied!' : 'Send to a friend'}
+            <button className="btn-share-subtle" onClick={handleShare} title="Copy link">
+              {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>Copied!</span> : (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+              )}
             </button>
           </div>
         </div>
