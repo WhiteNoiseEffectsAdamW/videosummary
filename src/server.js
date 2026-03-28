@@ -80,8 +80,45 @@ app.use('/api/summary', summaryRouter);
 
 // Serve React build in production
 if (process.env.NODE_ENV === 'production') {
+  const fs = require('fs');
   const clientDist = path.join(__dirname, '..', 'client', 'dist');
+  const { findByVideoId } = require('./models/summary');
+  const APP_URL = process.env.APP_URL || 'https://headwater.app';
+
+  function escAttr(str) {
+    return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
   app.use(express.static(clientDist));
+
+  // Per-video OG tags for share pages
+  app.get('/s/:videoId', async (req, res) => {
+    try {
+      const summary = await findByVideoId(req.params.videoId);
+      if (!summary) return res.sendFile(path.join(clientDist, 'index.html'));
+
+      const title = escAttr(`Headwater · "${summary.title || req.params.videoId}"`);
+      const description = escAttr(summary.summary?.tldr || 'AI-generated video summary from Headwater.');
+      const image = `https://img.youtube.com/vi/${req.params.videoId}/maxresdefault.jpg`;
+      const url = `${APP_URL}/s/${req.params.videoId}`;
+
+      let html = fs.readFileSync(path.join(clientDist, 'index.html'), 'utf8');
+      html = html
+        .replace(/(<title>)[^<]*(<\/title>)/, `$1${title}$2`)
+        .replace(/(<meta property="og:title"[^>]*content=")[^"]*(")/,  `$1${title}$2`)
+        .replace(/(<meta property="og:description"[^>]*content=")[^"]*(")/,  `$1${description}$2`)
+        .replace(/(<meta property="og:image"[^>]*content=")[^"]*(")/,  `$1${image}$2`)
+        .replace(/(<meta property="og:url"[^>]*content=")[^"]*(")/,  `$1${url}$2`)
+        .replace(/(<meta name="twitter:title"[^>]*content=")[^"]*(")/,  `$1${title}$2`)
+        .replace(/(<meta name="twitter:description"[^>]*content=")[^"]*(")/,  `$1${description}$2`)
+        .replace(/(<meta name="twitter:image"[^>]*content=")[^"]*(")/,  `$1${image}$2`);
+
+      res.send(html);
+    } catch {
+      res.sendFile(path.join(clientDist, 'index.html'));
+    }
+  });
+
   app.get('*', (req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'));
   });
