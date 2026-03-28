@@ -17,6 +17,7 @@ const CYAN = '#22d3ee';
 // Load font files once at startup
 const FONT_700 = fs.readFileSync(path.join(__dirname, '../fonts/inter-700.woff'));
 const FONT_900 = fs.readFileSync(path.join(__dirname, '../fonts/inter-900.woff'));
+console.log('[og] fonts loaded — 700:', FONT_700.length, '900:', FONT_900.length);
 
 function escXml(str) {
   return String(str || '')
