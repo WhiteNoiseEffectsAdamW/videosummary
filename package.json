@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "build": "node scripts/install-yt-dlp.js && cd client && npm install && npm run build",
+    "build": "npm rebuild sharp && node scripts/install-yt-dlp.js && cd client && npm install && npm run build",
     "postinstall": "node scripts/patch-deps.js"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.20.0",
     "resend": "^6.9.4",
+    "sharp": "^0.34.5",
     "sqlite3": "^5.1.7",
     "youtube-transcript": "^1.2.1"
   }
