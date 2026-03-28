@@ -137,7 +137,9 @@ router.get('/:videoId', async (req, res) => {
         fontBuffers: [FONT],
       },
     });
-    const overlayPng = resvg.render().asPng();
+    const rendered = resvg.render();
+    const overlayPng = rendered.asPng();
+    console.log('[og] resvg rendered', videoId, '— png size:', overlayPng.length, 'w:', rendered.width, 'h:', rendered.height);
 
     // Composite: thumbnail base + SVG overlay
     const png = await sharp(thumbResized)
