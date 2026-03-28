@@ -10,8 +10,8 @@ if (process.platform !== 'linux') {
 }
 
 try {
-  console.log('[install-fonts] installing fonts-liberation...');
-  execSync('apt-get install -y -q fonts-liberation 2>&1 || true', { stdio: 'inherit' });
+  console.log('[install-fonts] installing ttf-liberation via apk...');
+  execSync('apk add --no-cache ttf-liberation 2>&1 || apt-get install -y -q fonts-liberation 2>&1 || true', { stdio: 'inherit' });
   console.log('[install-fonts] done');
 } catch (e) {
   console.warn('[install-fonts] failed:', e.message);
