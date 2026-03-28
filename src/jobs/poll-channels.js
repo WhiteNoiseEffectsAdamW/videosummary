@@ -42,7 +42,7 @@ async function processVideo(videoId, channelId, channelName, title, userIds = []
     cached = await summaryModel.create({
       videoId, channelId, channelName: channelName || null,
       title: title || summary.tldr?.slice(0, 100) || videoId,
-      summary, transcriptLength: text.length,
+      summary, transcriptLength: text.length, durationSeconds,
     });
     console.log(`[poll] done ${videoId} (${durationSeconds}s)`);
 

@@ -129,15 +129,15 @@ export default function FollowingPage() {
 
   async function handleToggleShorts(id, current) {
     const next = !current;
+    setChannels((prev) => prev.map((c) => c.id === id ? { ...c, include_shorts: next } : c));
     const res = await fetch(`/api/subscriptions/${id}`, {
       method: 'PATCH',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ include_shorts: next }),
     });
-    if (res.ok) {
-      setChannels((prev) => prev.map((c) => c.id === id ? { ...c, include_shorts: next } : c));
-    } else {
+    if (!res.ok) {
+      setChannels((prev) => prev.map((c) => c.id === id ? { ...c, include_shorts: current } : c));
       showToast('Could not update channel. Please try again.');
     }
   }

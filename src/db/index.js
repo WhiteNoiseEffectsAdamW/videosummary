@@ -129,6 +129,11 @@ async function migrate() {
       await db.schema.alterTable('subscriptions', (t) => t.boolean('include_shorts').defaultTo(false));
     }
   }
+
+  const hasDuration = await db.schema.hasColumn('summaries', 'duration_seconds');
+  if (!hasDuration) {
+    await db.schema.alterTable('summaries', (t) => t.integer('duration_seconds'));
+  }
 }
 
 module.exports = { db, migrate };

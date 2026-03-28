@@ -9,7 +9,7 @@ async function findByVideoId(videoId) {
   return { ...row, summary: JSON.parse(row.summary_json) };
 }
 
-async function create({ videoId, channelId, channelName, title, summary, transcriptLength }) {
+async function create({ videoId, channelId, channelName, title, summary, transcriptLength, durationSeconds }) {
   await db(TABLE).insert({
     video_id: videoId,
     channel_id: channelId || null,
@@ -17,6 +17,7 @@ async function create({ videoId, channelId, channelName, title, summary, transcr
     title,
     summary_json: JSON.stringify(summary),
     transcript_length: transcriptLength,
+    duration_seconds: durationSeconds || null,
   });
   return findByVideoId(videoId);
 }

@@ -315,6 +315,7 @@ body {
   color: #22d3ee;
   font-weight: 500;
 }
+.summary-duration { color: #64748b; font-weight: 400; }
 .btn-follow {
   font-size: 11px;
   font-weight: 600;
@@ -1167,6 +1168,7 @@ body {
 }
 .vrow-channel { font-size: 12px; color: #22d3ee; font-weight: 500; margin-bottom: 4px; }
 .vrow-date    { font-size: 12px; color: #555; }
+.vrow-duration { font-size: 12px; color: #555; }
 .vrow-saved   { font-size: 11px; color: #666; }
 
 .vrow-right {

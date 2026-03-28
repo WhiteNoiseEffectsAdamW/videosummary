@@ -63,7 +63,7 @@ router.get('/', anonLimit, async (req, res, next) => {
     const cached = await summaryModel.findByVideoId(videoId);
     if (cached) {
       summaryModel.upsertUserSave(userId, videoId).catch(() => {});
-      return res.json({ videoId, cached: true, thumbnailUrl, channelName: cached.channel_name, ...cached.summary });
+      return res.json({ videoId, cached: true, thumbnailUrl, channelName: cached.channel_name, durationSeconds: cached.duration_seconds || null, ...cached.summary });
     }
 
     const [{ text, durationSeconds }, meta] = await Promise.all([
@@ -78,11 +78,12 @@ router.get('/', anonLimit, async (req, res, next) => {
       channelName: meta.channelName || null,
       summary,
       transcriptLength: text.length,
+      durationSeconds,
     });
 
     summaryModel.upsertUserSave(userId, videoId).catch(() => {});
 
-    return res.json({ videoId, cached: false, thumbnailUrl, channelName: meta.channelName || null, ...summary });
+    return res.json({ videoId, cached: false, thumbnailUrl, channelName: meta.channelName || null, durationSeconds, ...summary });
   } catch (err) {
     next(err);
   }

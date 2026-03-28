@@ -35,6 +35,7 @@ function VideoRow({ video, onDelete }) {
         {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
         <div className="vrow-meta">
           <span className="vrow-date">{date}</span>
+          {video.durationSeconds > 0 && <span className="vrow-duration">{Math.round(video.durationSeconds / 60) < 1 ? '< 1 min' : `${Math.round(video.durationSeconds / 60)} min`}</span>}
           {video.categories.slice(0, 2).map((c, i) => (
             <span key={i} className="pill pill-cat" style={{ fontSize: 11, padding: '2px 7px' }}>{c}</span>
           ))}

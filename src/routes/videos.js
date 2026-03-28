@@ -26,6 +26,7 @@ router.get('/', requireAuth, async (req, res, next) => {
       verdict: row.summary?.verdict || null,
       categories: row.summary?.categories || [],
       readTimeSaved: row.summary?.readTimeSaved || null,
+      durationSeconds: row.duration_seconds || null,
     }));
 
     res.json(result);

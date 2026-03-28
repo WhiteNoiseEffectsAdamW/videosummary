@@ -32,9 +32,15 @@ function ytUrl(videoId, ts, leadSeconds = 0) {
 }
 
 
+function formatDuration(seconds) {
+  if (!seconds || seconds <= 0) return null;
+  const mins = Math.round(seconds / 60);
+  return mins < 1 ? '< 1 min' : `${mins} min`;
+}
+
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName } = data;
+  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName, durationSeconds } = data;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState(null);
@@ -107,7 +113,7 @@ export default function SummaryDisplay({ data }) {
       {/* Channel + Actions */}
       <div className="summary-header">
         <div className="summary-channel-group">
-          {channelName && <span className="summary-channel">{channelName}</span>}
+          {channelName && <span className="summary-channel">{channelName}{formatDuration(durationSeconds) ? <span className="summary-duration"> · {formatDuration(durationSeconds)}</span> : null}</span>}
           {channelName && (
             <div className="btn-follow-wrap">
               {user ? (
