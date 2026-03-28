@@ -44,26 +44,26 @@ function wrapText(text, maxChars) {
 
 function buildSvg(summary, videoId) {
   const channelName = (summary.channel_name || '').replace(/^@/, '').toUpperCase();
-  const title = summary.title || videoId;
+  const tldr = summary.summary?.tldr || '';
 
   const PAD = 64;
-  const titleLines = wrapText(title, 28).slice(0, 2);
-  const TITLE_FONT = 68;
-  const TITLE_LINE_H = 80;
+  const tldrLines = wrapText(tldr, 52).slice(0, 2);
+  const TLDR_FONT = 34;
+  const TLDR_LINE_H = 46;
 
   // Badge
-  const BADGE_W = 168;
-  const BADGE_H = 52;
+  const BADGE_W = 196;
+  const BADGE_H = 60;
   const BADGE_X = W - PAD - BADGE_W;
-  const BADGE_Y = 52;
+  const BADGE_Y = 46;
 
   // Wordmark baseline
   const WM_Y = 110;
 
-  // Bottom text — anchor last title line at H - 64
-  const titleLastY = H - 64;
-  const titleFirstY = titleLastY - (titleLines.length - 1) * TITLE_LINE_H;
-  const channelY = titleFirstY - 40;
+  // Bottom text — anchor last TL;DR line at H - 56
+  const tldrLastY = H - 56;
+  const tldrFirstY = tldrLastY - (tldrLines.length - 1) * TLDR_LINE_H;
+  const channelY = tldrFirstY - 40;
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -86,13 +86,13 @@ function buildSvg(summary, videoId) {
 
     <!-- Summary badge (filled cyan) -->
     <rect x="${BADGE_X}" y="${BADGE_Y}" width="${BADGE_W}" height="${BADGE_H}" rx="8" fill="${CYAN}"/>
-    <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 35}" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
+    <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 40}" font-family="Inter,Arial,sans-serif" font-size="24" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
 
     <!-- Channel name -->
-    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="600" fill="#94a3b8" letter-spacing="3">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="${CYAN}" letter-spacing="3">${escXml(channelName)}</text>` : ''}
 
-    <!-- Title -->
-    ${titleLines.map((line, i) => `<text x="${PAD}" y="${titleFirstY + i * TITLE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TITLE_FONT}" font-weight="800" fill="#ffffff" letter-spacing="-1">${escXml(line)}</text>`).join('\n    ')}
+    <!-- TL;DR -->
+    ${tldrLines.map((line, i) => `<text x="${PAD}" y="${tldrFirstY + i * TLDR_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TLDR_FONT}" font-weight="600" fill="#e2e8f0">${escXml(line)}</text>`).join('\n    ')}
   </svg>`;
 }
 
