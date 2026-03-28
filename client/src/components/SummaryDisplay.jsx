@@ -113,8 +113,21 @@ export default function SummaryDisplay({ data }) {
         </div>
       )}
 
-      {/* Title */}
-      {title && <div className="summary-title">{title}</div>}
+      {/* Title + Share */}
+      {title && (
+        <div className="summary-title-row">
+          <div className="summary-title">{title}</div>
+          <button className="btn-share-subtle" onClick={handleShare} title="Share">
+            {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>Copied!</span> : (
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
+              </svg>
+            )}
+          </button>
+        </div>
+      )}
 
       {/* Channel + Actions */}
       <div className="summary-header">
@@ -150,15 +163,6 @@ export default function SummaryDisplay({ data }) {
               </svg>
               Watch on YouTube
             </a>
-            <button className="btn-share-subtle" onClick={handleShare} title="Copy link">
-              {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>Copied!</span> : (
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                  <polyline points="16 6 12 2 8 6"/>
-                  <line x1="12" y1="2" x2="12" y2="15"/>
-                </svg>
-              )}
-            </button>
           </div>
         </div>
       </div>

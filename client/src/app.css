@@ -497,12 +497,13 @@ body {
 .quote-ts:hover { text-decoration: underline; }
 
 /* Title */
+.summary-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 .summary-title {
   font-size: 15px;
   font-weight: 600;
   color: #94a3b8;
-  margin-bottom: 16px;
   line-height: 1.4;
+  flex: 1;
 }
 
 /* Verdict */
