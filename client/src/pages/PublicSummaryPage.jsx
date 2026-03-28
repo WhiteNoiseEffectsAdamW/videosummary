@@ -52,15 +52,15 @@ export default function PublicSummaryPage() {
   return (
     <div className="public-summary-page">
       {/* Minimal header */}
-      <header className="public-header">
-        <div className="public-brand-group">
-          <Link to="/" className="public-brand">Headwater</Link>
-          {!user && <span className="public-brand-sub">Know what's worth watching before you click.</span>}
-        </div>
-        {user
-          ? <Link to="/videos" className="btn-primary public-cta">← My Videos</Link>
-          : <Link to="/register" className="btn-primary public-cta">Try it free</Link>}
-      </header>
+      {!user && (
+        <header className="public-header">
+          <div className="public-brand-group">
+            <Link to="/" className="public-brand">Headwater</Link>
+            <span className="public-brand-sub">Know what's worth watching before you click.</span>
+          </div>
+          <Link to="/register" className="btn-primary public-cta">Try it free</Link>
+        </header>
+      )}
 
       <div className={`public-content${!user ? ' public-content-with-bar' : ''}`}>
         {error && <p style={{ color: '#ef4444', padding: '48px 0' }}>{error}</p>}
