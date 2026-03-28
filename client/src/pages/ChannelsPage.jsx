@@ -65,7 +65,8 @@ export default function FollowingPage() {
     setLoading(true);
     try {
       const raw = input.trim();
-      const resolveUrl = raw.startsWith('@') ? `https://www.youtube.com/${raw}` : raw;
+      const normalized = !raw.startsWith('@') && !raw.startsWith('http') ? `@${raw}` : raw;
+      const resolveUrl = normalized.startsWith('@') ? `https://www.youtube.com/${normalized}` : normalized;
       const resolveRes = await fetch(`/api/channels/resolve?url=${encodeURIComponent(resolveUrl)}`, { credentials: 'include' });
       const resolved = await resolveRes.json();
       if (!resolveRes.ok) throw new Error(resolved.error);
@@ -248,7 +249,7 @@ export default function FollowingPage() {
           <input
             className="url-input channel-url-input"
             type="text"
-            placeholder="@CalNewportMedia or youtube.com/..."
+            placeholder="@handle or youtube.com/..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
