@@ -7,12 +7,12 @@ function VideoRow({ video, onDelete }) {
 
   function handleClick(e) {
     if (e.target.closest('.vrow-delete')) return;
-    navigate(`/?v=${video.videoId}`);
+    navigate(`/s/${video.videoId}`);
   }
 
   return (
     <div className="vrow" onClick={handleClick} role="button" tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && navigate(`/?v=${video.videoId}`)}>
+      onKeyDown={(e) => e.key === 'Enter' && navigate(`/s/${video.videoId}`)}>
       {video.thumbnailUrl && (
         <div className="vrow-thumb-wrap">
           <img className="vrow-thumb" src={video.thumbnailUrl} alt=""

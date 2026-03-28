@@ -114,7 +114,7 @@ export default function Nav() {
     }
   }
 
-  if (!user || pathname === '/welcome' || pathname.startsWith('/s/')) return null;
+  if (!user || pathname === '/welcome') return null;
 
   return (
     <>

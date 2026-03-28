@@ -30,7 +30,7 @@ export default function PublicSummaryPage() {
     setMeta('og:title', title);
     setMeta('og:description', desc);
     setMeta('og:image', image);
-    setMeta('og:type', 'article');
+    setMeta('og:type', 'website');
     setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:title', title);
     setMeta('twitter:description', desc);
