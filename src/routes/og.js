@@ -68,12 +68,12 @@ function buildSvg(summary, videoId) {
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0.88"/>
-        <stop offset="38%" stop-color="${NAV_BG}" stop-opacity="0"/>
+        <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0.96"/>
+        <stop offset="42%" stop-color="${NAV_BG}" stop-opacity="0"/>
       </linearGradient>
       <linearGradient id="botfade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="42%" stop-color="${NAV_BG}" stop-opacity="0"/>
-        <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="0.92"/>
+        <stop offset="38%" stop-color="${NAV_BG}" stop-opacity="0"/>
+        <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="0.97"/>
       </linearGradient>
     </defs>
 
@@ -89,7 +89,7 @@ function buildSvg(summary, videoId) {
     <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 44}" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
 
     <!-- Channel name -->
-    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="32" font-weight="700" fill="${CYAN}" letter-spacing="3">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="38" font-weight="700" fill="${CYAN}" letter-spacing="3">${escXml(channelName)}</text>` : ''}
 
     <!-- Title -->
     ${titleLines.map((line, i) => `<text x="${PAD}" y="${titleFirstY + i * TITLE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TITLE_FONT}" font-weight="800" fill="#ffffff" letter-spacing="-1">${escXml(line)}</text>`).join('\n    ')}

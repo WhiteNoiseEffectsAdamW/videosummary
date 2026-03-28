@@ -377,7 +377,7 @@ body {
 }
 .summary-disclaimer a:hover { color: #94a3b8; }
 .summary-header-actions-col { display: flex; flex-direction: row; align-items: center; gap: 14px; }
-.btn-share-subtle { font-size: 12px; font-weight: 500; color: #22d3ee; background: none; border: none; cursor: pointer; padding: 0; text-align: right; }
+.btn-share-subtle { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: #22d3ee; background: none; border: none; cursor: pointer; padding: 0; text-align: right; }
 .btn-share-subtle:hover { opacity: 0.75; }
 @media (max-width: 480px) {
   .summary-header { flex-direction: column; }
