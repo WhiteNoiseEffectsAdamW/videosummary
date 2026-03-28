@@ -63,8 +63,10 @@ async function processVideo(videoId, channelId, channelName, title, userIds = []
     }
     return true;
   }
-  // Cached — save for all (no duration info available without re-fetching)
-  for (const userId of userIds) {
+  // Cached — apply same shorts filtering using stored duration
+  const isShort = cached.duration_seconds > 0 && cached.duration_seconds < 120;
+  const saveUserIds = isShort ? shortsUserIds : userIds;
+  for (const userId of saveUserIds) {
     await summaryModel.upsertUserSave(userId, videoId);
   }
   return true;

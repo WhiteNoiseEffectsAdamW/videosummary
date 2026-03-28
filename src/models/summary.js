@@ -70,6 +70,12 @@ async function findSavedByUserIdSince(userId, since) {
     .where({ [`${SAVES}.user_id`]: userId, [`${SAVES}.dismissed`]: false })
     .where('subscriptions.active', true)
     .where(`${SAVES}.created_at`, '>=', since)
+    .where(function () {
+      // Exclude Shorts unless the user opted in for this channel
+      this.where(`${TABLE}.duration_seconds`, '>=', 120)
+        .orWhereNull(`${TABLE}.duration_seconds`)
+        .orWhere('subscriptions.include_shorts', true);
+    })
     .orderBy(`${SAVES}.created_at`, 'desc')
     .select(`${TABLE}.*`, `${SAVES}.created_at as saved_at`);
   return rows.map((row) => ({ ...row, summary: JSON.parse(row.summary_json) }));
