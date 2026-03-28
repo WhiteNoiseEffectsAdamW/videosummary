@@ -321,14 +321,10 @@ export default function FollowingPage() {
                           </svg>
                           Refresh
                         </button>
-                        <label className="channel-menu-item channel-menu-shorts">
-                          <input
-                            type="checkbox"
-                            checked={shortsOn}
-                            onChange={() => handleToggleShorts(c.id, shortsOn)}
-                          />
+                        <button className="channel-menu-item channel-menu-shorts" onClick={() => handleToggleShorts(c.id, shortsOn)}>
+                          <span className={`channel-menu-check${shortsOn ? ' checked' : ''}`} />
                           Include Shorts
-                        </label>
+                        </button>
                         <div className="channel-menu-divider" />
                         <button className="channel-menu-item channel-menu-danger" onClick={() => { setOpenMenu(null); handleRemove(c.id, c.channel_name || c.channel_id); }}>
                           Remove

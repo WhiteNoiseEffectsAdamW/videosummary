@@ -58,6 +58,17 @@ async function findByChannelIdsSince(channelIds, since) {
     .orderBy('created_at', 'desc');
 }
 
+// Get saved (non-dismissed) summaries for a user saved since a given date — used for digest
+async function findSavedByUserIdSince(userId, since) {
+  const rows = await db(SAVES)
+    .join(TABLE, `${SAVES}.video_id`, `${TABLE}.video_id`)
+    .where({ [`${SAVES}.user_id`]: userId, [`${SAVES}.dismissed`]: false })
+    .where(`${SAVES}.created_at`, '>=', since)
+    .orderBy(`${SAVES}.created_at`, 'desc')
+    .select(`${TABLE}.*`, `${SAVES}.created_at as saved_at`);
+  return rows.map((row) => ({ ...row, summary: JSON.parse(row.summary_json) }));
+}
+
 async function findByChannelIds(channelIds, limit = 50) {
   const rows = await db(TABLE)
     .whereIn('channel_id', channelIds)
@@ -68,6 +79,6 @@ async function findByChannelIds(channelIds, limit = 50) {
 
 module.exports = {
   findByVideoId, create,
-  upsertUserSave, dismissUserSave, findSavedByUserId,
+  upsertUserSave, dismissUserSave, findSavedByUserId, findSavedByUserIdSince,
   findByChannelIdsSince, findByChannelIds,
 };

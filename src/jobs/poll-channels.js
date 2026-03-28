@@ -7,7 +7,7 @@ const summaryModel = require('../models/summary');
 
 const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix: '' });
 
-const POLL_DAILY_CAP = parseInt(process.env.POLL_DAILY_CAP || '50', 10);
+const POLL_DAILY_CAP = parseInt(process.env.POLL_DAILY_CAP || '150', 10);
 let pollCallsToday = 0;
 let pollCapResetDate = new Date().toDateString();
 
@@ -17,16 +17,6 @@ function checkPollCap() {
   if (pollCallsToday >= POLL_DAILY_CAP) return false;
   pollCallsToday++;
   return true;
-}
-
-// Returns true if the video is a YouTube Short
-async function isShort(videoId) {
-  try {
-    const res = await fetch(`https://www.youtube.com/shorts/${videoId}`, { method: 'HEAD' });
-    return res.url.includes('/shorts/');
-  } catch {
-    return false;
-  }
 }
 
 // Fetch recent videos from a channel's RSS feed
@@ -41,8 +31,8 @@ async function fetchChannelVideos(channelId) {
 }
 
 // Summarize a video if not already cached, then link to users.
-// Returns true if an API call was made (not cached).
-async function processVideo(videoId, channelId, channelName, title, userIds = []) {
+// shortsUserIds: subset of userIds who opted in to Shorts (under 2 min).
+async function processVideo(videoId, channelId, channelName, title, userIds = [], shortsUserIds = []) {
   let cached = await summaryModel.findByVideoId(videoId);
   if (!cached) {
     if (!checkPollCap()) { console.warn('[poll] daily API cap reached, skipping', videoId); return false; }
@@ -50,15 +40,22 @@ async function processVideo(videoId, channelId, channelName, title, userIds = []
     const { text, durationSeconds } = await getTranscript(videoId);
     const summary = await summarize(text, durationSeconds, title);
     cached = await summaryModel.create({
-      videoId,
-      channelId,
-      channelName: channelName || null,
+      videoId, channelId, channelName: channelName || null,
       title: title || summary.tldr?.slice(0, 100) || videoId,
-      summary,
-      transcriptLength: text.length,
+      summary, transcriptLength: text.length,
     });
-    console.log(`[poll] done ${videoId}`);
+    console.log(`[poll] done ${videoId} (${durationSeconds}s)`);
+
+    // Only save shorts for users who opted in
+    const isShort = durationSeconds > 0 && durationSeconds < 120;
+    const saveUserIds = isShort ? shortsUserIds : userIds;
+    if (isShort) console.log(`[poll] ${videoId} is a Short — saving for ${shortsUserIds.length} subscriber(s)`);
+    for (const userId of saveUserIds) {
+      await summaryModel.upsertUserSave(userId, videoId);
+    }
+    return true;
   }
+  // Cached — save for all (no duration info available without re-fetching)
   for (const userId of userIds) {
     await summaryModel.upsertUserSave(userId, videoId);
   }
@@ -83,8 +80,12 @@ async function pollAllChannels() {
   for (const row of rows) {
     const { channel_id: channelId, channel_name: channelName } = row;
     try {
-      const subscribers = await db('subscriptions').where({ channel_id: channelId, active: true }).whereNot({ digest: false }).select('user_id');
+      const [subscribers, shortsSubscribers] = await Promise.all([
+        db('subscriptions').where({ channel_id: channelId, active: true }).whereNot({ digest: false }).select('user_id'),
+        db('subscriptions').where({ channel_id: channelId, active: true, include_shorts: true }).whereNot({ digest: false }).select('user_id'),
+      ]);
       const userIds = subscribers.map((s) => s.user_id);
+      const shortsUserIds = shortsSubscribers.map((s) => s.user_id);
       const videos = await fetchChannelVideos(channelId);
       const recent = videos.filter((v) => new Date(v.published) > cutoff);
       console.log(`[poll] ${channelId}: ${recent.length} new video(s)`);
@@ -93,18 +94,7 @@ async function pollAllChannels() {
         const videoId = video['yt:videoId'];
         const title = typeof video.title === 'string' ? video.title : videoId;
         try {
-          const short = await isShort(videoId);
-          let eligibleUserIds = userIds;
-          if (short) {
-            const shortsRows = await db('subscriptions')
-              .where({ channel_id: channelId, active: true, include_shorts: true })
-              .whereNot({ digest: false })
-              .select('user_id');
-            eligibleUserIds = shortsRows.map((s) => s.user_id);
-            console.log(`[poll] ${videoId} is a Short — ${eligibleUserIds.length} subscriber(s) want it`);
-          }
-          if (!eligibleUserIds.length) continue;
-          await processVideo(videoId, channelId, channelName, title, eligibleUserIds);
+          await processVideo(videoId, channelId, channelName, title, userIds, shortsUserIds);
         } catch (err) {
           console.error(`[poll] failed to process ${videoId}:`, err.message);
         }

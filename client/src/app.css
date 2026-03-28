@@ -382,6 +382,10 @@ body {
 .summary-header-actions-col { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 .btn-share-subtle { font-size: 12px; font-weight: 500; color: #22d3ee; background: none; border: none; cursor: pointer; padding: 0; text-align: right; }
 .btn-share-subtle:hover { opacity: 0.75; }
+@media (max-width: 480px) {
+  .summary-header { flex-direction: column; }
+  .summary-header-actions-col { align-items: flex-start; }
+}
 
 /* Title vs Reality */
 .card-title-claim { border-left: 2px solid rgba(34,211,238,0.4); }
@@ -801,7 +805,32 @@ body {
 }
 .channel-menu-item:hover { background: rgba(255,255,255,0.07); color: #e2e8f0; }
 .channel-menu-shorts { cursor: pointer; }
-.channel-menu-shorts input { accent-color: #fff; cursor: pointer; }
+.channel-menu-check {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #475569;
+  border-radius: 3px;
+  flex-shrink: 0;
+  display: inline-block;
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+}
+.channel-menu-check.checked {
+  background: #e2e8f0;
+  border-color: #e2e8f0;
+}
+.channel-menu-check.checked::after {
+  content: '';
+  position: absolute;
+  left: 3px;
+  top: 0px;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #0f172a;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
 .channel-menu-divider { border-top: 1px solid rgba(255,255,255,0.07); margin: 4px 0; }
 .channel-menu-danger { color: #f87171; }
 .channel-menu-danger:hover { background: rgba(248,113,113,0.1); color: #f87171; }

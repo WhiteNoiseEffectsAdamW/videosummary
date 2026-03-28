@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 const { db } = require('../db');
-const { findByChannelIdsSince } = require('../models/summary');
+const { findSavedByUserIdSince } = require('../models/summary');
 const { sendDigest } = require('../services/email');
 
 const LOOKBACK_HOURS = 25;
@@ -29,11 +29,7 @@ async function sendAllDigests() {
 
   for (const user of users) {
     try {
-      const channelIds = await db('subscriptions')
-        .where({ user_id: user.id, active: true })
-        .pluck('channel_id');
-
-      const summaries = await findByChannelIdsSince(channelIds, since);
+      const summaries = await findSavedByUserIdSince(user.id, since);
       if (!summaries.length) {
         console.log(`[digest] no new summaries for ${user.email}, skipping`);
         continue;
