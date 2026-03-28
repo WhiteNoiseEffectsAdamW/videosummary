@@ -10,7 +10,6 @@ const MAX_CACHE = 500;
 
 const W = 1200;
 const H = 630;
-const THUMB_W = 420;
 const NAV_BG = '#0c0f14';
 const CYAN = '#22d3ee';
 
@@ -46,56 +45,54 @@ function wrapText(text, maxChars) {
 function buildSvg(summary, videoId) {
   const channelName = (summary.channel_name || '').replace(/^@/, '').toUpperCase();
   const title = summary.title || videoId;
-  const tldr = summary.summary?.tldr || '';
-  const durationSeconds = summary.duration_seconds;
-  const savesMins = durationSeconds > 0 ? Math.round(durationSeconds / 60) : null;
 
-  const textX = THUMB_W + 48;
-  const titleLines = wrapText(title, 28).slice(0, 3);
-  const tldrLines = wrapText(tldr, 42).slice(0, 3);
+  const PAD = 64;
+  const titleLines = wrapText(title, 28).slice(0, 2);
+  const TITLE_FONT = 68;
+  const TITLE_LINE_H = 80;
 
-  const titleY = 160;
-  const titleLineH = 52;
-  const tldrLabelY = titleY + titleLines.length * titleLineH + 30;
-  const tldrY = tldrLabelY + 30;
-  const tldrLineH = 34;
+  // Badge
+  const BADGE_W = 168;
+  const BADGE_H = 52;
+  const BADGE_X = W - PAD - BADGE_W;
+  const BADGE_Y = 52;
+
+  // Wordmark baseline
+  const WM_Y = 110;
+
+  // Bottom text — anchor last title line at H - 64
+  const titleLastY = H - 64;
+  const titleFirstY = titleLastY - (titleLines.length - 1) * TITLE_LINE_H;
+  const channelY = titleFirstY - 40;
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0"/>
-        <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="1"/>
+      <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0.88"/>
+        <stop offset="38%" stop-color="${NAV_BG}" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="botfade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="42%" stop-color="${NAV_BG}" stop-opacity="0"/>
+        <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="0.92"/>
       </linearGradient>
     </defs>
 
-    <!-- Dark right panel -->
-    <rect x="${THUMB_W}" y="0" width="${W - THUMB_W}" height="${H}" fill="${NAV_BG}"/>
-    <!-- Gradient edge blend -->
-    <rect x="${THUMB_W - 60}" y="0" width="60" height="${H}" fill="url(#fade)"/>
-    <!-- Cyan top bar -->
-    <rect x="0" y="0" width="${W}" height="4" fill="${CYAN}"/>
+    <!-- Gradient overlays -->
+    <rect x="0" y="0" width="${W}" height="${H}" fill="url(#topfade)"/>
+    <rect x="0" y="0" width="${W}" height="${H}" fill="url(#botfade)"/>
 
-    <!-- Wordmark -->
-    <text x="${textX}" y="70" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="#ffffff" letter-spacing="2">HEADWATER</text>
+    <!-- Wordmark: Head(white)water(cyan) -->
+    <text x="${PAD}" y="${WM_Y}" font-family="Inter,Arial,sans-serif" font-size="64" font-weight="800" fill="#ffffff" letter-spacing="-1">Head<tspan fill="${CYAN}">water</tspan></text>
 
-    <!-- Summary pill -->
-    <rect x="${W - 170}" y="44" width="110" height="32" rx="6" fill="${CYAN}"/>
-    <text x="${W - 115}" y="65" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="1">SUMMARY</text>
+    <!-- Summary badge (filled cyan) -->
+    <rect x="${BADGE_X}" y="${BADGE_Y}" width="${BADGE_W}" height="${BADGE_H}" rx="8" fill="${CYAN}"/>
+    <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 35}" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
 
     <!-- Channel name -->
-    ${channelName ? `<text x="${textX}" y="120" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="${CYAN}" letter-spacing="2">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="600" fill="#94a3b8" letter-spacing="3">${escXml(channelName)}</text>` : ''}
 
     <!-- Title -->
-    ${titleLines.map((line, i) => `<text x="${textX}" y="${titleY + i * titleLineH}" font-family="Inter,Arial,sans-serif" font-size="40" font-weight="900" fill="#ffffff" letter-spacing="-0.5">${escXml(line)}</text>`).join('\n    ')}
-
-    <!-- TL;DR label -->
-    <text x="${textX}" y="${tldrLabelY}" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" fill="${CYAN}" letter-spacing="2">TL;DR</text>
-
-    <!-- TL;DR text -->
-    ${tldrLines.map((line, i) => `<text x="${textX}" y="${tldrY + i * tldrLineH}" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="#64748b">${escXml(line)}</text>`).join('\n    ')}
-
-    <!-- Saves X min -->
-    ${savesMins ? `<text x="${W - 48}" y="${H - 36}" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#334155" text-anchor="end">Saves ${savesMins} min</text>` : ''}
+    ${titleLines.map((line, i) => `<text x="${PAD}" y="${titleFirstY + i * TITLE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TITLE_FONT}" font-weight="800" fill="#ffffff" letter-spacing="-1">${escXml(line)}</text>`).join('\n    ')}
   </svg>`;
 }
 
@@ -125,11 +122,12 @@ router.get('/:videoId', async (req, res) => {
     if (!thumbRes.ok) throw new Error('Thumbnail fetch failed');
     const thumbBuffer = Buffer.from(await thumbRes.arrayBuffer());
 
+    // Full-bleed thumbnail at 1200x630
     const thumbResized = await sharp(thumbBuffer)
-      .resize(THUMB_W, H, { fit: 'cover', position: 'centre' })
+      .resize(W, H, { fit: 'cover', position: 'centre' })
       .toBuffer();
 
-    // Render SVG to PNG using resvg (proper font support)
+    // Render SVG overlay (gradients + text) using resvg
     const svg = buildSvg(summary, videoId);
     const resvg = new Resvg(svg, {
       font: {
@@ -141,9 +139,8 @@ router.get('/:videoId', async (req, res) => {
     const overlayPng = rendered.asPng();
     console.log('[og] resvg rendered', videoId, '— png size:', overlayPng.length, 'w:', rendered.width, 'h:', rendered.height);
 
-    // Composite: thumbnail base + SVG overlay
+    // Composite: full thumbnail + SVG overlay
     const png = await sharp(thumbResized)
-      .extend({ right: W - THUMB_W, background: { r: 12, g: 15, b: 20 } })
       .composite([{ input: Buffer.from(overlayPng), top: 0, left: 0 }])
       .png()
       .toBuffer();
