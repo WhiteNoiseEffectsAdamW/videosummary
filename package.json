@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "build": "npm rebuild sharp && node scripts/install-yt-dlp.js && cd client && npm install && npm run build",
+    "build": "npm rebuild sharp && node scripts/install-yt-dlp.js && node scripts/install-fonts.js && cd client && npm install && npm run build",
     "postinstall": "node scripts/patch-deps.js"
   },
   "dependencies": {

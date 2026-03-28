@@ -76,26 +76,26 @@ function buildSvg(summary, videoId) {
     <rect x="0" y="0" width="${W}" height="4" fill="${CYAN}"/>
 
     <!-- Wordmark -->
-    <text x="${textX}" y="70" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="#ffffff" letter-spacing="2">HEADWATER</text>
+    <text x="${textX}" y="70" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#ffffff" letter-spacing="2">HEADWATER</text>
 
     <!-- Summary pill -->
     <rect x="${W - 170}" y="44" width="110" height="32" rx="6" fill="${CYAN}"/>
-    <text x="${W - 115}" y="65" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="1">SUMMARY</text>
+    <text x="${W - 115}" y="65" font-family="Liberation Sans,Arial,sans-serif" font-size="14" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="1">SUMMARY</text>
 
     <!-- Channel name -->
-    ${channelName ? `<text x="${textX}" y="120" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="${CYAN}" letter-spacing="2">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${textX}" y="120" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="${CYAN}" letter-spacing="2">${escXml(channelName)}</text>` : ''}
 
     <!-- Title -->
-    ${titleLines.map((line, i) => `<text x="${textX}" y="${titleY + i * titleLineH}" font-family="Inter,Arial,sans-serif" font-size="40" font-weight="900" fill="#ffffff" letter-spacing="-0.5">${escXml(line)}</text>`).join('\n    ')}
+    ${titleLines.map((line, i) => `<text x="${textX}" y="${titleY + i * titleLineH}" font-family="Liberation Sans,Arial,sans-serif" font-size="40" font-weight="900" fill="#ffffff" letter-spacing="-0.5">${escXml(line)}</text>`).join('\n    ')}
 
     <!-- TL;DR label -->
-    <text x="${textX}" y="${tldrLabelY}" font-family="Inter,Arial,sans-serif" font-size="14" font-weight="700" fill="${CYAN}" letter-spacing="2">TL;DR</text>
+    <text x="${textX}" y="${tldrLabelY}" font-family="Liberation Sans,Arial,sans-serif" font-size="14" font-weight="700" fill="${CYAN}" letter-spacing="2">TL;DR</text>
 
     <!-- TL;DR text -->
-    ${tldrLines.map((line, i) => `<text x="${textX}" y="${tldrY + i * tldrLineH}" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700" fill="#64748b">${escXml(line)}</text>`).join('\n    ')}
+    ${tldrLines.map((line, i) => `<text x="${textX}" y="${tldrY + i * tldrLineH}" font-family="Liberation Sans,Arial,sans-serif" font-size="22" font-weight="700" fill="#64748b">${escXml(line)}</text>`).join('\n    ')}
 
     <!-- Saves X min -->
-    ${savesMins ? `<text x="${W - 48}" y="${H - 36}" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#334155" text-anchor="end">Saves ${savesMins} min</text>` : ''}
+    ${savesMins ? `<text x="${W - 48}" y="${H - 36}" font-family="Liberation Sans,Arial,sans-serif" font-size="18" font-weight="700" fill="#334155" text-anchor="end">Saves ${savesMins} min</text>` : ''}
   </svg>`;
 }
 
@@ -132,10 +132,9 @@ router.get('/:videoId', async (req, res) => {
     // Render SVG to PNG using resvg (proper font support)
     const svg = buildSvg(summary, videoId);
     const resvg = new Resvg(svg, {
-      font: {
-        loadSystemFonts: false,
-        fontBuffers: [FONT],
-      },
+      font: process.platform === 'linux'
+        ? { loadSystemFonts: true }
+        : { loadSystemFonts: false, fontBuffers: [FONT] },
     });
     const rendered = resvg.render();
     const overlayPng = rendered.asPng();
