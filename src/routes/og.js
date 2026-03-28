@@ -62,18 +62,6 @@ function buildSvg(summary, videoId) {
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <style>
-        @font-face {
-          font-family: 'Inter';
-          font-weight: 700;
-          src: url('data:font/woff;base64,${FONT_700.toString('base64')}') format('woff');
-        }
-        @font-face {
-          font-family: 'Inter';
-          font-weight: 900;
-          src: url('data:font/woff;base64,${FONT_900.toString('base64')}') format('woff');
-        }
-      </style>
       <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0"/>
         <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="1"/>
