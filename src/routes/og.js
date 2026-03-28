@@ -1,9 +1,6 @@
 const express = require('express');
 const { findByVideoId } = require('../models/summary');
 
-let sharp;
-try { sharp = require('sharp'); } catch (e) { console.warn('[og] sharp not available:', e.message); }
-
 const router = express.Router();
 
 // In-memory cache: videoId → PNG Buffer
@@ -107,6 +104,9 @@ function buildSvgOverlay(summary, videoId) {
 // GET /api/og/:videoId
 router.get('/:videoId', async (req, res) => {
   const { videoId } = req.params;
+
+  let sharp;
+  try { sharp = require('sharp'); } catch (e) { /* not available */ }
 
   if (!sharp) {
     return res.redirect(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
