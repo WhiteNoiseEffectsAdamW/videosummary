@@ -140,7 +140,7 @@ export default function VideosPage() {
               <input
                 className="url-input videos-search"
                 type="text"
-                placeholder="Search videos…"
+                placeholder="Search by title or channel…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />

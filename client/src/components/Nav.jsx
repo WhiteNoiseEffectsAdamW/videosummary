@@ -81,6 +81,7 @@ export default function Nav() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const menuRef = React.useRef(null);
@@ -119,7 +120,7 @@ export default function Nav() {
     <>
       {/* Desktop top nav */}
       <nav className="nav">
-        <span className="nav-brand">Headwater</span>
+        <span className="nav-brand" onClick={() => setAboutOpen(true)}>Headwater</span>
         <div className="nav-links">
           {TABS.map((t) => (
             <Link key={t.to} className={`nav-link${pathname === t.to ? ' active' : ''}`} to={t.to}>
@@ -154,6 +155,20 @@ export default function Nav() {
           </div>
         </div>
       </nav>
+
+      {/* About bottom sheet */}
+      {aboutOpen && (
+        <div className="about-backdrop" onClick={() => setAboutOpen(false)}>
+          <div className="about-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="about-handle" />
+            <div className="about-title">Headwater <span className="about-beta">Private Beta</span></div>
+            <p className="about-body">Built because browsing YouTube shouldn't take longer than watching it.</p>
+            <p className="about-body">Follow the channels you care about, get a morning digest of what's new. No algorithm. Just the channels you chose.</p>
+            <p className="about-body">You're one of the first people using this. If something feels off, reply to any email — I read everything.</p>
+            <p className="about-sig">— Adam</p>
+          </div>
+        </div>
+      )}
 
       {/* Mobile bottom tab bar */}
       <nav className="mobile-tabs">
