@@ -99,7 +99,7 @@ if (process.env.NODE_ENV === 'production') {
       const summary = await findByVideoId(req.params.videoId);
       if (!summary) return res.sendFile(path.join(clientDist, 'index.html'));
 
-      const title = escAttr(`Headwater Summary — ${summary.title || req.params.videoId}`);
+      const title = escAttr(`${summary.title || req.params.videoId} — Headwater Summary`);
       const description = escAttr(summary.summary?.tldr || 'AI-generated video summary from Headwater.');
       const image = `${APP_URL}/api/og/${req.params.videoId}`;
       const url = `${APP_URL}/s/${req.params.videoId}`;

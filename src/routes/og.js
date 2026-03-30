@@ -45,34 +45,32 @@ function wrapText(text, maxChars) {
 function buildSvg(summary, videoId) {
   const channelName = (summary.channel_name || '').replace(/^@/, '').toUpperCase();
 
-  // Parse summary JSON to get quote
+  // Parse summary JSON to get topics
   let summaryData = {};
   try {
     summaryData = typeof summary.summary === 'string'
       ? JSON.parse(summary.summary)
       : (summary.summary || {});
   } catch {}
-  const rawQuote = summaryData.quotes?.[0]?.text || summaryData.tldr || summary.title || videoId;
+  const topics = (summaryData.topics || []).slice(0, 3).map(t => t.title || '');
 
   const STRIPE = 5;
   const PAD_LEFT = 85;
   const LABEL_FONT = 28;
-  const QUOTE_FONT = 52;
-  const QUOTE_LINE_H = 68;
-  const MAX_QUOTE_LINES = 4;
-
-  const quoteLines = wrapText(`\u201c${rawQuote}\u201d`, 42).slice(0, MAX_QUOTE_LINES);
+  const TOPIC_FONT = 40;
+  const TOPIC_LINE_H = 58;
+  const BULLET = '\u00B7  ';
 
   // Vertical layout — center the block
-  const totalQuoteH = (quoteLines.length - 1) * QUOTE_LINE_H + QUOTE_FONT;
-  const blockH = LABEL_FONT + 28 + totalQuoteH + 32 + LABEL_FONT;
+  const topicCount = topics.length;
+  const totalTopicsH = (topicCount - 1) * TOPIC_LINE_H + TOPIC_FONT;
+  const blockH = LABEL_FONT + 32 + totalTopicsH;
   const blockTop = Math.round((H - blockH) / 2);
 
   const topLabelY = blockTop + LABEL_FONT;
-  const quoteStartY = topLabelY + 28 + QUOTE_FONT;
-  const bottomLabelY = quoteStartY + (quoteLines.length - 1) * QUOTE_LINE_H + 32 + LABEL_FONT;
+  const topicsStartY = topLabelY + 32 + TOPIC_FONT;
 
-  const topLabel = channelName ? `KEY INSIGHT  \u00B7  ${channelName}` : 'KEY INSIGHT';
+  const topLabel = channelName || 'HEADWATER';
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <defs>
@@ -87,14 +85,14 @@ function buildSvg(summary, videoId) {
     <!-- Cyan left stripe (5px, flush to edge) -->
     <rect x="0" y="0" width="${STRIPE}" height="${H}" fill="${CYAN}"/>
 
-    <!-- Top label: KEY INSIGHT · CHANNEL -->
+    <!-- Top label: CHANNEL NAME -->
     <text x="${PAD_LEFT}" y="${topLabelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="700" fill="${CYAN}" letter-spacing="3">${escXml(topLabel)}</text>
 
-    <!-- Pull quote -->
-    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#e2e8f0" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
-
-    <!-- Bottom label: HEADWATER SUMMARY -->
-    <text x="${PAD_LEFT}" y="${bottomLabelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="600" fill="#475569" letter-spacing="3">HEADWATER SUMMARY</text>
+    <!-- Topic bullets -->
+    ${topics.map((topic, i) => {
+      const line = wrapText(BULLET + topic, 38)[0];
+      return `<text x="${PAD_LEFT}" y="${topicsStartY + i * TOPIC_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TOPIC_FONT}" font-weight="400" fill="#e2e8f0" filter="url(#shadow)">${escXml(line)}</text>`;
+    }).join('\n    ')}
   </svg>`;
 }
 
