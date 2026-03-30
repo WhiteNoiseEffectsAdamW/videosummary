@@ -52,14 +52,6 @@ function buildSvg(summary, videoId) {
       ? JSON.parse(summary.summary)
       : (summary.summary || {});
   } catch {}
-  // Pick the shortest quote that's still substantive (>=40 chars), fallback to first quote
-  const quotes = summaryData.quotes || [];
-  const cardQuote = quotes
-    .map(q => q.text || '')
-    .filter(t => t.length >= 40)
-    .sort((a, b) => a.length - b.length)[0];
-  const rawQuote = cardQuote || quotes[0]?.text || summaryData.tldr || summary.title || videoId;
-
   // Sizes — must be large enough to read at iMessage scale (~23% of 1200x630)
   const STRIPE = 16;
   const PAD_LEFT = 60;
@@ -71,7 +63,30 @@ function buildSvg(summary, videoId) {
   const MAX_QUOTE_LINES = 3;
   const MAX_CHARS = 28; // chars per line at this font size
 
-  const allQuoteLines = wrapText(`\u201c${rawQuote}`, MAX_CHARS);
+  const quotes = summaryData.quotes || [];
+  const fits = (t) => wrapText(`\u201c${t}`, MAX_CHARS).length <= MAX_QUOTE_LINES;
+
+  // 1. Try the first (best) quote as-is
+  // 2. If it won't fit but has an em dash, try the portion before the dash
+  // 3. Fall back to the shortest substantive quote that fits
+  // 4. Last resort: first quote (will be truncated with ellipsis)
+  let displayQuote = null;
+  const firstQuote = quotes[0]?.text || '';
+  if (firstQuote && fits(firstQuote)) {
+    displayQuote = firstQuote;
+  } else if (firstQuote && firstQuote.includes('\u2014')) {
+    const beforeDash = firstQuote.split('\u2014')[0].trim();
+    if (beforeDash.length >= 40) displayQuote = beforeDash;
+  }
+  if (!displayQuote) {
+    displayQuote = quotes
+      .map(q => q.text || '')
+      .filter(t => t.length >= 40 && fits(t))
+      .sort((a, b) => a.length - b.length)[0]
+      || firstQuote || summaryData.tldr || summary.title || videoId;
+  }
+
+  const allQuoteLines = wrapText(`\u201c${displayQuote}`, MAX_CHARS);
   const quoteLines = allQuoteLines.slice(0, MAX_QUOTE_LINES);
   // If quote was clipped, close with ellipsis on last line
   if (allQuoteLines.length > MAX_QUOTE_LINES) {
