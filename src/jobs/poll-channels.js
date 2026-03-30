@@ -37,13 +37,13 @@ async function processVideo(videoId, channelId, channelName, title, userIds = []
   if (!cached) {
     if (!checkPollCap()) { console.warn('[poll] daily API cap reached, skipping', videoId); return false; }
     console.log(`[poll] summarizing ${videoId} — "${title}"`);
-    const { text, durationSeconds } = await getTranscript(videoId);
-    const summary = await summarize(text, durationSeconds, title);
+    const { text, durationSeconds, isSampled } = await getTranscript(videoId);
+    const { summary, inputTokens, outputTokens } = await summarize(text, durationSeconds, title, isSampled);
     try {
       cached = await summaryModel.create({
         videoId, channelId, channelName: channelName || null,
         title: title || summary.tldr?.slice(0, 100) || videoId,
-        summary, transcriptLength: text.length, durationSeconds,
+        summary, transcriptLength: text.length, durationSeconds, inputTokens, outputTokens,
       });
     } catch (err) {
       if (err.message?.includes('duplicate') || err.message?.includes('UNIQUE') || err.code === '23505') {
