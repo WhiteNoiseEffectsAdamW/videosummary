@@ -188,8 +188,18 @@ export default function FollowingPage() {
   const [channelStatus, setChannelStatus] = useState({});
   const menuRefs = useRef({});
   const dragId = useRef(null);
-  const dragOverId = useRef(null);
+  const listRef = useRef(null);
 
+  function saveOrder(orderedIds) {
+    fetch('/api/subscriptions/reorder', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderedIds }),
+    }).catch(() => showToast('Could not save channel order.'));
+  }
+
+  // Mouse drag
   function handleDragStart(e, id) {
     dragId.current = id;
     e.dataTransfer.effectAllowed = 'move';
@@ -197,8 +207,6 @@ export default function FollowingPage() {
 
   function handleDragOver(e, id) {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    dragOverId.current = id;
     if (dragId.current === id) return;
     setChannels((prev) => {
       const from = prev.findIndex((c) => c.id === dragId.current);
@@ -210,21 +218,39 @@ export default function FollowingPage() {
     });
   }
 
-  function handleDrop(e, id) {
+  function handleDrop(e) {
     e.preventDefault();
-    // Persist order to server
-    setChannels((current) => {
-      const orderedIds = current.map((c) => c.id);
-      fetch('/api/subscriptions/reorder', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderedIds }),
-      }).catch(() => showToast('Could not save channel order.'));
-      return current;
-    });
+    setChannels((current) => { saveOrder(current.map((c) => c.id)); return current; });
     dragId.current = null;
-    dragOverId.current = null;
+  }
+
+  // Touch drag — attached to the handle only so scroll still works on the row
+  function handleTouchStart(e, id) {
+    dragId.current = id;
+  }
+
+  function handleTouchMove(e, id) {
+    e.preventDefault(); // block scroll while dragging handle
+    const touch = e.touches[0];
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    const li = el?.closest('li[data-id]');
+    if (!li) return;
+    const overId = parseInt(li.dataset.id, 10);
+    if (overId === dragId.current) return;
+    setChannels((prev) => {
+      const from = prev.findIndex((c) => c.id === dragId.current);
+      const to = prev.findIndex((c) => c.id === overId);
+      if (from === -1 || to === -1) return prev;
+      const next = [...prev];
+      next.splice(to, 0, next.splice(from, 1)[0]);
+      dragId.current = dragId.current; // stays the same — we're tracking the dragged item, not the target
+      return next;
+    });
+  }
+
+  function handleTouchEnd() {
+    setChannels((current) => { saveOrder(current.map((c) => c.id)); return current; });
+    dragId.current = null;
   }
 
   useEffect(() => {
@@ -324,13 +350,19 @@ export default function FollowingPage() {
             const shortsOn = c.include_shorts === true;
             const status = channelStatus[c.channel_id];
             return (
-              <li key={c.id} className="channel-item"
+              <li key={c.id} data-id={c.id} className="channel-item"
                 draggable
                 onDragStart={(e) => handleDragStart(e, c.id)}
                 onDragOver={(e) => handleDragOver(e, c.id)}
-                onDrop={(e) => handleDrop(e, c.id)}
+                onDrop={handleDrop}
               >
-                <div className="channel-drag-handle" title="Drag to reorder">⠿</div>
+                <div
+                  className="channel-drag-handle"
+                  title="Drag to reorder"
+                  onTouchStart={(e) => handleTouchStart(e, c.id)}
+                  onTouchMove={(e) => handleTouchMove(e, c.id)}
+                  onTouchEnd={handleTouchEnd}
+                >⠿</div>
                 <div>
                   <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
                   {status === 'scanning' && <div className="channel-scan-status">Checking for new videos…</div>}
