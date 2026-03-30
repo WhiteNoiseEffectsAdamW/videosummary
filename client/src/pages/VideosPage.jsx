@@ -1,18 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-function VideoRow({ video, onDelete }) {
+const VIEWED_KEY = 'hw_viewed_videos';
+
+function getViewed() {
+  try { return new Set(JSON.parse(localStorage.getItem(VIEWED_KEY) || '[]')); } catch { return new Set(); }
+}
+function markViewed(videoId) {
+  const s = getViewed(); s.add(videoId);
+  localStorage.setItem(VIEWED_KEY, JSON.stringify([...s]));
+}
+
+function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) {
   const navigate = useNavigate();
   const date = new Date(video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
   function handleClick(e) {
-    if (e.target.closest('.vrow-delete')) return;
+    if (e.target.closest('.vrow-delete') || e.target.closest('.vrow-checkbox')) return;
+    if (anySelected) { onToggle(video.videoId); return; }
+    markViewed(video.videoId);
     navigate(`/s/${video.videoId}`);
   }
 
   return (
-    <div className="vrow" onClick={handleClick} role="button" tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && navigate(`/s/${video.videoId}`)}>
+    <div
+      className={`vrow${selected ? ' vrow-selected' : ''}${viewed && !selected ? ' vrow-viewed' : ''}`}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
+    >
+      {/* Checkbox — visible on hover or when any row selected */}
+      <div className={`vrow-checkbox-wrap${anySelected ? ' vrow-checkbox-visible' : ''}`}>
+        <input
+          type="checkbox"
+          className="vrow-checkbox"
+          checked={selected}
+          onChange={() => onToggle(video.videoId)}
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
+
       {video.thumbnailUrl && (
         <div className="vrow-thumb-wrap">
           <img className="vrow-thumb" src={video.thumbnailUrl} alt=""
@@ -31,18 +59,42 @@ function VideoRow({ video, onDelete }) {
         </div>
       )}
       <div className="vrow-main">
-        <div className="vrow-title">{video.title || video.videoId}</div>
+        <div className={`vrow-title${viewed && !selected ? ' vrow-title-viewed' : ''}`}>{video.title || video.videoId}</div>
         {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
         <div className="vrow-meta">
           <span className="vrow-date">{date}</span>
           {video.durationSeconds > 0 && <span className="vrow-duration">{Math.round(video.durationSeconds / 60) < 1 ? '< 1 min' : `${Math.round(video.durationSeconds / 60)} min`}</span>}
-          {video.categories.slice(0, 2).map((c, i) => (
+          {(video.categories || []).slice(0, 2).map((c, i) => (
             <span key={i} className="pill pill-cat" style={{ fontSize: 11, padding: '2px 7px' }}>{c}</span>
           ))}
         </div>
       </div>
       <div className="vrow-right">
-        <button className="vrow-delete" title="Remove" onClick={(e) => { e.stopPropagation(); onDelete(video.videoId); }}>×</button>
+        <button className="vrow-delete" title="Remove" onClick={(e) => { e.stopPropagation(); onDelete([video.videoId]); }}>×</button>
+      </div>
+    </div>
+  );
+}
+
+function BulkBar({ count, onDelete, onClear }) {
+  return (
+    <div className="bulk-bar">
+      <span className="bulk-bar-count">{count} selected</span>
+      <button className="bulk-bar-clear" onClick={onClear}>Deselect all</button>
+      <button className="bulk-bar-delete" onClick={onDelete}>Delete selected ({count})</button>
+    </div>
+  );
+}
+
+function ConfirmDialog({ count, onConfirm, onCancel }) {
+  return (
+    <div className="confirm-overlay" onClick={onCancel}>
+      <div className="confirm-dialog" onClick={(e) => e.stopPropagation()}>
+        <p className="confirm-msg">Delete {count} video{count !== 1 ? 's' : ''}? This can't be undone.</p>
+        <div className="confirm-actions">
+          <button className="confirm-cancel" onClick={onCancel}>Cancel</button>
+          <button className="confirm-delete" onClick={onConfirm}>Delete</button>
+        </div>
       </div>
     </div>
   );
@@ -58,6 +110,9 @@ export default function VideosPage() {
   const [filterChannel, setFilterChannel] = useState(null);
   const [search, setSearch] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
+  const [selected, setSelected] = useState(new Set());
+  const [confirmIds, setConfirmIds] = useState(null); // null | string[]
+  const [viewed, setViewed] = useState(() => getViewed());
 
   function loadVideos() {
     setError(false);
@@ -70,9 +125,37 @@ export default function VideosPage() {
 
   useEffect(() => { loadVideos(); }, []);
 
-  async function handleDelete(videoId) {
-    setVideos((prev) => prev.filter((v) => v.videoId !== videoId));
-    await fetch(`/api/videos/${videoId}`, { method: 'DELETE', credentials: 'include' });
+  // Sync viewed state from localStorage on focus (in case another tab updated it)
+  useEffect(() => {
+    const sync = () => setViewed(getViewed());
+    window.addEventListener('focus', sync);
+    return () => window.removeEventListener('focus', sync);
+  }, []);
+
+  function toggleSelect(videoId) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      next.has(videoId) ? next.delete(videoId) : next.add(videoId);
+      return next;
+    });
+  }
+
+  function clearSelection() { setSelected(new Set()); }
+
+  // Called with array of videoIds — single delete skips confirm, bulk shows dialog
+  function requestDelete(ids) {
+    if (ids.length === 1) {
+      doDelete(ids);
+    } else {
+      setConfirmIds(ids);
+    }
+  }
+
+  async function doDelete(ids) {
+    setConfirmIds(null);
+    setSelected(new Set());
+    setVideos((prev) => prev.filter((v) => !ids.includes(v.videoId)));
+    await Promise.all(ids.map((id) => fetch(`/api/videos/${id}`, { method: 'DELETE', credentials: 'include' })));
   }
 
   async function handleSendTestEmail() {
@@ -91,11 +174,21 @@ export default function VideosPage() {
     }
   }
 
+  const anySelected = selected.size > 0;
+
   return (
     <div className="page-inner">
       {emailToast && (
         <div className={`toast${emailToast.ok ? '' : ' toast-error'}`}>{emailToast.msg}</div>
       )}
+      {confirmIds && (
+        <ConfirmDialog
+          count={confirmIds.length}
+          onConfirm={() => doDelete(confirmIds)}
+          onCancel={() => setConfirmIds(null)}
+        />
+      )}
+
       <div className="videos-header">
         <h1 className="page-title" style={{ margin: 0 }}>My Videos</h1>
         {videos.length > 0 && (
@@ -134,16 +227,22 @@ export default function VideosPage() {
             const da = new Date(a.savedAt), db = new Date(b.savedAt);
             return sortOrder === 'oldest' ? da - db : db - da;
           });
+
+        const isFiltered = q || filterCategory || filterChannel;
+
         return (
           <>
+            {/* Search — full width above filter row */}
+            <input
+              className="url-input videos-search-full"
+              type="text"
+              placeholder="Search by title or channel…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+
+            {/* Filter row */}
             <div className="filter-bar">
-              <input
-                className="url-input videos-search"
-                type="text"
-                placeholder="Search by title or channel…"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
               <div className="filter-dropdowns">
                 {allChannels.length > 0 && (
                   <select className="filter-select" value={filterChannel || ''} onChange={(e) => setFilterChannel(e.target.value || null)}>
@@ -162,12 +261,35 @@ export default function VideosPage() {
                   <option value="oldest">Oldest first</option>
                 </select>
               </div>
+              {isFiltered && (
+                <span className="filter-result-count">{filtered.length} of {videos.length}</span>
+              )}
             </div>
+
+            {/* Bulk action bar */}
+            {anySelected && (
+              <BulkBar
+                count={selected.size}
+                onDelete={() => requestDelete([...selected])}
+                onClear={clearSelection}
+              />
+            )}
+
             {filtered.length === 0 ? (
               <p className="empty-state" style={{ marginTop: 24 }}>No videos match this filter.</p>
             ) : (
               <div className="vlist">
-                {filtered.map((v) => <VideoRow key={v.videoId} video={v} onDelete={handleDelete} />)}
+                {filtered.map((v) => (
+                  <VideoRow
+                    key={v.videoId}
+                    video={v}
+                    onDelete={requestDelete}
+                    selected={selected.has(v.videoId)}
+                    onToggle={toggleSelect}
+                    anySelected={anySelected}
+                    viewed={viewed.has(v.videoId)}
+                  />
+                ))}
               </div>
             )}
           </>
