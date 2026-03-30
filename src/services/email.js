@@ -66,50 +66,42 @@ function renderDigestHtml(summaries) {
     const videoUrl = `https://www.youtube.com/watch?v=${s.video_id}`;
     const thumb = `https://img.youtube.com/vi/${s.video_id}/hqdefault.jpg`;
     const quote = quotes[0];
-    const divider = i > 0 ? `<div style="border-top:1px solid #ebebeb;margin:36px 0;"></div>` : '';
+    const isLast = i === summaries.length - 1;
 
-    return `${divider}
-      <div>
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
-          <tr>
-            <td width="120" valign="top" style="padding-right:16px;">
-              <a href="${videoUrl}" style="display:block;line-height:0;">
-                <img src="${thumb}" alt="${esc(s.title || '')}" width="120" height="68"
-                  style="display:block;width:120px;height:68px;object-fit:cover;border-radius:4px;" />
-              </a>
-            </td>
-            <td valign="top">
-              ${cleanName(s.channel_name) ? `<div style="font-size:11px;font-weight:500;color:#999;margin-bottom:4px;">${esc(cleanName(s.channel_name))}</div>` : ''}
-              <div style="font-size:15px;font-weight:700;color:#111;line-height:1.35;margin-bottom:8px;">${esc(s.title || s.video_id)}</div>
-              ${tldr ? `<div style="font-size:13px;color:#555;line-height:1.6;margin-bottom:10px;">${esc(tldr.length > 280 ? tldr.slice(0, 280) + '…' : tldr)}</div>` : ''}
-              ${quote ? `<div style="color:#888;font-size:12px;font-style:italic;line-height:1.5;margin-bottom:10px;">&ldquo;${esc(quote.text.length > 200 ? quote.text.slice(0, 200) + '…' : quote.text)}&rdquo;</div>` : ''}
-              <a href="${APP_URL}/s/${s.video_id}" style="font-size:12px;font-weight:600;color:#111;text-decoration:none;margin-right:12px;">Full summary &rarr;</a>
-              <a href="${videoUrl}" style="font-size:12px;color:#999;text-decoration:none;">Watch &rarr;</a>
-            </td>
-          </tr>
-        </table>
+    return `
+      <div style="margin-bottom:${isLast ? '0' : '36px'};padding-bottom:${isLast ? '0' : '36px'};${isLast ? '' : 'border-bottom:1px solid #f0f0f0;'}">
+        <a href="${videoUrl}" style="display:block;line-height:0;margin-bottom:14px;">
+          <img src="${thumb}" alt="${esc(s.title || '')}" width="512"
+            style="display:block;width:100%;height:auto;max-height:200px;object-fit:cover;border-radius:6px;" />
+        </a>
+        ${cleanName(s.channel_name) ? `<div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#22d3ee;margin-bottom:6px;">${esc(cleanName(s.channel_name))}</div>` : ''}
+        <div style="font-size:17px;font-weight:700;color:#111;line-height:1.3;margin-bottom:10px;">${esc(s.title || s.video_id)}</div>
+        ${tldr ? `<div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:12px;border-left:3px solid #22d3ee;padding-left:12px;">${esc(tldr.length > 280 ? tldr.slice(0, 280) + '…' : tldr)}</div>` : ''}
+        ${quote ? `<div style="color:#777;font-size:13px;font-style:italic;line-height:1.55;margin-bottom:14px;">&ldquo;${esc(quote.text.length > 200 ? quote.text.slice(0, 200) + '…' : quote.text)}&rdquo;</div>` : ''}
+        <a href="${APP_URL}/s/${s.video_id}" style="font-size:13px;font-weight:600;color:#111;text-decoration:none;margin-right:16px;">Read the breakdown &rarr;</a>
+        <a href="${videoUrl}" style="font-size:13px;color:#aaa;text-decoration:none;">Watch on YouTube &rarr;</a>
       </div>`;
   }).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your digest</title></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your morning digest</title></head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <div style="max-width:560px;margin:0 auto;padding:48px 24px 64px;">
+  <div style="max-width:560px;margin:0 auto;padding:40px 24px 56px;">
 
     <!-- Header -->
-    <div style="margin-bottom:40px;border-bottom:1px solid #ebebeb;padding-bottom:24px;">
-      <div style="font-size:13px;color:#999;margin-bottom:6px;">Headwater</div>
-      <div style="font-size:22px;font-weight:700;color:#111;">${count} new video${count !== 1 ? 's' : ''} from your channels</div>
+    <div style="margin-bottom:36px;border-bottom:2px solid #f0f0f0;padding-bottom:24px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#22d3ee;margin-bottom:10px;">Headwater</div>
+      <div style="font-size:24px;font-weight:700;color:#111;line-height:1.2;margin-bottom:8px;">Your morning digest</div>
+      <div style="font-size:13px;color:#999;line-height:1.5;">${count} new video${count !== 1 ? 's' : ''} from your channels &mdash; you won&rsquo;t be notified again until something new posts.</div>
     </div>
 
     <!-- Videos -->
     ${videoSections}
 
     <!-- Footer -->
-    <div style="border-top:1px solid #ebebeb;margin-top:48px;padding-top:24px;font-size:12px;color:#bbb;line-height:1.8;">
+    <div style="border-top:1px solid #f0f0f0;margin-top:48px;padding-top:24px;font-size:12px;color:#bbb;line-height:1.8;">
       <a href="${APP_URL}" style="color:#999;font-weight:600;text-decoration:none;">Headwater</a><br>
-      You only receive this when there's something new from your channels.<br>
       Summaries are AI-generated and may be incomplete or inaccurate.<br>
       <a href="${APP_URL}/following" style="color:#999;font-weight:500;text-decoration:none;">Manage your channels</a>
       &nbsp;&middot;&nbsp;
@@ -138,7 +130,9 @@ async function sendDigest(toEmail, summaries) {
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: `Headwater — ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`,
+    subject: capped.length === 1
+      ? capped[0].title || 'Your morning digest'
+      : `${capped[0].title || 'New videos'} — plus ${capped.length - 1} more`,
     html: renderDigestHtml(capped),
     text: renderDigestText(capped),
     headers: {
