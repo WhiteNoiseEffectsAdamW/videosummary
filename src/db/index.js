@@ -134,6 +134,14 @@ async function migrate() {
   if (!hasDuration) {
     await db.schema.alterTable('summaries', (t) => t.integer('duration_seconds'));
   }
+
+  const hasInputTokens = await db.schema.hasColumn('summaries', 'input_tokens');
+  if (!hasInputTokens) {
+    await db.schema.alterTable('summaries', (t) => {
+      t.integer('input_tokens');
+      t.integer('output_tokens');
+    });
+  }
 }
 
 module.exports = { db, migrate };

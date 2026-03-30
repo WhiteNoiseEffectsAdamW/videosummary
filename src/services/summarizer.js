@@ -14,7 +14,8 @@ async function summarize(transcriptText, durationSeconds, title, isSampled = fal
   });
 
   const raw = message.content[0].text;
-  return parseStructuredSummary(raw);
+  const summary = parseStructuredSummary(raw);
+  return { summary, inputTokens: message.usage.input_tokens, outputTokens: message.usage.output_tokens };
 }
 
 function parseStructuredSummary(raw) {

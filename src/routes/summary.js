@@ -70,7 +70,7 @@ router.get('/', anonLimit, async (req, res, next) => {
       getTranscript(videoId),
       fetchVideoMeta(videoId),
     ]);
-    const summary = await summarize(text, durationSeconds, meta.title, isSampled);
+    const { summary, inputTokens, outputTokens } = await summarize(text, durationSeconds, meta.title, isSampled);
 
     await summaryModel.create({
       videoId,
@@ -79,6 +79,8 @@ router.get('/', anonLimit, async (req, res, next) => {
       summary,
       transcriptLength: text.length,
       durationSeconds,
+      inputTokens,
+      outputTokens,
     });
 
     summaryModel.upsertUserSave(userId, videoId).catch(() => {});
