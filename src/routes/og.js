@@ -127,7 +127,7 @@ function buildSvg(summary, videoId) {
     ${channelName ? `<text x="${PAD_LEFT}" y="${labelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="800" fill="${CYAN}" letter-spacing="4">${escXml(channelName)}</text>` : ''}
 
     <!-- Pull quote -->
-    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#cbd5e1" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
+    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#e2e8f0" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
 
     <!-- Headwater Summary label -->
     <text x="${PAD_LEFT}" y="${bottomY}" font-family="Inter,Arial,sans-serif" font-size="${BOTTOM_FONT}" font-weight="600" fill="#64748b" letter-spacing="4">HEADWATER SUMMARY</text>
