@@ -44,59 +44,57 @@ function wrapText(text, maxChars) {
 
 function buildSvg(summary, videoId) {
   const channelName = (summary.channel_name || '').replace(/^@/, '').toUpperCase();
-  const title = summary.title || videoId;
 
-  const PAD = 64;
-  const titleLines = wrapText(title, 28).slice(0, 2);
-  const TITLE_FONT = 68;
-  const TITLE_LINE_H = 80;
+  // Parse summary JSON to get quote
+  let summaryData = {};
+  try {
+    summaryData = typeof summary.summary === 'string'
+      ? JSON.parse(summary.summary)
+      : (summary.summary || {});
+  } catch {}
+  const rawQuote = summaryData.quotes?.[0]?.text || summaryData.tldr || summary.title || videoId;
 
-  // Badge
-  const BADGE_W = 248;
-  const BADGE_H = 74;
-  const BADGE_X = W - PAD - BADGE_W;
-  const BADGE_Y = 38;
+  const STRIPE = 5;
+  const PAD_LEFT = 85;
+  const LABEL_FONT = 28;
+  const QUOTE_FONT = 52;
+  const QUOTE_LINE_H = 68;
+  const MAX_QUOTE_LINES = 4;
 
-  // Wordmark baseline
-  const WM_Y = 110;
+  const quoteLines = wrapText(`\u201c${rawQuote}\u201d`, 42).slice(0, MAX_QUOTE_LINES);
 
-  // Bottom text — anchor last title line at H - 56
-  const titleLastY = H - 56;
-  const titleFirstY = titleLastY - (titleLines.length - 1) * TITLE_LINE_H;
-  const channelY = titleFirstY - 72;
+  // Vertical layout — center the block
+  const totalQuoteH = (quoteLines.length - 1) * QUOTE_LINE_H + QUOTE_FONT;
+  const blockH = LABEL_FONT + 28 + totalQuoteH + 32 + LABEL_FONT;
+  const blockTop = Math.round((H - blockH) / 2);
+
+  const topLabelY = blockTop + LABEL_FONT;
+  const quoteStartY = topLabelY + 28 + QUOTE_FONT;
+  const bottomLabelY = quoteStartY + (quoteLines.length - 1) * QUOTE_LINE_H + 32 + LABEL_FONT;
+
+  const topLabel = channelName ? `KEY INSIGHT  \u00B7  ${channelName}` : 'KEY INSIGHT';
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
     <defs>
-      <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${NAV_BG}" stop-opacity="0.82"/>
-        <stop offset="42%" stop-color="${NAV_BG}" stop-opacity="0"/>
-      </linearGradient>
-      <linearGradient id="botfade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="38%" stop-color="${NAV_BG}" stop-opacity="0"/>
-        <stop offset="100%" stop-color="${NAV_BG}" stop-opacity="0.82"/>
-      </linearGradient>
       <filter id="shadow">
-        <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.75"/>
+        <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.55"/>
       </filter>
     </defs>
 
-    <!-- Uniform dark base + gradient overlays -->
-    <rect x="0" y="0" width="${W}" height="${H}" fill="${NAV_BG}" fill-opacity="0.52"/>
-    <rect x="0" y="0" width="${W}" height="${H}" fill="url(#topfade)"/>
-    <rect x="0" y="0" width="${W}" height="${H}" fill="url(#botfade)"/>
+    <!-- Dark navy overlay — reduces thumbnail to ~12% -->
+    <rect x="0" y="0" width="${W}" height="${H}" fill="${NAV_BG}" fill-opacity="0.88"/>
 
-    <!-- Wordmark: Head(white)water(cyan) -->
-    <text x="${PAD}" y="${WM_Y}" font-family="Inter,Arial,sans-serif" font-size="64" font-weight="800" fill="#ffffff" letter-spacing="-1" filter="url(#shadow)">Head<tspan fill="${CYAN}">water</tspan></text>
+    <!-- Cyan left stripe (5px, flush to edge) -->
+    <rect x="0" y="0" width="${STRIPE}" height="${H}" fill="${CYAN}"/>
 
-    <!-- Summary badge (filled cyan) -->
-    <rect x="${BADGE_X}" y="${BADGE_Y}" width="${BADGE_W}" height="${BADGE_H}" rx="8" fill="${CYAN}"/>
-    <text x="${BADGE_X + BADGE_W / 2}" y="${BADGE_Y + 49}" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700" fill="${NAV_BG}" text-anchor="middle" letter-spacing="2">SUMMARY</text>
+    <!-- Top label: KEY INSIGHT · CHANNEL -->
+    <text x="${PAD_LEFT}" y="${topLabelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="700" fill="${CYAN}" letter-spacing="3">${escXml(topLabel)}</text>
 
-    <!-- Channel name -->
-    ${channelName ? `<text x="${PAD}" y="${channelY}" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="800" fill="${CYAN}" letter-spacing="3" filter="url(#shadow)">${escXml(channelName)}</text>` : ''}
+    <!-- Pull quote -->
+    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#e2e8f0" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
 
-    <!-- Title -->
-    ${titleLines.map((line, i) => `<text x="${PAD}" y="${titleFirstY + i * TITLE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${TITLE_FONT}" font-weight="800" fill="#ffffff" letter-spacing="-1" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
+    <!-- Bottom label: HEADWATER SUMMARY -->
+    <text x="${PAD_LEFT}" y="${bottomLabelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="600" fill="#475569" letter-spacing="3">HEADWATER SUMMARY</text>
   </svg>`;
 }
 
@@ -126,12 +124,12 @@ router.get('/:videoId', async (req, res) => {
     if (!thumbRes.ok) throw new Error('Thumbnail fetch failed');
     const thumbBuffer = Buffer.from(await thumbRes.arrayBuffer());
 
-    // Full-bleed thumbnail at 1200x630
+    // Full-bleed thumbnail at 1200x630 (will be knocked back to ~12% by SVG overlay)
     const thumbResized = await sharp(thumbBuffer)
       .resize(W, H, { fit: 'cover', position: 'centre' })
       .toBuffer();
 
-    // Render SVG overlay (gradients + text) using resvg
+    // Render SVG overlay (dark bg + stripe + text) using resvg
     const svg = buildSvg(summary, videoId);
     const resvg = new Resvg(svg, {
       font: {
@@ -143,7 +141,7 @@ router.get('/:videoId', async (req, res) => {
     const overlayPng = rendered.asPng();
     console.log('[og] resvg rendered', videoId, '— png size:', overlayPng.length, 'w:', rendered.width, 'h:', rendered.height);
 
-    // Composite: full thumbnail + SVG overlay
+    // Composite: thumbnail (ghost texture) + SVG overlay
     const png = await sharp(thumbResized)
       .composite([{ input: Buffer.from(overlayPng), top: 0, left: 0 }])
       .png()

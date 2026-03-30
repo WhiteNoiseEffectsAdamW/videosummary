@@ -41,7 +41,7 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
 
 RULES:
 - topics: identify 3–8 distinct sections or themes, in chronological order.
-- quotes: select 2–5 of the most insightful, surprising, or quotable lines.
+- quotes: select 2–5 of the most insightful, surprising, or quotable lines. Quotes must be self-contained and suitable to display publicly without surrounding context — avoid anything that could sound offensive, misleading, or controversial when read in isolation.
 - titleClaim: only include if the title can be evaluated against the content (i.e. it makes a specific promise, tease, or claim). If the title is straightforward and accurately describes the video, set both fields to null. Be honest — note if it's clickbait, misleading, or accurate.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
 - tldr: must directly address the title's implied question or promise. If the title asks "Is X worth it?", open with the answer. If it teases a discovery, state what was actually found. Never open with "This video covers..." or "The creator discusses...". Write as if answering the title in two plain sentences.

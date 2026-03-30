@@ -41,6 +41,7 @@ function formatDuration(seconds) {
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
   const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName, durationSeconds } = data;
+  const savesMins = durationSeconds > 0 ? Math.round(durationSeconds / 60) : null;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState(null);
@@ -114,73 +115,50 @@ export default function SummaryDisplay({ data }) {
       )}
 
       {/* Title + Share */}
-      {title && (
-        <div className="summary-title-row">
-          <div className="summary-title">{title}</div>
-          <button className="btn-share-subtle" onClick={handleShare} title="Share">
-            {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>Copied!</span> : (
-              <>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                  <polyline points="16 6 12 2 8 6"/>
-                  <line x1="12" y1="2" x2="12" y2="15"/>
-                </svg>
-                <span style={{ fontSize: 13, fontWeight: 600 }}>Share</span>
-              </>
-            )}
-          </button>
+      <div className="under-thumb-row">
+        <div className="under-thumb-left">
+          <div className="summary-badge">Headwater Summary</div>
+          {title && <div className="summary-title">{title}</div>}
         </div>
-      )}
-
-      {/* Channel + Actions */}
-      <div className="summary-header">
-        <div className="summary-channel-group">
-          {channelName && <span className="summary-channel">{channelName}{formatDuration(durationSeconds) ? <span className="summary-duration"> · {formatDuration(durationSeconds)}</span> : null}</span>}
-          {channelName && (
-            <div className="btn-follow-wrap">
-              {user ? (
-                <button
-                  className={`btn-follow${followState === 'following' ? ' btn-follow-done' : ''}`}
-                  onClick={handleFollow}
-                  disabled={followState !== 'idle'}
-                >
-                  {followState === 'loading' ? 'Following…' : followState === 'following' ? '✓ Following' : followState === 'error' ? 'Error' : 'Follow this channel'}
-                </button>
-              ) : (
-                <Link to="/register" className="btn-follow">Follow this channel</Link>
-              )}
-              {followState === 'idle' && <span className="btn-follow-sub">Get new video summaries by email</span>}
-            </div>
-          )}
-        </div>
-        <div className="summary-header-actions">
-          <div className="summary-header-actions-col">
-            <a
-              className="btn-watch-yt"
-              href={`https://www.youtube.com/watch?v=${videoId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
+        <button className="btn-share-subtle" onClick={handleShare} title="Share">
+          {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>Copied!</span> : (
+            <>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                <polyline points="16 6 12 2 8 6"/>
+                <line x1="12" y1="2" x2="12" y2="15"/>
               </svg>
-              Watch on YouTube
-            </a>
-          </div>
+              <span style={{ fontSize: 13, fontWeight: 600 }}>Share</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Channel + actions */}
+      <div className="summary-meta-row">
+        <div className="summary-meta-left">
+          {channelName && <span className="summary-channel">{channelName}{formatDuration(durationSeconds) ? <span className="summary-duration"> · {formatDuration(durationSeconds)}</span> : null}</span>}
+          {channelName && (user ? (
+            <button
+              className={`btn-follow${followState === 'following' ? ' btn-follow-done' : ''}`}
+              onClick={handleFollow}
+              disabled={followState !== 'idle'}
+            >
+              {followState === 'loading' ? 'Following…' : followState === 'following' ? '✓ Following' : followState === 'error' ? 'Error' : 'Follow'}
+            </button>
+          ) : (
+            <Link to="/register" className="btn-follow">Follow</Link>
+          ))}
+          <a className="btn-watch-yt" href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
+            </svg>
+            Watch
+          </a>
         </div>
       </div>
 
-
-      {/* Categories */}
-      {categories.length > 0 && (
-        <div className="categories-row">
-          {categories.map((cat, i) => (
-            <span key={i} className="pill pill-cat">{cat}</span>
-          ))}
-        </div>
-      )}
-
-      {/* TL;DR */}
+      {/* TL;DR — above fold, before categories */}
       <div className="card">
         <div className="card-label">TL;DR</div>
         {quotes.length > 0 && (
@@ -188,6 +166,7 @@ export default function SummaryDisplay({ data }) {
         )}
         <p className="tldr-text">{tldr}</p>
       </div>
+
 
       {/* Title Claim */}
       {titleClaim?.claim && titleClaim?.reality && (

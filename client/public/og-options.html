@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>OG Image Options — iMessage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #111;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 48px 32px;
+      color: #fff;
+    }
+    h1 { font-size: 14px; color: #666; font-weight: 500; margin-bottom: 40px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .grid { display: flex; flex-wrap: wrap; gap: 32px; }
+    .option { display: flex; flex-direction: column; gap: 8px; }
+    .label { font-size: 12px; color: #555; font-weight: 500; }
+    .link-preview {
+      width: 280px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      background: #fff;
+    }
+    .meta { padding: 8px 10px; border-top: 1px solid #eee; }
+    .meta-site { color: #999; margin-bottom: 2px; font-size: 10px; }
+    .meta-title { font-weight: 600; color: #000; line-height: 1.3; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <h1>iMessage Preview Comparison</h1>
+  <div class="grid">
+
+    <!-- A -->
+    <div class="option">
+      <div class="label">A — Branded card</div>
+      <div class="link-preview">
+        <div style="background:#0c0f14;display:flex;align-items:stretch;height:147px;">
+          <div style="width:105px;flex-shrink:0;overflow:hidden;">
+            <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;opacity:0.9;" />
+          </div>
+          <div style="flex:1;padding:10px 10px 8px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+              <div style="font-size:10px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:6px;">Escher's most mind-bending piece of art</div>
+              <div style="font-size:8px;font-weight:700;color:#22d3ee;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;">TL;DR</div>
+              <div style="font-size:8px;color:#94a3b8;line-height:1.5;">Impossible staircases reveal the math behind visual perception...</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1e293b;padding-top:5px;">
+              <div style="font-size:8px;font-weight:700;color:#fff;">Headwater</div>
+              <div style="font-size:7px;color:#475569;font-weight:500;letter-spacing:0.04em;">SAVES 18 MIN</div>
+            </div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- B -->
+    <div class="option">
+      <div class="label">B — Thumbnail forward</div>
+      <div class="link-preview">
+        <div style="position:relative;height:147px;overflow:hidden;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.88) 100%);"></div>
+          <div style="position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;color:#fff;background:rgba(0,0,0,0.45);padding:3px 7px;border-radius:3px;">Headwater</div>
+          <div style="position:absolute;top:8px;right:8px;font-size:8px;font-weight:700;color:#0c0f14;background:#22d3ee;padding:3px 7px;border-radius:3px;letter-spacing:0.05em;text-transform:uppercase;">Summary</div>
+          <div style="position:absolute;bottom:10px;left:10px;right:10px;">
+            <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:3px;">3Blue1Brown</div>
+            <div style="font-size:11px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:4px;">Escher's most mind-bending piece</div>
+            <div style="font-size:8px;color:#94a3b8;">Saves 18 min · TL;DR inside</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- E -->
+    <div class="option">
+      <div class="label">E — Thumbnail left (current)</div>
+      <div class="link-preview">
+        <div style="height:147px;background:#0c0f14;display:flex;align-items:stretch;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#22d3ee;"></div>
+          <div style="width:80px;flex-shrink:0;position:relative;overflow:hidden;">
+            <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to left,rgba(12,15,20,0.5) 0%,rgba(12,15,20,0) 40%);"></div>
+          </div>
+          <div style="flex:1;padding:12px 12px 10px;display:flex;flex-direction:column;justify-content:space-between;">
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;">
+                <div style="font-size:8px;font-weight:700;color:#fff;letter-spacing:0.06em;text-transform:uppercase;">Headwater</div>
+                <div style="font-size:7px;font-weight:700;color:#0c0f14;background:#22d3ee;padding:2px 6px;border-radius:3px;letter-spacing:0.05em;text-transform:uppercase;">Summary</div>
+              </div>
+              <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+              <div style="font-size:11px;font-weight:800;color:#fff;line-height:1.3;letter-spacing:-0.01em;margin-bottom:6px;">Escher's most mind-bending piece</div>
+              <div style="font-size:7px;font-weight:700;color:#22d3ee;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;">TL;DR</div>
+              <div style="font-size:8px;color:#64748b;line-height:1.5;">The paradox of impossible staircases...</div>
+            </div>
+            <div style="font-size:7px;color:#334155;font-weight:500;">Saves 18 min</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- I -->
+    <div class="option">
+      <div class="label">I — Full thumbnail, bottom text</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.45;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.92) 100%);"></div>
+          <div style="position:absolute;top:10px;left:12px;font-size:8px;font-weight:700;color:rgba(255,255,255,0.6);letter-spacing:0.08em;text-transform:uppercase;">Headwater</div>
+          <div style="position:absolute;top:8px;right:10px;font-size:7px;font-weight:700;color:#0c0f14;background:#22d3ee;padding:3px 7px;border-radius:3px;letter-spacing:0.05em;text-transform:uppercase;">Summary</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px 12px;">
+            <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- J -->
+    <div class="option">
+      <div class="label">J — Full thumbnail, centered text</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.35;" />
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(0,0,0,0) 0%,rgba(0,0,0,0.7) 100%);"></div>
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:#22d3ee;"></div>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 16px;text-align:center;">
+            <div style="font-size:8px;font-weight:700;color:#22d3ee;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">3Blue1Brown · Summary</div>
+            <div style="font-size:15px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:6px;">Escher's most mind-bending piece</div>
+            <div style="font-size:7px;font-weight:600;color:rgba(255,255,255,0.4);letter-spacing:0.06em;text-transform:uppercase;">Headwater</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- K -->
+    <div class="option">
+      <div class="label">K — Full thumbnail, solid bottom bar</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;top:0;left:0;right:0;height:65%;width:100%;object-fit:cover;" />
+          <div style="position:absolute;top:0;left:0;right:0;height:65%;background:linear-gradient(to bottom,rgba(0,0,0,0) 40%,rgba(12,15,20,1) 100%);"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:#0c0f14;padding:8px 12px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;">3Blue1Brown</div>
+              <div style="font-size:7px;font-weight:700;color:#0c0f14;background:#22d3ee;padding:2px 6px;border-radius:3px;text-transform:uppercase;">Summary</div>
+            </div>
+            <div style="font-size:13px;font-weight:800;color:#fff;line-height:1.25;">Escher's most mind-bending piece</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- L -->
+    <div class="option">
+      <div class="label">L — Full thumbnail brighter, tighter gradient</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.65;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0) 40%,rgba(0,0,0,0.95) 100%);"></div>
+          <div style="position:absolute;top:10px;left:12px;font-size:8px;font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:0.08em;text-transform:uppercase;">Headwater</div>
+          <div style="position:absolute;top:8px;right:10px;font-size:7px;font-weight:700;color:#0c0f14;background:#22d3ee;padding:3px 7px;border-radius:3px;letter-spacing:0.05em;text-transform:uppercase;">Summary</div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px 12px;">
+            <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- M -->
+    <div class="option">
+      <div class="label">M — Thumbnail top, gradient fade into dark text area</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#0c0f14;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;top:0;left:0;right:0;width:100%;height:75%;object-fit:cover;" />
+          <div style="position:absolute;top:0;left:0;right:0;height:75%;background:linear-gradient(to bottom,rgba(0,0,0,0) 20%,rgba(12,15,20,1) 100%);"></div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:8px 12px 10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+              <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;">3Blue1Brown</div>
+              <div style="font-size:7px;font-weight:700;color:#0c0f14;background:#22d3ee;padding:2px 6px;border-radius:3px;text-transform:uppercase;">Summary</div>
+            </div>
+            <div style="font-size:13px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:3px;">Escher's most mind-bending piece</div>
+            <div style="font-size:8px;color:#334155;font-weight:500;">Headwater</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- N -->
+    <div class="option">
+      <div class="label">N — Cyan header bar with wordmark + summary label</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.55;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.1) 20%,rgba(0,0,0,0.88) 100%);"></div>
+          <!-- Solid cyan header strip -->
+          <div style="position:absolute;top:0;left:0;right:0;background:#22d3ee;padding:6px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:10px;font-weight:800;color:#0c0f14;letter-spacing:0.06em;text-transform:uppercase;">Headwater</div>
+            <div style="font-size:8px;font-weight:700;color:#0c0f14;letter-spacing:0.06em;text-transform:uppercase;">Video Summary</div>
+          </div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px 12px;">
+            <div style="font-size:8px;font-weight:600;color:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- O -->
+    <div class="option">
+      <div class="label">O — Dark header bar, large wordmark, full thumbnail</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,15,20,0.75) 0%,rgba(12,15,20,0.15) 40%,rgba(12,15,20,0.85) 100%);"></div>
+          <div style="position:absolute;top:0;left:0;right:0;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:13px;font-weight:800;color:#fff;letter-spacing:-0.01em;">Head<span style="color:#22d3ee;">water</span></div>
+            <div style="font-size:8px;font-weight:700;color:#22d3ee;letter-spacing:0.08em;text-transform:uppercase;border:1px solid #22d3ee;padding:2px 7px;border-radius:3px;">Summary</div>
+          </div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px 12px;">
+            <div style="font-size:8px;font-weight:600;color:#94a3b8;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- O2 -->
+    <div class="option">
+      <div class="label">O2 — O with bolder wordmark + filled summary badge</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,15,20,0.82) 0%,rgba(12,15,20,0.1) 45%,rgba(12,15,20,0.88) 100%);"></div>
+          <div style="position:absolute;top:0;left:0;right:0;padding:9px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Head<span style="color:#22d3ee;">water</span></div>
+            <div style="font-size:9px;font-weight:700;color:#0c0f14;background:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;padding:3px 9px;border-radius:4px;">Summary</div>
+          </div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px 12px;">
+            <div style="font-size:8px;font-weight:600;color:#94a3b8;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- O3 -->
+    <div class="option">
+      <div class="label">O3 — O2 with cyan left border accent</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,15,20,0.82) 0%,rgba(12,15,20,0.1) 45%,rgba(12,15,20,0.88) 100%);"></div>
+          <!-- cyan left border -->
+          <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#22d3ee;"></div>
+          <div style="position:absolute;top:0;left:0;right:0;padding:9px 12px 9px 16px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Head<span style="color:#22d3ee;">water</span></div>
+            <div style="font-size:9px;font-weight:700;color:#0c0f14;background:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;padding:3px 9px;border-radius:4px;">Summary</div>
+          </div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px 12px 16px;">
+            <div style="font-size:8px;font-weight:600;color:#94a3b8;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece — Headwater</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <h1 style="margin-top:64px;">New Directions</h1>
+  <div class="grid">
+
+    <!-- CURRENT — O3 reference -->
+    <div class="option">
+      <div class="label">Current (O3) — reference</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#000;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.6;" />
+          <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(12,15,20,0.82) 0%,rgba(12,15,20,0.1) 45%,rgba(12,15,20,0.88) 100%);"></div>
+          <div style="position:absolute;top:0;left:0;bottom:0;width:3px;background:#22d3ee;"></div>
+          <div style="position:absolute;top:0;left:0;right:0;padding:9px 12px 9px 16px;display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Head<span style="color:#22d3ee;">water</span></div>
+            <div style="font-size:9px;font-weight:700;color:#0c0f14;background:#22d3ee;letter-spacing:0.07em;text-transform:uppercase;padding:3px 9px;border-radius:4px;">Summary</div>
+          </div>
+          <div style="position:absolute;bottom:0;left:0;right:0;padding:10px 12px 12px 16px;">
+            <div style="font-size:8px;font-weight:600;color:#94a3b8;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:4px;">3Blue1Brown</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.25;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Headwater Summary — Escher's most mind-bending piece of art</div></div>
+      </div>
+    </div>
+
+    <!-- P1 — Pull Quote -->
+    <div class="option">
+      <div class="label">P1 — Pull Quote (no thumbnail)</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#0c0f14;display:flex;flex-direction:column;justify-content:center;padding:16px 18px;">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#22d3ee;"></div>
+          <div style="font-size:9px;font-weight:700;color:#22d3ee;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;padding-left:8px;">3Blue1Brown · Headwater</div>
+          <div style="font-size:13px;font-weight:500;color:#e2e8f0;line-height:1.55;font-style:italic;padding-left:8px;">"Impossible staircases don't reveal a flaw in perception — they reveal exactly how well it works."</div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Impossible staircases don't reveal a flaw in perception — they reveal exactly how well it works.</div></div>
+      </div>
+    </div>
+
+    <!-- P2 — Data Card -->
+    <div class="option">
+      <div class="label">P2 — Data Card (no thumbnail)</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#0c0f14;display:flex;flex-direction:column;justify-content:space-between;padding:14px 16px;">
+          <div>
+            <div style="font-size:9px;font-weight:700;color:#22d3ee;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">3Blue1Brown</div>
+            <div style="font-size:13px;font-weight:700;color:#fff;line-height:1.3;">Escher's most mind-bending piece of art</div>
+          </div>
+          <div>
+            <div style="height:1px;background:rgba(255,255,255,0.08);margin-bottom:10px;"></div>
+            <div style="display:flex;gap:0;align-items:center;">
+              <div style="flex:1;text-align:center;">
+                <div style="font-size:18px;font-weight:800;color:#22d3ee;line-height:1;">18</div>
+                <div style="font-size:8px;color:#475569;margin-top:2px;text-transform:uppercase;letter-spacing:0.06em;">min saved</div>
+              </div>
+              <div style="width:1px;background:rgba(255,255,255,0.08);height:28px;"></div>
+              <div style="flex:1;text-align:center;">
+                <div style="font-size:18px;font-weight:800;color:#22d3ee;line-height:1;">5</div>
+                <div style="font-size:8px;color:#475569;margin-top:2px;text-transform:uppercase;letter-spacing:0.06em;">topics</div>
+              </div>
+              <div style="width:1px;background:rgba(255,255,255,0.08);height:28px;"></div>
+              <div style="flex:1;text-align:center;">
+                <div style="font-size:18px;font-weight:800;color:#22d3ee;line-height:1;">3</div>
+                <div style="font-size:8px;color:#475569;margin-top:2px;text-transform:uppercase;letter-spacing:0.06em;">quotes</div>
+              </div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.08);margin-top:10px;margin-bottom:8px;"></div>
+            <div style="font-size:8px;font-weight:600;color:#334155;letter-spacing:0.06em;">HEADWATER</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece of art — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- P3 — Split Panel -->
+    <div class="option">
+      <div class="label">P3 — Split Panel (thumbnail right)</div>
+      <div class="link-preview">
+        <div style="height:147px;display:flex;overflow:hidden;">
+          <div style="flex:0 0 55%;background:#0c0f14;display:flex;flex-direction:column;justify-content:space-between;padding:14px 14px 12px;">
+            <div>
+              <div style="font-size:8px;font-weight:700;color:#22d3ee;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">3Blue1Brown</div>
+              <div style="font-size:14px;font-weight:800;color:#fff;line-height:1.28;letter-spacing:-0.01em;">Escher's most mind-bending piece of art</div>
+            </div>
+            <div style="font-size:8px;font-weight:600;color:#334155;letter-spacing:0.06em;">HEADWATER</div>
+          </div>
+          <div style="flex:1;overflow:hidden;position:relative;">
+            <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+            <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(12,15,20,0.4) 0%,rgba(12,15,20,0) 40%);"></div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Escher's most mind-bending piece of art — Headwater</div></div>
+      </div>
+    </div>
+
+    <!-- P5 — Pull Quote with thumbnail bleed -->
+    <div class="option">
+      <div class="label">P5 — Pull Quote + faint thumbnail</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#0c0f14;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.12;" />
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:16px 18px;">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:#22d3ee;"></div>
+            <div style="font-size:9px;font-weight:700;color:#22d3ee;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;padding-left:10px;">3Blue1Brown · Headwater</div>
+            <div style="font-size:13px;font-weight:500;color:#e2e8f0;line-height:1.55;font-style:italic;padding-left:10px;">"Impossible staircases don't reveal a flaw in perception — they reveal exactly how well it works."</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Impossible staircases don't reveal a flaw in perception — they reveal exactly how well it works.</div></div>
+      </div>
+    </div>
+
+    <!-- P5b — Pull Quote + ghost thumbnail + KEY INSIGHT label -->
+    <div class="option">
+      <div class="label">P5b — P5 + "Key Insight" micro-label</div>
+      <div class="link-preview">
+        <div style="height:147px;position:relative;overflow:hidden;background:#0c0f14;">
+          <img src="https://img.youtube.com/vi/F3QpgXBtDeo/hqdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.12;" />
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:16px 18px;">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:5px;background:#22d3ee;"></div>
+            <div style="font-size:7.5px;font-weight:700;color:#22d3ee;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;padding-left:10px;">Key Insight · 3Blue1Brown</div>
+            <div style="font-size:13px;font-weight:500;color:#e2e8f0;line-height:1.55;font-style:italic;padding-left:10px;margin-bottom:10px;">"Impossible staircases don't reveal a flaw in perception — they reveal exactly how well it works."</div>
+            <div style="font-size:7.5px;font-weight:700;color:#334155;letter-spacing:0.1em;text-transform:uppercase;padding-left:10px;">Headwater Summary</div>
+          </div>
+        </div>
+        <div class="meta"><div class="meta-site">headwaterapp.com</div><div class="meta-title">Impossible staircases don't reveal a flaw in perception — they reveal exactly how well it works.</div></div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
