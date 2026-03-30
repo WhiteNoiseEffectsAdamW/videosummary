@@ -69,7 +69,7 @@ function buildSvg(summary, videoId) {
   const QUOTE_LINE_H = 76;
   const BOTTOM_FONT = 32;
   const MAX_QUOTE_LINES = 3;
-  const MAX_CHARS = 32; // chars per line at this font size
+  const MAX_CHARS = 28; // chars per line at this font size
 
   const allQuoteLines = wrapText(`\u201c${rawQuote}`, MAX_CHARS);
   const quoteLines = allQuoteLines.slice(0, MAX_QUOTE_LINES);
