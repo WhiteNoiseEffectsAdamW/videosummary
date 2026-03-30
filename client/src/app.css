@@ -1289,30 +1289,44 @@ body {
 .vrow-selected { background: rgba(34,211,238,0.06); border-color: rgba(34,211,238,0.25); }
 .vrow-viewed { border-left-color: #1e2a3a; }
 
-/* Checkbox */
-.vrow-checkbox-wrap { opacity: 0; transition: opacity 0.12s; flex-shrink: 0; }
+/* Checkbox — right side, replaces × */
+.vrow-checkbox-wrap { opacity: 0; transition: opacity 0.12s; flex-shrink: 0; padding: 4px 0 4px 4px; }
 .vrow-checkbox-wrap.vrow-checkbox-visible { opacity: 1; }
-.vrow-checkbox { width: 15px; height: 15px; accent-color: #22d3ee; cursor: pointer; }
+.vrow-checkbox {
+  width: 16px; height: 16px;
+  accent-color: #22d3ee;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  position: relative;
+  transition: background 0.12s, border-color 0.12s;
+}
+.vrow-checkbox:checked {
+  background: #22d3ee;
+  border-color: #22d3ee;
+}
+.vrow-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border: 2px solid #0c0f14;
+  border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
 
 /* Viewed title */
 .vrow-title-viewed { opacity: 0.55; }
 
-/* Bulk bar */
-.bulk-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background: rgba(34,211,238,0.08);
-  border: 1px solid rgba(34,211,238,0.2);
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
+/* Bulk bar — lives in the videos-header when rows are selected */
+.bulk-bar { display: flex; align-items: center; gap: 10px; }
 .bulk-bar-count { font-size: 13px; color: #22d3ee; font-weight: 600; }
 .bulk-bar-clear { background: none; border: none; font-size: 13px; color: #64748b; cursor: pointer; padding: 0; font-family: inherit; }
 .bulk-bar-clear:hover { color: #94a3b8; }
 .bulk-bar-delete {
-  margin-left: auto;
   background: rgba(239,68,68,0.12);
   border: 1px solid rgba(239,68,68,0.25);
   color: #ef4444;
@@ -1397,12 +1411,7 @@ body {
 .vrow-duration { font-size: 12px; color: #6b7280; }
 .vrow-saved   { font-size: 11px; color: #666; }
 
-.vrow-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
+.vrow-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 .vbadge {
   font-size: 11px;

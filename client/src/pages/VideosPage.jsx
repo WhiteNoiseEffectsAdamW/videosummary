@@ -16,7 +16,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
   const date = new Date(video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
 
   function handleClick(e) {
-    if (e.target.closest('.vrow-delete') || e.target.closest('.vrow-checkbox')) return;
+    if (e.target.closest('.vrow-checkbox-wrap')) return;
     if (anySelected) { onToggle(video.videoId); return; }
     markViewed(video.videoId);
     navigate(`/s/${video.videoId}`);
@@ -30,17 +30,6 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
     >
-      {/* Checkbox — visible on hover or when any row selected */}
-      <div className={`vrow-checkbox-wrap${anySelected ? ' vrow-checkbox-visible' : ''}`}>
-        <input
-          type="checkbox"
-          className="vrow-checkbox"
-          checked={selected}
-          onChange={() => onToggle(video.videoId)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-
       {video.thumbnailUrl && (
         <div className="vrow-thumb-wrap">
           <img className="vrow-thumb" src={video.thumbnailUrl} alt=""
@@ -69,22 +58,20 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
           ))}
         </div>
       </div>
-      <div className="vrow-right">
-        <button className="vrow-delete" title="Remove" onClick={(e) => { e.stopPropagation(); onDelete([video.videoId]); }}>×</button>
+      {/* Checkbox on right — replaces × button */}
+      <div className={`vrow-checkbox-wrap${anySelected ? ' vrow-checkbox-visible' : ''}`}>
+        <input
+          type="checkbox"
+          className="vrow-checkbox"
+          checked={selected}
+          onChange={() => onToggle(video.videoId)}
+          onClick={(e) => e.stopPropagation()}
+        />
       </div>
     </div>
   );
 }
 
-function BulkBar({ count, onDelete, onClear }) {
-  return (
-    <div className="bulk-bar">
-      <span className="bulk-bar-count">{count} selected</span>
-      <button className="bulk-bar-clear" onClick={onClear}>Deselect all</button>
-      <button className="bulk-bar-delete" onClick={onDelete}>Delete selected ({count})</button>
-    </div>
-  );
-}
 
 function ConfirmDialog({ count, onConfirm, onCancel }) {
   return (
@@ -191,10 +178,18 @@ export default function VideosPage() {
 
       <div className="videos-header">
         <h1 className="page-title" style={{ margin: 0 }}>My Videos</h1>
-        {videos.length > 0 && (
-          <button className="btn-test-email" onClick={handleSendTestEmail} disabled={sendingEmail}>
-            {sendingEmail ? 'Sending…' : 'Send digest email'}
-          </button>
+        {anySelected ? (
+          <div className="bulk-bar">
+            <span className="bulk-bar-count">{selected.size} selected</span>
+            <button className="bulk-bar-clear" onClick={clearSelection}>Deselect all</button>
+            <button className="bulk-bar-delete" onClick={() => requestDelete([...selected])}>Delete ({selected.size})</button>
+          </div>
+        ) : (
+          videos.length > 0 && (
+            <button className="btn-test-email" onClick={handleSendTestEmail} disabled={sendingEmail}>
+              {sendingEmail ? 'Sending…' : 'Send digest email'}
+            </button>
+          )
         )}
       </div>
 
@@ -266,14 +261,6 @@ export default function VideosPage() {
               )}
             </div>
 
-            {/* Bulk action bar */}
-            {anySelected && (
-              <BulkBar
-                count={selected.size}
-                onDelete={() => requestDelete([...selected])}
-                onClear={clearSelection}
-              />
-            )}
 
             {filtered.length === 0 ? (
               <p className="empty-state" style={{ marginTop: 24 }}>No videos match this filter.</p>
