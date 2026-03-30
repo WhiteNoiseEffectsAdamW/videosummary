@@ -224,34 +224,53 @@ export default function FollowingPage() {
     dragId.current = null;
   }
 
-  // Touch drag — attached to the handle only so scroll still works on the row
-  function handleTouchStart(e, id) {
-    dragId.current = id;
-  }
+  // Touch drag — imperative listeners with { passive: false } so preventDefault works
+  const handleRefs = useRef({});
 
-  function handleTouchMove(e, id) {
-    e.preventDefault(); // block scroll while dragging handle
-    const touch = e.touches[0];
-    const el = document.elementFromPoint(touch.clientX, touch.clientY);
-    const li = el?.closest('li[data-id]');
-    if (!li) return;
-    const overId = parseInt(li.dataset.id, 10);
-    if (overId === dragId.current) return;
-    setChannels((prev) => {
-      const from = prev.findIndex((c) => c.id === dragId.current);
-      const to = prev.findIndex((c) => c.id === overId);
-      if (from === -1 || to === -1) return prev;
-      const next = [...prev];
-      next.splice(to, 0, next.splice(from, 1)[0]);
-      dragId.current = dragId.current; // stays the same — we're tracking the dragged item, not the target
-      return next;
+  useEffect(() => {
+    const cleanups = [];
+    channels.forEach((c) => {
+      const el = handleRefs.current[c.id];
+      if (!el) return;
+
+      const onStart = (e) => { dragId.current = c.id; };
+
+      const onMove = (e) => {
+        if (!dragId.current) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        const li = target?.closest('li[data-id]');
+        if (!li) return;
+        const overId = parseInt(li.dataset.id, 10);
+        if (overId === dragId.current) return;
+        setChannels((prev) => {
+          const from = prev.findIndex((x) => x.id === dragId.current);
+          const to = prev.findIndex((x) => x.id === overId);
+          if (from === -1 || to === -1) return prev;
+          const next = [...prev];
+          next.splice(to, 0, next.splice(from, 1)[0]);
+          return next;
+        });
+      };
+
+      const onEnd = () => {
+        if (!dragId.current) return;
+        setChannels((current) => { saveOrder(current.map((x) => x.id)); return current; });
+        dragId.current = null;
+      };
+
+      el.addEventListener('touchstart', onStart, { passive: true });
+      el.addEventListener('touchmove', onMove, { passive: false });
+      el.addEventListener('touchend', onEnd, { passive: true });
+      cleanups.push(() => {
+        el.removeEventListener('touchstart', onStart);
+        el.removeEventListener('touchmove', onMove);
+        el.removeEventListener('touchend', onEnd);
+      });
     });
-  }
-
-  function handleTouchEnd() {
-    setChannels((current) => { saveOrder(current.map((c) => c.id)); return current; });
-    dragId.current = null;
-  }
+    return () => cleanups.forEach((fn) => fn());
+  }, [channels.map((c) => c.id).join(',')]);
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -359,9 +378,7 @@ export default function FollowingPage() {
                 <div
                   className="channel-drag-handle"
                   title="Drag to reorder"
-                  onTouchStart={(e) => handleTouchStart(e, c.id)}
-                  onTouchMove={(e) => handleTouchMove(e, c.id)}
-                  onTouchEnd={handleTouchEnd}
+                  ref={(el) => { handleRefs.current[c.id] = el; }}
                 >⠿</div>
                 <div>
                   <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
