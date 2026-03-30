@@ -142,6 +142,19 @@ async function migrate() {
       t.integer('output_tokens');
     });
   }
+
+  const hasSortOrder = await db.schema.hasColumn('subscriptions', 'sort_order');
+  if (!hasSortOrder) {
+    await db.schema.alterTable('subscriptions', (t) => t.integer('sort_order'));
+    // Backfill existing rows: assign sort_order per user based on created_at
+    const subs = await db('subscriptions').orderBy(['user_id', 'created_at']);
+    let lastUserId = null;
+    let order = 0;
+    for (const sub of subs) {
+      if (sub.user_id !== lastUserId) { order = 0; lastUserId = sub.user_id; }
+      await db('subscriptions').where({ id: sub.id }).update({ sort_order: order++ });
+    }
+  }
 }
 
 module.exports = { db, migrate };

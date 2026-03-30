@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useAuth } from '../AuthContext.jsx';
 import PopularChannelSelect from '../components/PopularChannelSelect.jsx';
 
@@ -187,6 +187,45 @@ export default function FollowingPage() {
   const [openMenu, setOpenMenu] = useState(null);
   const [channelStatus, setChannelStatus] = useState({});
   const menuRefs = useRef({});
+  const dragId = useRef(null);
+  const dragOverId = useRef(null);
+
+  function handleDragStart(e, id) {
+    dragId.current = id;
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragOver(e, id) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    dragOverId.current = id;
+    if (dragId.current === id) return;
+    setChannels((prev) => {
+      const from = prev.findIndex((c) => c.id === dragId.current);
+      const to = prev.findIndex((c) => c.id === id);
+      if (from === -1 || to === -1) return prev;
+      const next = [...prev];
+      next.splice(to, 0, next.splice(from, 1)[0]);
+      return next;
+    });
+  }
+
+  function handleDrop(e, id) {
+    e.preventDefault();
+    // Persist order to server
+    setChannels((current) => {
+      const orderedIds = current.map((c) => c.id);
+      fetch('/api/subscriptions/reorder', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderedIds }),
+      }).catch(() => showToast('Could not save channel order.'));
+      return current;
+    });
+    dragId.current = null;
+    dragOverId.current = null;
+  }
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -285,7 +324,13 @@ export default function FollowingPage() {
             const shortsOn = c.include_shorts === true;
             const status = channelStatus[c.channel_id];
             return (
-              <li key={c.id} className="channel-item">
+              <li key={c.id} className="channel-item"
+                draggable
+                onDragStart={(e) => handleDragStart(e, c.id)}
+                onDragOver={(e) => handleDragOver(e, c.id)}
+                onDrop={(e) => handleDrop(e, c.id)}
+              >
+                <div className="channel-drag-handle" title="Drag to reorder">⠿</div>
                 <div>
                   <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
                   {status === 'scanning' && <div className="channel-scan-status">Checking for new videos…</div>}

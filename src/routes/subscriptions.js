@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const requireAuth = require('../middleware/requireAuth');
-const { findByUserId, create, remove, setDigest, setIncludeShorts } = require('../models/subscription');
+const { findByUserId, create, remove, setDigest, setIncludeShorts, reorder } = require('../models/subscription');
 const { db } = require('../db');
 
 // All routes require login
@@ -20,6 +20,19 @@ router.get('/', async (req, res, next) => {
       rows.forEach((r) => { lastPostedMap[r.channel_id] = r.last_posted; });
     }
     res.json(subs.map((s) => ({ ...s, lastPosted: lastPostedMap[s.channel_id] || null })));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/subscriptions/reorder — update channel priority order
+// Body: { orderedIds: [id, id, ...] }
+router.post('/reorder', async (req, res, next) => {
+  try {
+    const { orderedIds } = req.body;
+    if (!Array.isArray(orderedIds)) return res.status(400).json({ error: 'orderedIds must be an array.' });
+    await reorder({ userId: req.user.id, orderedIds });
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

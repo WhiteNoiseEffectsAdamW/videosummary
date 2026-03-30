@@ -78,6 +78,7 @@ async function findSavedByUserIdSince(userId, since) {
         .orWhereNull(`${TABLE}.duration_seconds`)
         .orWhere('subscriptions.include_shorts', true);
     })
+    .orderBy('subscriptions.sort_order', 'asc')
     .orderBy(`${SAVES}.created_at`, 'desc')
     .select(`${TABLE}.*`, `${SAVES}.created_at as saved_at`);
   return rows.map((row) => ({ ...row, summary: JSON.parse(row.summary_json) }));

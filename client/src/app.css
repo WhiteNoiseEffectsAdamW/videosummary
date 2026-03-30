@@ -1177,10 +1177,24 @@ body {
 .channel-item {
   display: flex;
   align-items: center;
+  gap: 10px;
   justify-content: space-between;
   padding: 14px 0;
   border-bottom: 1px solid #111827;
+  transition: opacity 0.12s;
 }
+.channel-item[draggable]:hover { cursor: grab; }
+.channel-item[draggable]:active { cursor: grabbing; opacity: 0.6; }
+.channel-drag-handle {
+  font-size: 18px;
+  color: #2d3748;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.12s;
+}
+.channel-item:hover .channel-drag-handle { color: #4a5568; }
 .channel-item-actions { display: flex; align-items: center; gap: 10px; }
 .btn-digest-pill {
   font-size: 11px;

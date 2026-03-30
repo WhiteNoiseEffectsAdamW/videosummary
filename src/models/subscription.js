@@ -3,12 +3,21 @@ const { db } = require('../db');
 const TABLE = 'subscriptions';
 
 async function findByUserId(userId) {
-  return db(TABLE).where({ user_id: userId, active: true }).orderBy('created_at', 'asc');
+  return db(TABLE).where({ user_id: userId, active: true }).orderBy('sort_order', 'asc').orderBy('created_at', 'asc');
 }
 
 async function create({ userId, channelId, channelName }) {
-  await db(TABLE).insert({ user_id: userId, channel_id: channelId, channel_name: channelName });
+  const maxRow = await db(TABLE).where({ user_id: userId }).max('sort_order as m').first();
+  const sortOrder = (maxRow?.m ?? -1) + 1;
+  await db(TABLE).insert({ user_id: userId, channel_id: channelId, channel_name: channelName, sort_order: sortOrder });
   return db(TABLE).where({ user_id: userId, channel_id: channelId }).first();
+}
+
+// orderedIds: array of subscription IDs in desired order
+async function reorder({ userId, orderedIds }) {
+  await Promise.all(
+    orderedIds.map((id, i) => db(TABLE).where({ id, user_id: userId }).update({ sort_order: i }))
+  );
 }
 
 async function remove({ userId, subscriptionId }) {
@@ -27,4 +36,4 @@ async function findAll() {
   return db(TABLE).where({ active: true });
 }
 
-module.exports = { findByUserId, create, remove, findAll, setDigest, setIncludeShorts };
+module.exports = { findByUserId, create, remove, findAll, setDigest, setIncludeShorts, reorder };
