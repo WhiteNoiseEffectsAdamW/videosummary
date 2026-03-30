@@ -62,7 +62,7 @@ function buildSvg(summary, videoId) {
 
   // Sizes — must be large enough to read at iMessage scale (~23% of 1200x630)
   const STRIPE = 16;
-  const PAD_LEFT = 90;
+  const PAD_LEFT = 60;
   const PAD_RIGHT = 60;
   const LABEL_FONT = 44;
   const QUOTE_FONT = 58;
@@ -96,22 +96,26 @@ function buildSvg(summary, videoId) {
       <filter id="shadow">
         <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.6"/>
       </filter>
+      <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="${CYAN}" stop-opacity="1"/>
+        <stop offset="100%" stop-color="${CYAN}" stop-opacity="0.25"/>
+      </linearGradient>
     </defs>
 
     <!-- Dark navy overlay — reduces thumbnail to ~12% -->
     <rect x="0" y="0" width="${W}" height="${H}" fill="${NAV_BG}" fill-opacity="0.88"/>
 
-    <!-- Cyan left stripe (flush to edge) -->
-    <rect x="0" y="0" width="${STRIPE}" height="${H}" fill="${CYAN}"/>
+    <!-- Cyan top bar (flush to edge, gradient left→right) -->
+    <rect x="0" y="0" width="${W}" height="${STRIPE}" fill="url(#barGrad)"/>
 
     <!-- Channel name label -->
     ${channelName ? `<text x="${PAD_LEFT}" y="${labelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="800" fill="${CYAN}" letter-spacing="4">${escXml(channelName)}</text>` : ''}
 
     <!-- Pull quote -->
-    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#e2e8f0" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
+    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#cbd5e1" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
 
     <!-- Headwater Summary label -->
-    <text x="${PAD_LEFT}" y="${bottomY}" font-family="Inter,Arial,sans-serif" font-size="${BOTTOM_FONT}" font-weight="600" fill="#475569" letter-spacing="4">HEADWATER SUMMARY</text>
+    <text x="${PAD_LEFT}" y="${bottomY}" font-family="Inter,Arial,sans-serif" font-size="${BOTTOM_FONT}" font-weight="600" fill="#64748b" letter-spacing="4">HEADWATER SUMMARY</text>
   </svg>`;
 }
 
