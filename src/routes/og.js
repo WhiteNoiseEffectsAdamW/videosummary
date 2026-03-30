@@ -52,20 +52,33 @@ function buildSvg(summary, videoId) {
       ? JSON.parse(summary.summary)
       : (summary.summary || {});
   } catch {}
-  const rawQuote = summaryData.quotes?.[0]?.text || summaryData.tldr || summary.title || videoId;
+  // Pick the shortest quote that's still substantive (>=40 chars), fallback to first quote
+  const quotes = summaryData.quotes || [];
+  const cardQuote = quotes
+    .map(q => q.text || '')
+    .filter(t => t.length >= 40)
+    .sort((a, b) => a.length - b.length)[0];
+  const rawQuote = cardQuote || quotes[0]?.text || summaryData.tldr || summary.title || videoId;
 
   // Sizes — must be large enough to read at iMessage scale (~23% of 1200x630)
   const STRIPE = 16;
   const PAD_LEFT = 90;
   const PAD_RIGHT = 60;
-  const LABEL_FONT = 38;
-  const QUOTE_FONT = 66;
-  const QUOTE_LINE_H = 84;
-  const BOTTOM_FONT = 34;
-  const MAX_QUOTE_LINES = 4;
-  const MAX_CHARS = 34; // chars per line at this font size
+  const LABEL_FONT = 36;
+  const QUOTE_FONT = 58;
+  const QUOTE_LINE_H = 76;
+  const BOTTOM_FONT = 32;
+  const MAX_QUOTE_LINES = 3;
+  const MAX_CHARS = 38; // chars per line at this font size
 
-  const quoteLines = wrapText(`\u201c${rawQuote}\u201d`, MAX_CHARS).slice(0, MAX_QUOTE_LINES);
+  const allQuoteLines = wrapText(`\u201c${rawQuote}`, MAX_CHARS);
+  const quoteLines = allQuoteLines.slice(0, MAX_QUOTE_LINES);
+  // If quote was clipped, close with ellipsis on last line
+  if (allQuoteLines.length > MAX_QUOTE_LINES) {
+    quoteLines[MAX_QUOTE_LINES - 1] = quoteLines[MAX_QUOTE_LINES - 1].replace(/\s+\S+$/, '') + '\u2026\u201d';
+  } else {
+    quoteLines[quoteLines.length - 1] += '\u201d';
+  }
 
   // Center block vertically
   const totalQuoteH = (quoteLines.length - 1) * QUOTE_LINE_H + QUOTE_FONT;
@@ -95,7 +108,7 @@ function buildSvg(summary, videoId) {
     ${channelName ? `<text x="${PAD_LEFT}" y="${labelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="700" fill="${CYAN}" letter-spacing="4">${escXml(channelName)}</text>` : ''}
 
     <!-- Pull quote -->
-    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="500" fill="#f1f5f9" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
+    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#e2e8f0" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
 
     <!-- Headwater Summary label -->
     <text x="${PAD_LEFT}" y="${bottomY}" font-family="Inter,Arial,sans-serif" font-size="${BOTTOM_FONT}" font-weight="600" fill="#475569" letter-spacing="4">HEADWATER SUMMARY</text>
