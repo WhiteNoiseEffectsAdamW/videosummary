@@ -89,12 +89,25 @@ export default function SummaryDisplay({ data }) {
 
   return (
     <div>
-      {/* Thumbnail */}
-      {thumbnailUrl && (
-        <div className="thumbnail-wrap">
-          <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">
+      {/* Header: badge + title + thumbnail inset */}
+      <div className="summary-header-row">
+        <div className="summary-header-left">
+          <div className="summary-badge">Headwater Summary</div>
+          {title && <div className="summary-title">{title}</div>}
+          {channelName && (
+            <div className="summary-channel-line">
+              <span className="summary-channel">{channelName}{formatDuration(durationSeconds) ? <span className="summary-duration"> · {formatDuration(durationSeconds)}</span> : null}</span>
+            </div>
+          )}
+        </div>
+        {thumbnailUrl && (
+          <a
+            className="summary-thumb-inset"
+            href={`https://www.youtube.com/watch?v=${videoId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img
-              className="thumbnail"
               src={thumbnailUrl}
               alt="Video thumbnail"
               onLoad={(e) => {
@@ -106,20 +119,33 @@ export default function SummaryDisplay({ data }) {
                 if (e.target.src.includes('maxresdefault')) {
                   e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
                 } else {
-                  e.target.closest('.thumbnail-wrap').style.display = 'none';
+                  e.target.closest('.summary-thumb-inset').style.display = 'none';
                 }
               }}
             />
           </a>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Title + Share */}
-      <div className="under-thumb-row">
-        <div className="under-thumb-left">
-          <div className="summary-badge">Headwater Summary</div>
-          {title && <div className="summary-title">{title}</div>}
-        </div>
+      {/* Action row */}
+      <div className="summary-action-row">
+        {channelName && (user ? (
+          <button
+            className={`btn-follow${followState === 'following' ? ' btn-follow-done' : ''}`}
+            onClick={handleFollow}
+            disabled={followState !== 'idle'}
+          >
+            {followState === 'loading' ? 'Following…' : followState === 'following' ? '✓ Following' : followState === 'error' ? 'Error' : 'Follow'}
+          </button>
+        ) : (
+          <Link to="/register" className="btn-follow">Follow</Link>
+        ))}
+        <a className="btn-watch-yt" href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
+          </svg>
+          Watch
+        </a>
         <button className="btn-share-subtle" onClick={handleShare} title="Share">
           {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>Copied!</span> : (
             <>
@@ -132,30 +158,6 @@ export default function SummaryDisplay({ data }) {
             </>
           )}
         </button>
-      </div>
-
-      {/* Channel + actions */}
-      <div className="summary-meta-row">
-        <div className="summary-meta-left">
-          {channelName && <span className="summary-channel">{channelName}{formatDuration(durationSeconds) ? <span className="summary-duration"> · {formatDuration(durationSeconds)}</span> : null}</span>}
-          {channelName && (user ? (
-            <button
-              className={`btn-follow${followState === 'following' ? ' btn-follow-done' : ''}`}
-              onClick={handleFollow}
-              disabled={followState !== 'idle'}
-            >
-              {followState === 'loading' ? 'Following…' : followState === 'following' ? '✓ Following' : followState === 'error' ? 'Error' : 'Follow'}
-            </button>
-          ) : (
-            <Link to="/register" className="btn-follow">Follow</Link>
-          ))}
-          <a className="btn-watch-yt" href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>
-            </svg>
-            Watch
-          </a>
-        </div>
       </div>
 
       {/* TL;DR — above fold, before categories */}

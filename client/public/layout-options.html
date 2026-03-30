@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Summary Page Layout Options</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #111;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 48px 24px;
+      color: #fff;
+    }
+    h1 { font-size: 12px; color: #555; font-weight: 500; margin-bottom: 40px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .grid { display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; }
+    .option { display: flex; flex-direction: column; gap: 8px; }
+    .label { font-size: 11px; color: #555; font-weight: 500; }
+
+    /* Phone shell */
+    .phone {
+      width: 320px;
+      background: #0c0f14;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Shared component styles */
+    .hw-badge { font-size: 10px; font-weight: 700; color: #22d3ee; letter-spacing: 0.08em; text-transform: uppercase; }
+    .vid-title { font-size: 17px; font-weight: 700; color: #f1f5f9; line-height: 1.3; }
+    .channel { font-size: 13px; color: #22d3ee; font-weight: 600; }
+    .duration { font-size: 13px; color: #64748b; }
+    .card { background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.07); padding: 14px; margin: 0 12px; }
+    .card-label { font-size: 10px; font-weight: 700; color: #22d3ee; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .tldr { font-size: 13px; color: #cbd5e1; line-height: 1.6; }
+    .btn-row { display: flex; align-items: center; gap: 8px; }
+    .btn-follow { font-size: 11px; font-weight: 600; color: #22d3ee; background: none; border: 1px solid rgba(34,211,238,0.3); border-radius: 6px; padding: 4px 10px; }
+    .btn-watch { font-size: 11px; font-weight: 600; color: #94a3b8; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 4px 10px; }
+    .btn-share { font-size: 11px; font-weight: 600; color: #22d3ee; background: rgba(34,211,238,0.1); border: 1px solid rgba(34,211,238,0.25); border-radius: 6px; padding: 4px 10px; }
+  </style>
+</head>
+<body>
+  <h1>Summary Page — Layout Variations</h1>
+  <div class="grid">
+
+    <!-- CURRENT — A -->
+    <div class="option">
+      <div class="label">Current — full thumbnail, badge below</div>
+      <div class="phone">
+        <!-- Full 16:9 thumbnail -->
+        <div style="width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;">
+          <img src="https://img.youtube.com/vi/2S1tW5PHKHU/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+        </div>
+        <!-- Badge + title + share -->
+        <div style="padding:10px 12px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div style="flex:1;min-width:0;">
+            <div class="hw-badge" style="margin-bottom:4px;">Headwater Summary</div>
+            <div class="vid-title">Who is Ezra of the TLC regularly seen @GrimGriz</div>
+          </div>
+          <div class="btn-share" style="flex-shrink:0;margin-top:2px;">Share</div>
+        </div>
+        <!-- Channel row -->
+        <div style="padding:4px 12px 10px;display:flex;align-items:center;gap:8px;">
+          <span class="channel">PaulVanderKlay</span>
+          <span class="duration">· 125 min</span>
+          <div class="btn-follow">Follow</div>
+          <div class="btn-watch">Watch</div>
+        </div>
+        <!-- TL;DR -->
+        <div style="padding-bottom:12px;">
+          <div class="card">
+            <div class="card-label">TL;DR</div>
+            <div class="tldr">Ezra's theological framework centers on embodied community over abstract doctrine, drawing on his TLC background to critique modern evangelical drift.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- B — Capped thumbnail height + Headwater header bar -->
+    <div class="option">
+      <div class="label">B — Capped thumbnail + header bar</div>
+      <div class="phone">
+        <!-- Headwater header bar -->
+        <div style="background:#0c0f14;border-bottom:1px solid rgba(255,255,255,0.06);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:14px;font-weight:800;color:#fff;letter-spacing:-0.01em;">Head<span style="color:#22d3ee;">water</span></div>
+          <div style="font-size:9px;font-weight:700;color:#22d3ee;letter-spacing:0.08em;text-transform:uppercase;">Summary</div>
+        </div>
+        <!-- Capped thumbnail ~40vh equiv = ~128px on phone -->
+        <div style="width:100%;height:128px;overflow:hidden;position:relative;">
+          <img src="https://img.youtube.com/vi/2S1tW5PHKHU/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+        </div>
+        <!-- Title + share -->
+        <div style="padding:10px 12px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div class="vid-title" style="flex:1;min-width:0;">Who is Ezra of the TLC regularly seen @GrimGriz</div>
+          <div class="btn-share" style="flex-shrink:0;margin-top:2px;">Share</div>
+        </div>
+        <!-- Channel row -->
+        <div style="padding:4px 12px 10px;display:flex;align-items:center;gap:8px;">
+          <span class="channel">PaulVanderKlay</span>
+          <span class="duration">· 125 min</span>
+          <div class="btn-follow">Follow</div>
+          <div class="btn-watch">Watch</div>
+        </div>
+        <!-- TL;DR -->
+        <div style="padding-bottom:12px;">
+          <div class="card">
+            <div class="card-label">TL;DR</div>
+            <div class="tldr">Ezra's theological framework centers on embodied community over abstract doctrine, drawing on his TLC background to critique modern evangelical drift.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- C — Headwater badge overlaid on thumbnail, no separate badge below -->
+    <div class="option">
+      <div class="label">C — Badge overlaid on thumbnail</div>
+      <div class="phone">
+        <!-- Thumbnail with overlay badge -->
+        <div style="width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;">
+          <img src="https://img.youtube.com/vi/2S1tW5PHKHU/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          <div style="position:absolute;bottom:8px;left:8px;background:rgba(12,15,20,0.85);border-radius:6px;padding:4px 10px;backdrop-filter:blur(4px);">
+            <span style="font-size:10px;font-weight:700;color:#22d3ee;letter-spacing:0.08em;text-transform:uppercase;">Headwater Summary</span>
+          </div>
+        </div>
+        <!-- Title + share -->
+        <div style="padding:10px 12px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div class="vid-title" style="flex:1;min-width:0;">Who is Ezra of the TLC regularly seen @GrimGriz</div>
+          <div class="btn-share" style="flex-shrink:0;margin-top:2px;">Share</div>
+        </div>
+        <!-- Channel row -->
+        <div style="padding:4px 12px 10px;display:flex;align-items:center;gap:8px;">
+          <span class="channel">PaulVanderKlay</span>
+          <span class="duration">· 125 min</span>
+          <div class="btn-follow">Follow</div>
+          <div class="btn-watch">Watch</div>
+        </div>
+        <!-- TL;DR -->
+        <div style="padding-bottom:12px;">
+          <div class="card">
+            <div class="card-label">TL;DR</div>
+            <div class="tldr">Ezra's theological framework centers on embodied community over abstract doctrine, drawing on his TLC background to critique modern evangelical drift.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D — TL;DR first, thumbnail secondary (small, right-aligned) -->
+    <div class="option">
+      <div class="label">D — TL;DR first, thumbnail small right</div>
+      <div class="phone">
+        <!-- Header with thumbnail inset -->
+        <div style="padding:12px 12px 0;display:flex;gap:10px;align-items:flex-start;">
+          <div style="flex:1;min-width:0;">
+            <div class="hw-badge" style="margin-bottom:6px;">Headwater Summary</div>
+            <div class="vid-title" style="font-size:15px;margin-bottom:4px;">Who is Ezra of the TLC regularly seen @GrimGriz</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:0;">
+              <span class="channel" style="font-size:12px;">PaulVanderKlay</span>
+              <span class="duration" style="font-size:11px;">· 125 min</span>
+            </div>
+          </div>
+          <div style="flex-shrink:0;width:80px;height:54px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+            <img src="https://img.youtube.com/vi/2S1tW5PHKHU/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+          </div>
+        </div>
+        <!-- Action row -->
+        <div style="padding:8px 12px 10px;display:flex;align-items:center;gap:8px;">
+          <div class="btn-follow">Follow</div>
+          <div class="btn-watch">Watch</div>
+          <div class="btn-share">Share</div>
+        </div>
+        <!-- TL;DR -->
+        <div style="padding-bottom:12px;">
+          <div class="card">
+            <div class="card-label">TL;DR</div>
+            <div class="tldr">Ezra's theological framework centers on embodied community over abstract doctrine, drawing on his TLC background to critique modern evangelical drift.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- E — No thumbnail at all, content leads -->
+    <div class="option">
+      <div class="label">E — No thumbnail, content first</div>
+      <div class="phone">
+        <div style="padding:14px 12px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div style="flex:1;min-width:0;">
+            <div class="hw-badge" style="margin-bottom:6px;">Headwater Summary</div>
+            <div class="vid-title">Who is Ezra of the TLC regularly seen @GrimGriz</div>
+          </div>
+          <div class="btn-share" style="flex-shrink:0;margin-top:2px;">Share</div>
+        </div>
+        <div style="padding:4px 12px 10px;display:flex;align-items:center;gap:8px;">
+          <span class="channel">PaulVanderKlay</span>
+          <span class="duration">· 125 min</span>
+          <div class="btn-follow">Follow</div>
+          <div class="btn-watch">Watch</div>
+        </div>
+        <div style="padding-bottom:12px;">
+          <div class="card">
+            <div class="card-label">TL;DR</div>
+            <div class="tldr">Ezra's theological framework centers on embodied community over abstract doctrine, drawing on his TLC background to critique modern evangelical drift.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <h1 style="margin-top:64px;">D — Mobile Full Width (375px iPhone)</h1>
+  <div style="width:375px;background:#0c0f14;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+    <!-- Header with thumbnail inset -->
+    <div style="padding:16px 16px 0;display:flex;gap:12px;align-items:flex-start;">
+      <div style="flex:1;min-width:0;">
+        <div class="hw-badge" style="margin-bottom:8px;">Headwater Summary</div>
+        <div style="font-size:18px;font-weight:700;color:#f1f5f9;line-height:1.3;margin-bottom:6px;">Who is Ezra of the TLC regularly seen @GrimGriz</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:14px;color:#22d3ee;font-weight:600;">PaulVanderKlay</span>
+          <span style="font-size:13px;color:#64748b;">· 125 min</span>
+        </div>
+      </div>
+      <div style="flex-shrink:0;width:96px;height:64px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <img src="https://img.youtube.com/vi/2S1tW5PHKHU/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      </div>
+    </div>
+    <!-- Action row -->
+    <div style="padding:10px 16px 12px;display:flex;align-items:center;gap:8px;">
+      <div class="btn-follow">Follow</div>
+      <div class="btn-watch">Watch</div>
+      <div class="btn-share">Share</div>
+    </div>
+    <!-- TL;DR -->
+    <div style="padding:0 16px 16px;">
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.07);padding:14px;">
+        <div class="card-label">TL;DR</div>
+        <div class="tldr">Ezra's theological framework centers on embodied community over abstract doctrine, drawing on his TLC background to critique modern evangelical drift.</div>
+      </div>
+    </div>
+    <!-- Topics card -->
+    <div style="padding:0 16px 16px;">
+      <div style="background:rgba(255,255,255,0.04);border-radius:10px;border:1px solid rgba(255,255,255,0.07);padding:14px;">
+        <div class="card-label">Key Topics</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f1f5f9;margin-bottom:2px;">Ezra's formation in the TLC</div>
+            <div style="font-size:12px;color:#64748b;line-height:1.5;">His early years and theological influences within the community.</div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#f1f5f9;margin-bottom:2px;">Critique of modern evangelicalism</div>
+            <div style="font-size:12px;color:#64748b;line-height:1.5;">Where institutional Christianity has drifted from embodied practice.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

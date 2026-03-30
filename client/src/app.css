@@ -230,6 +230,48 @@ body {
   object-fit: cover;
 }
 
+/* ── Summary header (layout D) ───────────────────────────── */
+.summary-header-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+.summary-header-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.summary-thumb-inset {
+  flex-shrink: 0;
+  width: 96px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  display: block;
+}
+.summary-thumb-inset img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.summary-channel-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.summary-action-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
 /* Thumbnail hero (individual summary page) */
 .thumb-hero {
   position: relative;
@@ -486,12 +528,13 @@ body {
 
 .tldr-quote {
   font-style: italic;
-  color: #64748b;
-  font-size: 15px;
+  color: #e2e8f0;
+  font-size: 18px;
+  font-weight: 500;
   line-height: 1.6;
-  margin-bottom: 14px;
-  border-left: 2px solid #334155;
-  padding-left: 12px;
+  margin-bottom: 16px;
+  border-left: 3px solid #22d3ee;
+  padding-left: 14px;
 }
 
 .tldr-text {
