@@ -63,7 +63,7 @@ router.get('/', anonLimit, async (req, res, next) => {
     const cached = await summaryModel.findByVideoId(videoId);
     if (cached) {
       summaryModel.upsertUserSave(userId, videoId).catch(() => {});
-      return res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, durationSeconds: cached.duration_seconds || null, ...cached.summary });
+      return res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, channelId: cached.channel_id || null, durationSeconds: cached.duration_seconds || null, ...cached.summary });
     }
 
     const [{ text, durationSeconds, isSampled }, meta] = await Promise.all([
@@ -98,7 +98,7 @@ router.get('/:videoId', async (req, res, next) => {
     const cached = await summaryModel.findByVideoId(videoId);
     if (!cached) return res.status(404).json({ error: 'Summary not found.' });
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-    res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, durationSeconds: cached.duration_seconds || null, ...cached.summary });
+    res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, channelId: cached.channel_id || null, durationSeconds: cached.duration_seconds || null, ...cached.summary });
   } catch (err) {
     next(err);
   }

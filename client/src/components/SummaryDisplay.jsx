@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
 
@@ -40,12 +40,21 @@ function formatDuration(seconds) {
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName, durationSeconds } = data;
+  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName, channelId, durationSeconds } = data;
   const savesMins = durationSeconds > 0 ? Math.round(durationSeconds / 60) : null;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState(null);
   const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
+
+  // Check if already following this channel on mount
+  useEffect(() => {
+    if (!user || !channelId) return;
+    fetch(`/api/subscriptions/check?channelId=${encodeURIComponent(channelId)}`, { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { if (d.following) setFollowState('following'); })
+      .catch(() => {});
+  }, [user, channelId]);
 
   async function handleFollow() {
     if (followState !== 'idle') return;

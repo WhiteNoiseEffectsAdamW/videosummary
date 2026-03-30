@@ -25,6 +25,21 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+// GET /api/subscriptions/check?channelId= — check if user is following a channel
+router.get('/check', async (req, res, next) => {
+  try {
+    const { channelId } = req.query;
+    if (!channelId) return res.status(400).json({ error: 'channelId is required.' });
+    const { db } = require('../db');
+    const row = await db('subscriptions')
+      .where({ user_id: req.user.id, channel_id: channelId, active: true })
+      .first();
+    res.json({ following: !!row });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // POST /api/subscriptions — follow a channel
 // Body: { channelId, channelName }
 router.post('/', async (req, res, next) => {
