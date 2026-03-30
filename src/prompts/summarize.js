@@ -54,7 +54,7 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
 RULES:
 ${topicsRule}
 ${quotesRule}
-- titleClaim: only include if the title can be evaluated against the content (i.e. it makes a specific promise, tease, or claim). If the title is straightforward and accurately describes the video, set both fields to null. Be honest — note if it's clickbait, misleading, or accurate.
+- titleClaim: always include. Set "claim" to what the title implies or promises, and "reality" to what the video actually delivers. Be specific and honest — note if it's clickbait, accurate, or undersells the content.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
 - tldr: must directly address the title's implied question or promise. If the title asks "Is X worth it?", open with the answer. If it teases a discovery, state what was actually found. Never open with "This video covers..." or "The creator discusses...". Write as if answering the title in two plain sentences.
 - Keep all text factual — no editorialising beyond what the speaker says. No promotional language.
