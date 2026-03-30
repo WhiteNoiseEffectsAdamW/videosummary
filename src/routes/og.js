@@ -64,7 +64,7 @@ function buildSvg(summary, videoId) {
   const STRIPE = 16;
   const PAD_LEFT = 90;
   const PAD_RIGHT = 60;
-  const LABEL_FONT = 36;
+  const LABEL_FONT = 44;
   const QUOTE_FONT = 58;
   const QUOTE_LINE_H = 76;
   const BOTTOM_FONT = 32;
@@ -105,7 +105,7 @@ function buildSvg(summary, videoId) {
     <rect x="0" y="0" width="${STRIPE}" height="${H}" fill="${CYAN}"/>
 
     <!-- Channel name label -->
-    ${channelName ? `<text x="${PAD_LEFT}" y="${labelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="700" fill="${CYAN}" letter-spacing="4">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${PAD_LEFT}" y="${labelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="800" fill="${CYAN}" letter-spacing="4">${escXml(channelName)}</text>` : ''}
 
     <!-- Pull quote -->
     ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#e2e8f0" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}

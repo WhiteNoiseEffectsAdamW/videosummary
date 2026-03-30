@@ -66,11 +66,11 @@ router.get('/', anonLimit, async (req, res, next) => {
       return res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, durationSeconds: cached.duration_seconds || null, ...cached.summary });
     }
 
-    const [{ text, durationSeconds }, meta] = await Promise.all([
+    const [{ text, durationSeconds, isSampled }, meta] = await Promise.all([
       getTranscript(videoId),
       fetchVideoMeta(videoId),
     ]);
-    const summary = await summarize(text, durationSeconds, meta.title);
+    const summary = await summarize(text, durationSeconds, meta.title, isSampled);
 
     await summaryModel.create({
       videoId,

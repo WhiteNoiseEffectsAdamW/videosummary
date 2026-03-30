@@ -4,23 +4,8 @@ const { buildSummarizePrompt } = require('../prompts/summarize');
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-// Safety cap: ~80 k chars ≈ 20 k tokens, covers a 45-60 min video.
-// Trims from the middle to preserve intro and conclusion.
-const MAX_TRANSCRIPT_CHARS = 80_000;
-
-function trimTranscript(text) {
-  if (text.length <= MAX_TRANSCRIPT_CHARS) return text;
-  const half = Math.floor(MAX_TRANSCRIPT_CHARS / 2);
-  return (
-    text.slice(0, half) +
-    '\n\n[... middle of transcript trimmed for length ...]\n\n' +
-    text.slice(-half)
-  );
-}
-
-async function summarize(transcriptText, durationSeconds, title) {
-  const trimmed = trimTranscript(transcriptText);
-  const prompt = buildSummarizePrompt(trimmed, durationSeconds, title);
+async function summarize(transcriptText, durationSeconds, title, isSampled = false) {
+  const prompt = buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled);
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',
