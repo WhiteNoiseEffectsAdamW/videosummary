@@ -404,7 +404,7 @@ body {
 @media (max-width: 480px) {
   .card { padding: 16px 14px; border-radius: 10px; }
   .tldr-text { font-size: 15px; }
-  .page-inner { padding: 28px 16px; }
+  .page-inner { padding: 28px 16px calc(80px + env(safe-area-inset-bottom)); }
   .page-title { font-size: 20px; }
   .video-body { padding: 14px 16px 16px; }
   .add-channel-inputs { flex-direction: column; }
@@ -1935,7 +1935,7 @@ body {
 .public-signup-text { font-size: 15px; color: #666; margin-bottom: 20px; line-height: 1.6; }
 @media (max-width: 600px) {
   .public-header { padding: 16px 20px; }
-  .public-content { padding: 24px 20px 60px; }
+  .public-content { padding: 24px 20px calc(80px + env(safe-area-inset-bottom)); }
 }
 
 /* Modal */
