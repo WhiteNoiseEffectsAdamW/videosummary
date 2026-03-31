@@ -404,7 +404,7 @@ body {
 @media (max-width: 480px) {
   .card { padding: 16px 14px; border-radius: 10px; }
   .tldr-text { font-size: 15px; }
-  .page-inner { padding: 28px 16px calc(80px + env(safe-area-inset-bottom)); }
+  .page-inner { padding: 28px 16px 100px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
   .page-title { font-size: 20px; }
   .video-body { padding: 14px 16px 16px; }
   .add-channel-inputs { flex-direction: column; }
@@ -841,10 +841,10 @@ body {
   .mobile-tab-logout:hover { color: #ef4444; }
 
   /* Pad page content so it clears the tab bar + safe area */
-  .page { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
-  .page-inner { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-  .content { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-  .auth-page { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+  .page { padding-bottom: 80px; padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+  .page-inner { padding-bottom: 100px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .content { padding-bottom: 100px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .auth-page { padding-bottom: 80px; padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
 }
 
 /* Auth pages */
@@ -1935,7 +1935,7 @@ body {
 .public-signup-text { font-size: 15px; color: #666; margin-bottom: 20px; line-height: 1.6; }
 @media (max-width: 600px) {
   .public-header { padding: 16px 20px; }
-  .public-content { padding: 24px 20px calc(80px + env(safe-area-inset-bottom)); }
+  .public-content { padding: 24px 20px 100px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 }
 
 /* Modal */
