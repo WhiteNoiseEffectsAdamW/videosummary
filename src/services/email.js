@@ -98,7 +98,7 @@ function renderDigestHtml(summaries) {
         ${tldr ? `<div style="font-size:15px;color:#333;line-height:1.75;margin-bottom:16px;">${esc(tldr)}</div>` : ''}
         ${quote ? `
         <div style="margin:20px 0;padding:14px 18px;background:#f9f9f9;border-left:3px solid #d4d4d4;">
-          <div style="font-size:14px;font-style:italic;color:#555;line-height:1.6;">&ldquo;${esc(quote.text.length > 220 ? quote.text.slice(0, 220) + '…' : quote.text)}&rdquo;</div>
+          <div style="font-size:14px;font-style:italic;color:#555;line-height:1.6;">&ldquo;${esc(quote.text)}&rdquo;</div>
         </div>` : ''}
         <div style="margin-top:14px;">
           <a href="${APP_URL}/s/${s.video_id}" style="font-size:14px;color:#22d3ee;text-decoration:none;font-weight:600;">Full breakdown &rarr;</a>

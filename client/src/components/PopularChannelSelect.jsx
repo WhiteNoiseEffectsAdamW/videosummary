@@ -1,23 +1,49 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const POPULAR_CHANNELS = [
+  // Tech & AI
   { name: 'Fireship', handle: '@Fireship', category: 'Tech & AI' },
-  { name: 'Andrej Karpathy', handle: '@AndrejKarpathy', category: 'Tech & AI' },
-  { name: 'Lex Fridman', handle: '@lexfridman', category: 'Tech & AI' },
   { name: 'MKBHD', handle: '@mkbhd', category: 'Tech & AI' },
-  { name: 'Veritasium', handle: '@veritasium', category: 'Science & Learning' },
-  { name: 'Kurzgesagt', handle: '@kurzgesagt', category: 'Science & Learning' },
-  { name: 'CGP Grey', handle: '@CGPGrey', category: 'Science & Learning' },
-  { name: '3Blue1Brown', handle: '@3blue1brown', category: 'Science & Learning' },
-  { name: 'Cal Newport', handle: '@CalNewportMedia', category: 'Productivity' },
-  { name: 'Ali Abdaal', handle: '@aliabdaal', category: 'Productivity' },
-  { name: 'Huberman Lab', handle: '@hubermanlab', category: 'Health' },
-  { name: 'Graham Stephan', handle: '@GrahamStephan', category: 'Finance & Business' },
+  { name: 'Andrej Karpathy', handle: '@AndrejKarpathy', category: 'Tech & AI' },
+  { name: 'Cleo Abram', handle: '@CleoAbram', category: 'Tech & AI' },
+  { name: 'ColdFusion', handle: '@ColdFusion', category: 'Tech & AI' },
+  { name: 'Two Minute Papers', handle: '@TwoMinutePapers', category: 'Tech & AI' },
+  { name: 'Wendover Productions', handle: '@Wendover', category: 'Tech & AI' },
+  // Science
+  { name: 'Kurzgesagt', handle: '@kurzgesagt', category: 'Science' },
+  { name: 'Veritasium', handle: '@veritasium', category: 'Science' },
+  { name: 'CGP Grey', handle: '@CGPGrey', category: 'Science' },
+  { name: '3Blue1Brown', handle: '@3blue1brown', category: 'Science' },
+  { name: 'PBS Space Time', handle: '@pbsspacetime', category: 'Science' },
+  // Health & Longevity
+  { name: 'Huberman Lab', handle: '@hubermanlab', category: 'Health & Longevity' },
+  { name: 'FoundMyFitness', handle: '@foundmyfitness', category: 'Health & Longevity' },
+  { name: 'What I\'ve Learned', handle: '@WhatIveLearned', category: 'Health & Longevity' },
+  { name: 'Doctor Mike', handle: '@DoctorMike', category: 'Health & Longevity' },
+  { name: 'Medlife Crisis', handle: '@MedlifeCrisis', category: 'Health & Longevity' },
+  // Finance & Business
+  { name: 'Plain Bagel', handle: '@ThePlainBagel', category: 'Finance & Business' },
+  { name: 'Patrick Boyle', handle: '@PBoyle', category: 'Finance & Business' },
+  { name: 'Company Man', handle: '@companyman', category: 'Finance & Business' },
+  { name: 'How Money Works', handle: '@HowMoneyWorks', category: 'Finance & Business' },
   { name: 'Y Combinator', handle: '@ycombinator', category: 'Finance & Business' },
-  { name: 'Diary of a CEO', handle: '@TheDiaryOfACEO', category: 'Finance & Business' },
+  { name: 'Economics Explained', handle: '@EconomicsExplained', category: 'Finance & Business' },
+  // History & World
+  { name: 'Johnny Harris', handle: '@johnnyharris', category: 'History & World' },
+  { name: 'RealLifeLore', handle: '@RealLifeLore', category: 'History & World' },
+  { name: 'Kings and Generals', handle: '@KingsandGenerals', category: 'History & World' },
+  { name: 'TLDR News', handle: '@TLDRNewsGlobal', category: 'History & World' },
+  { name: 'PolyMatter', handle: '@PolyMatter', category: 'History & World' },
+  { name: 'Tom Scott', handle: '@TomScottGo', category: 'History & World' },
+  // Ideas & Interviews
+  { name: 'Lex Fridman', handle: '@lexfridman', category: 'Ideas & Interviews' },
+  { name: 'Cal Newport', handle: '@CalNewportMedia', category: 'Ideas & Interviews' },
+  { name: 'Ali Abdaal', handle: '@aliabdaal', category: 'Ideas & Interviews' },
+  { name: 'Academy of Ideas', handle: '@academyofideas', category: 'Ideas & Interviews' },
+  { name: 'Like Stories of Old', handle: '@LikeStoriesofOld', category: 'Ideas & Interviews' },
 ];
 
-const POPULAR_CATEGORIES = ['Tech & AI', 'Science & Learning', 'Productivity', 'Health', 'Finance & Business'];
+const POPULAR_CATEGORIES = ['Tech & AI', 'Science', 'Health & Longevity', 'Finance & Business', 'History & World', 'Ideas & Interviews'];
 const DISMISSED_KEY = 'hw_dismissed_channels';
 
 function getDismissed() {

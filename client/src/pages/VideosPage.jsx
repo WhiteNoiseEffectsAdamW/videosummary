@@ -36,7 +36,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
       setPulsing(true);
       setTimeout(() => setPulsing(false), 400);
       onToggle(video.videoId);
-    }, 400);
+    }, 700);
   }
 
   function handleTouchMove(e) {
