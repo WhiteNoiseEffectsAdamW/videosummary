@@ -1186,9 +1186,21 @@ body {
   transition: border-color 0.12s, opacity 0.12s;
 }
 .channel-item:hover { border-color: rgba(255,255,255,0.13); }
-.channel-item[draggable] { cursor: grab; -webkit-user-select: none; user-select: none; }
+.channel-item[draggable] { -webkit-user-select: none; user-select: none; }
 .channel-item[draggable] * { pointer-events: none; }
-.channel-item[draggable] button, .channel-item[draggable] .channel-menu-wrap { pointer-events: auto; }
+.channel-item[draggable] button, .channel-item[draggable] .channel-menu-wrap, .channel-item[draggable] .channel-drag-handle { pointer-events: auto; }
+.channel-drag-handle {
+  font-size: 16px;
+  color: transparent;
+  cursor: grab;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 2px 4px;
+  transition: color 0.15s;
+  pointer-events: auto;
+}
+.channel-item:hover .channel-drag-handle { color: #4a5568; }
+.channel-item:active .channel-drag-handle { cursor: grabbing; }
 .channel-item[draggable]:active { cursor: grabbing; }
 .channel-item-dragging { opacity: 0.4; border-color: rgba(34,211,238,0.3); }
 .channel-item-pulse { animation: longpress-pulse 0.4s ease; }
@@ -1332,8 +1344,8 @@ body {
   transition: background 0.12s, border-color 0.12s;
 }
 .vrow-checkbox:checked {
-  background: #22d3ee;
-  border-color: #22d3ee;
+  background: #e2e8f0;
+  border-color: #e2e8f0;
 }
 .vrow-checkbox:checked::after {
   content: '';
@@ -1412,7 +1424,8 @@ body {
 }
 .confirm-delete:hover { background: #dc2626; }
 
-.vrow-thumb-wrap { flex-shrink: 0; order: 2; }
+.vrow-thumb-wrap { flex-shrink: 0; order: 2; -webkit-user-drag: none; }
+.vrow-thumb { -webkit-user-drag: none; }
 .vrow-thumb { width: 96px; height: 60px; object-fit: cover; border-radius: 6px; display: block; }
 
 .vrow-main { flex: 1; min-width: 0; }

@@ -240,7 +240,12 @@ export default function FollowingPage() {
       const el = handleRefs.current[c.id];
       if (!el) return;
 
+      let startX = 0, startY = 0;
+
       const onStart = (e) => {
+        const touch = e.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
         longPressTimer.current = setTimeout(() => {
           dragId.current = c.id;
           setDraggingId(c.id);
@@ -251,8 +256,11 @@ export default function FollowingPage() {
 
       const onMove = (e) => {
         if (!dragId.current) {
-          // Cancel long press if finger moves before activation
-          clearTimeout(longPressTimer.current);
+          // Only cancel long press if finger moved significantly (allows natural hand tremor)
+          const touch = e.touches[0];
+          if (Math.abs(touch.clientX - startX) > 8 || Math.abs(touch.clientY - startY) > 8) {
+            clearTimeout(longPressTimer.current);
+          }
           return;
         }
         e.preventDefault();
@@ -401,6 +409,8 @@ export default function FollowingPage() {
                 onDrop={(e) => { e.preventDefault(); setChannels((current) => { saveOrder(current.map((x) => x.id)); return current; }); dragId.current = null; setDraggingId(null); }}
                 onDragEnd={() => { dragId.current = null; setDraggingId(null); }}
               >
+                <div className="channel-drag-handle">⠿</div>
+
                 {/* Avatar */}
                 <div className="channel-avatar">
                   {c.avatar_url

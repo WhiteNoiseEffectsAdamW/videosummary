@@ -15,6 +15,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
   const navigate = useNavigate();
   const date = new Date(video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const longPressTimer = React.useRef(null);
+  const touchStart = React.useRef({ x: 0, y: 0 });
   const [pulsing, setPulsing] = React.useState(false);
 
   function handleClick(e) {
@@ -24,12 +25,21 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
     navigate(`/s/${video.videoId}`);
   }
 
-  function handleTouchStart() {
+  function handleTouchStart(e) {
+    const touch = e.touches[0];
+    touchStart.current = { x: touch.clientX, y: touch.clientY };
     longPressTimer.current = setTimeout(() => {
       setPulsing(true);
       setTimeout(() => setPulsing(false), 400);
       onToggle(video.videoId);
     }, 400);
+  }
+
+  function handleTouchMove(e) {
+    const touch = e.touches[0];
+    if (Math.abs(touch.clientX - touchStart.current.x) > 8 || Math.abs(touch.clientY - touchStart.current.y) > 8) {
+      clearTimeout(longPressTimer.current);
+    }
   }
 
   function handleTouchEnd() {
@@ -41,8 +51,8 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
       className={`vrow${selected ? ' vrow-selected' : ''}${viewed && !selected ? ' vrow-viewed' : ''}${pulsing ? ' vrow-pulse' : ''}`}
       onClick={handleClick}
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      onTouchMove={handleTouchEnd}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
@@ -60,7 +70,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
       </div>
       {video.thumbnailUrl && (
         <div className="vrow-thumb-wrap">
-          <img className="vrow-thumb" src={video.thumbnailUrl} alt=""
+          <img className="vrow-thumb" src={video.thumbnailUrl} alt="" draggable="false"
             onLoad={(e) => {
               if (e.target.src.includes('maxresdefault') && e.target.naturalWidth <= 120) {
                 e.target.src = e.target.src.replace('maxresdefault', 'hqdefault');
