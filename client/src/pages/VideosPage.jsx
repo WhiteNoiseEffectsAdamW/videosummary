@@ -16,19 +16,23 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
   const date = new Date(video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const longPressTimer = React.useRef(null);
   const touchStart = React.useRef({ x: 0, y: 0 });
+  const didLongPress = React.useRef(false);
   const [pulsing, setPulsing] = React.useState(false);
 
   function handleClick(e) {
     if (e.target.closest('.vrow-checkbox-wrap')) return;
+    if (didLongPress.current) { didLongPress.current = false; return; }
     if (anySelected) { onToggle(video.videoId); return; }
     markViewed(video.videoId);
     navigate(`/s/${video.videoId}`);
   }
 
   function handleTouchStart(e) {
+    didLongPress.current = false;
     const touch = e.touches[0];
     touchStart.current = { x: touch.clientX, y: touch.clientY };
     longPressTimer.current = setTimeout(() => {
+      didLongPress.current = true;
       setPulsing(true);
       setTimeout(() => setPulsing(false), 400);
       onToggle(video.videoId);
