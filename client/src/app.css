@@ -801,6 +801,7 @@ body {
   .nav-account-wrap { display: none; }
   .nav { padding: 0 16px; height: 48px; }
   .nav-brand { font-size: 14px; }
+  .bulk-sticky { top: 48px; }
 
   /* Show bottom tab bar */
   .mobile-tabs {
@@ -1421,7 +1422,7 @@ body {
 /* Bulk sticky bar — floats at top when rows are selected */
 .bulk-sticky {
   position: sticky;
-  top: 0;
+  top: 56px;
   z-index: 50;
   display: flex;
   align-items: center;
