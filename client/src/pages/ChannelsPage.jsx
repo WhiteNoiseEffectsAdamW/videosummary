@@ -190,9 +190,8 @@ export default function FollowingPage() {
 
   const [openMenu, setOpenMenu] = useState(null);
   const [channelStatus, setChannelStatus] = useState({});
+  const [reorderingId, setReorderingId] = useState(null);
   const menuRefs = useRef({});
-  const dragId = useRef(null);
-  const listRef = useRef(null);
 
   function saveOrder(orderedIds) {
     fetch('/api/subscriptions/reorder', {
@@ -203,112 +202,35 @@ export default function FollowingPage() {
     }).catch(() => showToast('Could not save channel order.'));
   }
 
-  // Mouse drag
-  function handleDragStart(e, id) {
-    dragId.current = id;
-    e.dataTransfer.effectAllowed = 'move';
+  function handleReorderClick(id) {
+    setReorderingId((prev) => prev === id ? null : id);
+    setOpenMenu(null);
   }
 
-  function handleDragOver(e, id) {
-    e.preventDefault();
-    if (dragId.current === id) return;
+  function moveChannel(id, dir) {
     setChannels((prev) => {
-      const from = prev.findIndex((c) => c.id === dragId.current);
-      const to = prev.findIndex((c) => c.id === id);
-      if (from === -1 || to === -1) return prev;
+      const idx = prev.findIndex((c) => c.id === id);
       const next = [...prev];
-      next.splice(to, 0, next.splice(from, 1)[0]);
+      const swapIdx = idx + dir;
+      if (swapIdx < 0 || swapIdx >= next.length) return prev;
+      [next[idx], next[swapIdx]] = [next[swapIdx], next[idx]];
+      saveOrder(next.map((c) => c.id));
       return next;
     });
   }
-
-  function handleDrop(e) {
-    e.preventDefault();
-    setChannels((current) => { saveOrder(current.map((c) => c.id)); return current; });
-    dragId.current = null;
-  }
-
-  // Touch drag — long-press to activate, then drag
-  const handleRefs = useRef({});
-  const longPressTimer = useRef(null);
-  const [draggingId, setDraggingId] = useState(null);
-  const [pulsingId, setPulsingId] = useState(null);
-
-  useEffect(() => {
-    const cleanups = [];
-    channels.forEach((c) => {
-      const el = handleRefs.current[c.id];
-      if (!el) return;
-
-      let startX = 0, startY = 0;
-
-      const onStart = (e) => {
-        const touch = e.touches[0];
-        startX = touch.clientX;
-        startY = touch.clientY;
-        longPressTimer.current = setTimeout(() => {
-          dragId.current = c.id;
-          setDraggingId(c.id);
-          setPulsingId(c.id);
-          setTimeout(() => setPulsingId(null), 400);
-        }, 400);
-      };
-
-      const onMove = (e) => {
-        if (!dragId.current) {
-          // Only cancel long press if finger moved significantly (allows natural hand tremor)
-          const touch = e.touches[0];
-          if (Math.abs(touch.clientX - startX) > 8 || Math.abs(touch.clientY - startY) > 8) {
-            clearTimeout(longPressTimer.current);
-          }
-          return;
-        }
-        e.preventDefault();
-        const touch = e.touches[0];
-        const target = document.elementFromPoint(touch.clientX, touch.clientY);
-        const li = target?.closest('li[data-id]');
-        if (!li) return;
-        const overId = parseInt(li.dataset.id, 10);
-        if (overId === dragId.current) return;
-        setChannels((prev) => {
-          const from = prev.findIndex((x) => x.id === dragId.current);
-          const to = prev.findIndex((x) => x.id === overId);
-          if (from === -1 || to === -1) return prev;
-          const next = [...prev];
-          next.splice(to, 0, next.splice(from, 1)[0]);
-          return next;
-        });
-      };
-
-      const onEnd = () => {
-        clearTimeout(longPressTimer.current);
-        if (!dragId.current) return;
-        setChannels((current) => { saveOrder(current.map((x) => x.id)); return current; });
-        dragId.current = null;
-        setDraggingId(null);
-      };
-
-      el.addEventListener('touchstart', onStart, { passive: true });
-      el.addEventListener('touchmove', onMove, { passive: false });
-      el.addEventListener('touchend', onEnd, { passive: true });
-      cleanups.push(() => {
-        el.removeEventListener('touchstart', onStart);
-        el.removeEventListener('touchmove', onMove);
-        el.removeEventListener('touchend', onEnd);
-      });
-    });
-    return () => cleanups.forEach((fn) => fn());
-  }, [channels.map((c) => c.id).join(',')]);
 
   useEffect(() => {
     function handleClickOutside(e) {
       if (openMenu && menuRefs.current[openMenu] && !menuRefs.current[openMenu].contains(e.target)) {
         setOpenMenu(null);
       }
+      if (reorderingId && !e.target.closest('.channel-drag-handle') && !e.target.closest('.channel-reorder-arrows')) {
+        setReorderingId(null);
+      }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [openMenu]);
+  }, [openMenu, reorderingId]);
 
   async function handleScanChannel(channelId) {
     setOpenMenu(null);
@@ -399,17 +321,20 @@ export default function FollowingPage() {
             const status = channelStatus[c.channel_id];
             const displayName = (c.channel_name || c.channel_id).replace(/^@/, '');
             const initials = displayName.slice(0, 2).toUpperCase();
+            const isReordering = reorderingId === c.id;
+            const idx = channels.findIndex((x) => x.id === c.id);
             return (
               <li key={c.id} data-id={c.id}
-                className={`channel-item${draggingId === c.id ? ' channel-item-dragging' : ''}${pulsingId === c.id ? ' channel-item-pulse' : ''}`}
-                ref={(el) => { handleRefs.current[c.id] = el; }}
-                draggable
-                onDragStart={(e) => { dragId.current = c.id; setDraggingId(c.id); e.dataTransfer.effectAllowed = 'move'; }}
-                onDragOver={(e) => handleDragOver(e, c.id)}
-                onDrop={(e) => { e.preventDefault(); setChannels((current) => { saveOrder(current.map((x) => x.id)); return current; }); dragId.current = null; setDraggingId(null); }}
-                onDragEnd={() => { dragId.current = null; setDraggingId(null); }}
+                className={`channel-item${isReordering ? ' channel-item-reordering' : ''}`}
               >
-                <div className="channel-drag-handle">⠿</div>
+                <div className="channel-drag-handle" onClick={() => handleReorderClick(c.id)} title="Reorder">
+                  {isReordering ? (
+                    <div className="channel-reorder-arrows">
+                      <button className="channel-arrow-btn" onClick={(e) => { e.stopPropagation(); moveChannel(c.id, -1); }} disabled={idx === 0}>▲</button>
+                      <button className="channel-arrow-btn" onClick={(e) => { e.stopPropagation(); moveChannel(c.id, 1); }} disabled={idx === channels.length - 1}>▼</button>
+                    </div>
+                  ) : '⠿'}
+                </div>
 
                 {/* Avatar */}
                 <div className="channel-avatar">
