@@ -84,10 +84,12 @@ export default function FollowingPage() {
       showToast(`✓ Added ${resolved.channelName || resolved.channelId} to your digest`);
       // Kick off a background scan and show inline status
       setScanStatus({ name: resolved.channelName || resolved.channelId, state: 'scanning' });
-      fetch('/api/videos/scan', { method: 'POST', credentials: 'include' }).then(() => {
-        setScanStatus((s) => s ? { ...s, state: 'done' } : null);
-        setTimeout(() => setScanStatus(null), 5000);
-      }).catch(() => setScanStatus(null));
+      fetch('/api/videos/scan', { method: 'POST', credentials: 'include' })
+        .then((r) => r.json())
+        .then((data) => {
+          setScanStatus((s) => s ? { ...s, state: 'done', found: data.found ?? 0 } : null);
+          setTimeout(() => setScanStatus(null), 5000);
+        }).catch(() => setScanStatus(null));
     } catch (err) {
       setError(err.message);
     } finally {
@@ -173,10 +175,12 @@ export default function FollowingPage() {
       setChannels((prev) => [...prev, data]);
       showToast(`✓ Added ${ch.name} to your digest`);
       setScanStatus({ name: ch.name, state: 'scanning' });
-      fetch('/api/videos/scan', { method: 'POST', credentials: 'include' }).then(() => {
-        setScanStatus((s) => s ? { ...s, state: 'done' } : null);
-        setTimeout(() => setScanStatus(null), 5000);
-      }).catch(() => setScanStatus(null));
+      fetch('/api/videos/scan', { method: 'POST', credentials: 'include' })
+        .then((r) => r.json())
+        .then((data) => {
+          setScanStatus((s) => s ? { ...s, state: 'done', found: data.found ?? 0 } : null);
+          setTimeout(() => setScanStatus(null), 5000);
+        }).catch(() => setScanStatus(null));
     } catch (err) {
       showToast(err.message || 'Could not add channel.');
     } finally {
@@ -228,6 +232,7 @@ export default function FollowingPage() {
   const handleRefs = useRef({});
   const longPressTimer = useRef(null);
   const [draggingId, setDraggingId] = useState(null);
+  const [pulsingId, setPulsingId] = useState(null);
 
   useEffect(() => {
     const cleanups = [];
@@ -239,7 +244,9 @@ export default function FollowingPage() {
         longPressTimer.current = setTimeout(() => {
           dragId.current = c.id;
           setDraggingId(c.id);
-        }, 300);
+          setPulsingId(c.id);
+          setTimeout(() => setPulsingId(null), 400);
+        }, 400);
       };
 
       const onMove = (e) => {
@@ -299,12 +306,13 @@ export default function FollowingPage() {
     setOpenMenu(null);
     setChannelStatus((prev) => ({ ...prev, [channelId]: 'scanning' }));
     try {
-      await fetch('/api/videos/scan', {
+      const r = await fetch('/api/videos/scan', {
         method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ channelId }),
       });
-      setChannelStatus((prev) => ({ ...prev, [channelId]: 'done' }));
+      const data = await r.json();
+      setChannelStatus((prev) => ({ ...prev, [channelId]: { state: 'done', found: data.found ?? 0 } }));
       setTimeout(() => setChannelStatus((prev) => { const n = { ...prev }; delete n[channelId]; return n; }), 5000);
     } catch {
       setChannelStatus((prev) => { const n = { ...prev }; delete n[channelId]; return n; });
@@ -385,7 +393,7 @@ export default function FollowingPage() {
             const initials = displayName.slice(0, 2).toUpperCase();
             return (
               <li key={c.id} data-id={c.id}
-                className={`channel-item${draggingId === c.id ? ' channel-item-dragging' : ''}`}
+                className={`channel-item${draggingId === c.id ? ' channel-item-dragging' : ''}${pulsingId === c.id ? ' channel-item-pulse' : ''}`}
                 ref={(el) => { handleRefs.current[c.id] = el; }}
                 draggable
                 onDragStart={(e) => { dragId.current = c.id; setDraggingId(c.id); e.dataTransfer.effectAllowed = 'move'; }}
@@ -403,14 +411,15 @@ export default function FollowingPage() {
 
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="channel-name">{displayName}</div>
-                  {status === 'scanning' && <div className="channel-scan-status">Checking for new videos…</div>}
-                  {status === 'done' && <div className="channel-scan-status">Done — check My Videos shortly.</div>}
+                  {status?.state === 'scanning' || status === 'scanning' ? <div className="channel-scan-status">Checking for new videos…</div> : null}
+                  {(status?.state === 'done') && <div className="channel-scan-status">{status.found > 0 ? `${status.found} new video${status.found !== 1 ? 's' : ''} added` : 'No new videos'}</div>}
                   {!status && c.lastPosted && (
                     <div className="channel-last-posted">Last posted {formatRelative(c.lastPosted)}</div>
                   )}
                 </div>
 
                 <div className="channel-item-actions">
+                  {shortsOn && <span className="pill-shorts">Shorts</span>}
                   <button
                     className={`btn-digest-pill${digestOn ? ' pill-on' : ' pill-off'}`}
                     onClick={() => handleToggleChannel(c.id, digestOn)}
@@ -421,10 +430,10 @@ export default function FollowingPage() {
                     <button
                       className="channel-menu-btn"
                       onClick={() => setOpenMenu(openMenu === c.id ? null : c.id)}
-                      disabled={status === 'scanning'}
+                      disabled={status?.state === 'scanning' || status === 'scanning'}
                       title="Channel settings"
                     >
-                      {status === 'scanning' ? (
+                      {status?.state === 'scanning' || status === 'scanning' ? (
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="spin">
                           <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" />
                         </svg>

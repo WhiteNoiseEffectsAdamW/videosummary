@@ -14,6 +14,8 @@ function markViewed(videoId) {
 function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) {
   const navigate = useNavigate();
   const date = new Date(video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const longPressTimer = React.useRef(null);
+  const [pulsing, setPulsing] = React.useState(false);
 
   function handleClick(e) {
     if (e.target.closest('.vrow-checkbox-wrap')) return;
@@ -22,14 +24,40 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
     navigate(`/s/${video.videoId}`);
   }
 
+  function handleTouchStart() {
+    longPressTimer.current = setTimeout(() => {
+      setPulsing(true);
+      setTimeout(() => setPulsing(false), 400);
+      onToggle(video.videoId);
+    }, 400);
+  }
+
+  function handleTouchEnd() {
+    clearTimeout(longPressTimer.current);
+  }
+
   return (
     <div
-      className={`vrow${selected ? ' vrow-selected' : ''}${viewed && !selected ? ' vrow-viewed' : ''}`}
+      className={`vrow${selected ? ' vrow-selected' : ''}${viewed && !selected ? ' vrow-viewed' : ''}${pulsing ? ' vrow-pulse' : ''}`}
       onClick={handleClick}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchEnd}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
     >
+      <div className="vrow-main">
+        <div className={`vrow-title${viewed && !selected ? ' vrow-title-viewed' : ''}`}>{video.title || video.videoId}</div>
+        {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
+        <div className="vrow-meta">
+          <span className="vrow-date">{date}</span>
+          {video.durationSeconds > 0 && <span className="vrow-duration">{Math.round(video.durationSeconds / 60) < 1 ? '< 1 min' : `${Math.round(video.durationSeconds / 60)} min`}</span>}
+          {(video.categories || []).slice(0, 2).map((c, i) => (
+            <span key={i} className="pill pill-cat" style={{ fontSize: 11, padding: '2px 7px' }}>{c}</span>
+          ))}
+        </div>
+      </div>
       {video.thumbnailUrl && (
         <div className="vrow-thumb-wrap">
           <img className="vrow-thumb" src={video.thumbnailUrl} alt=""
@@ -47,17 +75,6 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
             }} />
         </div>
       )}
-      <div className="vrow-main">
-        <div className={`vrow-title${viewed && !selected ? ' vrow-title-viewed' : ''}`}>{video.title || video.videoId}</div>
-        {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
-        <div className="vrow-meta">
-          <span className="vrow-date">{date}</span>
-          {video.durationSeconds > 0 && <span className="vrow-duration">{Math.round(video.durationSeconds / 60) < 1 ? '< 1 min' : `${Math.round(video.durationSeconds / 60)} min`}</span>}
-          {(video.categories || []).slice(0, 2).map((c, i) => (
-            <span key={i} className="pill pill-cat" style={{ fontSize: 11, padding: '2px 7px' }}>{c}</span>
-          ))}
-        </div>
-      </div>
       {/* Checkbox on right — replaces × button */}
       <div className={`vrow-checkbox-wrap${anySelected ? ' vrow-checkbox-visible' : ''}`}>
         <input
@@ -96,7 +113,7 @@ export default function VideosPage() {
   const [filterCategory, setFilterCategory] = useState(null);
   const [filterChannel, setFilterChannel] = useState(null);
   const [search, setSearch] = useState('');
-  const [sortOrder, setSortOrder] = useState('newest');
+  const [sortOrder, setSortOrder] = useState(() => localStorage.getItem('hw_sort_order') || 'newest');
   const [selected, setSelected] = useState(new Set());
   const [confirmIds, setConfirmIds] = useState(null); // null | string[]
   const [viewed, setViewed] = useState(() => getViewed());
@@ -178,18 +195,12 @@ export default function VideosPage() {
 
       <div className="videos-header">
         <h1 className="page-title" style={{ margin: 0 }}>My Videos</h1>
-        {anySelected ? (
+        {anySelected && (
           <div className="bulk-bar">
             <span className="bulk-bar-count">{selected.size} selected</span>
             <button className="bulk-bar-clear" onClick={clearSelection}>Deselect all</button>
             <button className="bulk-bar-delete" onClick={() => requestDelete([...selected])}>Delete ({selected.size})</button>
           </div>
-        ) : (
-          videos.length > 0 && (
-            <button className="btn-test-email" onClick={handleSendTestEmail} disabled={sendingEmail}>
-              {sendingEmail ? 'Sending…' : 'Send digest email'}
-            </button>
-          )
         )}
       </div>
 
@@ -251,7 +262,7 @@ export default function VideosPage() {
                     {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 )}
-                <select className="filter-select" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                <select className="filter-select" value={sortOrder} onChange={(e) => { setSortOrder(e.target.value); localStorage.setItem('hw_sort_order', e.target.value); }}>
                   <option value="newest">Newest first</option>
                   <option value="oldest">Oldest first</option>
                 </select>
@@ -282,6 +293,14 @@ export default function VideosPage() {
           </>
         );
       })()}
+
+      {videos.length > 0 && (
+        <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.06)', textAlign: 'center' }}>
+          <button className="btn-test-email" onClick={handleSendTestEmail} disabled={sendingEmail}>
+            {sendingEmail ? 'Sending…' : 'Send digest email'}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

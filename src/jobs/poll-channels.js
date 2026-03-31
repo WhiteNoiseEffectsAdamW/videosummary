@@ -121,6 +121,7 @@ async function pollAllChannels() {
 async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60 * 1000, userId = null) {
   const cutoff = new Date(Date.now() - lookbackMs);
   const userIds = userId ? [userId] : [];
+  let found = 0;
   try {
     const videos = await fetchChannelVideos(channelId);
     const recent = videos.filter((v) => new Date(v.published) > cutoff);
@@ -130,6 +131,7 @@ async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60
       const title = typeof video.title === 'string' ? video.title : videoId;
       try {
         await processVideo(videoId, channelId, channelName, title, userIds);
+        found++;
       } catch (err) {
         console.error(`[scan] failed ${videoId}:`, err.message);
       }
@@ -137,6 +139,7 @@ async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60
   } catch (err) {
     console.error(`[scan] failed channel ${channelId}:`, err.message);
   }
+  return found;
 }
 
 function startPolling() {

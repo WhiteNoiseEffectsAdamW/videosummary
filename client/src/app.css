@@ -213,6 +213,7 @@ body {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes longpress-pulse { 0% { background: rgba(34,211,238,0); } 50% { background: rgba(34,211,238,0.12); } 100% { background: rgba(34,211,238,0); } }
 
 /* ── Thumbnail ───────────────────────────────────────────── */
 .thumbnail-wrap {
@@ -1185,9 +1186,10 @@ body {
   transition: border-color 0.12s, opacity 0.12s;
 }
 .channel-item:hover { border-color: rgba(255,255,255,0.13); }
-.channel-item[draggable] { cursor: grab; }
+.channel-item[draggable] { cursor: grab; -webkit-user-select: none; user-select: none; }
 .channel-item[draggable]:active { cursor: grabbing; }
 .channel-item-dragging { opacity: 0.4; border-color: rgba(34,211,238,0.3); }
+.channel-item-pulse { animation: longpress-pulse 0.4s ease; }
 .channel-avatar {
   width: 36px;
   height: 36px;
@@ -1222,6 +1224,7 @@ body {
   border-color: #1e293b;
 }
 .btn-digest-pill:hover { opacity: 0.75; }
+.pill-shorts { font-size: 11px; font-weight: 500; color: #64748b; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 3px 8px; }
 .channel-name { font-size: 14px; font-weight: 500; color: #e2e8f0; }
 .channel-last-posted { font-size: 11px; color: #475569; margin-top: 2px; }
 .channel-scan-status { font-size: 11px; color: #22d3ee; margin-top: 2px; }
@@ -1304,6 +1307,7 @@ body {
 .vrow:hover .vrow-title { color: #e2e8f0; }
 .vrow:hover .vrow-checkbox-wrap { opacity: 1; }
 .vrow-selected { background: rgba(34,211,238,0.04); }
+.vrow-pulse { animation: longpress-pulse 0.4s ease; }
 .vrow-viewed {}
 
 /* Checkbox — right side, replaces × */
@@ -1336,7 +1340,7 @@ body {
 }
 
 /* Viewed title */
-.vrow-title-viewed { opacity: 0.55; }
+.vrow-title-viewed { color: #64748b; }
 
 /* Bulk bar — lives in the videos-header when rows are selected */
 .bulk-bar { display: flex; align-items: center; gap: 10px; }
@@ -1402,8 +1406,8 @@ body {
 }
 .confirm-delete:hover { background: #dc2626; }
 
-.vrow-thumb-wrap { flex-shrink: 0; }
-.vrow-thumb { width: 80px; height: 52px; object-fit: cover; border-radius: 6px; display: block; }
+.vrow-thumb-wrap { flex-shrink: 0; order: 2; }
+.vrow-thumb { width: 96px; height: 60px; object-fit: cover; border-radius: 6px; display: block; }
 
 .vrow-main { flex: 1; min-width: 0; }
 
@@ -1423,7 +1427,7 @@ body {
   flex-wrap: wrap;
   gap: 6px;
 }
-.vrow-channel { font-size: 12px; color: #22d3ee; font-weight: 500; margin-bottom: 4px; }
+.vrow-channel { font-size: 12px; color: #67c2d4; font-weight: 500; margin-bottom: 4px; }
 .vrow-date    { font-size: 12px; color: #6b7280; }
 .vrow-duration { font-size: 12px; color: #6b7280; }
 .vrow-saved   { font-size: 11px; color: #666; }
@@ -1456,7 +1460,7 @@ body {
 
 @media (max-width: 480px) {
   .vrow { padding: 12px; }
-  .vrow-thumb { width: 64px; height: 42px; }
+  .vrow-thumb { width: 80px; height: 50px; }
   .vbadge { font-size: 0; padding: 6px; border-radius: 50%; }
   .vbadge::before { font-size: 10px; font-weight: 700; }
   .vbadge-watch::before   { content: 'W'; }

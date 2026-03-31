@@ -70,8 +70,9 @@ router.post('/scan', requireAuth, async (req, res, next) => {
     if (!subs.length) return res.json({ ok: true });
     const { channelId } = req.body || {};
     const toScan = channelId ? subs.filter((s) => s.channel_id === channelId) : subs;
-    toScan.forEach((s) => scanChannel(s.channel_id, s.channel_name, 3 * 24 * 60 * 60 * 1000, req.user.id).catch(() => {}));
-    res.json({ ok: true });
+    const counts = await Promise.all(toScan.map((s) => scanChannel(s.channel_id, s.channel_name, 3 * 24 * 60 * 60 * 1000, req.user.id).catch(() => 0)));
+    const found = counts.reduce((a, b) => a + b, 0);
+    res.json({ ok: true, found });
   } catch (err) {
     next(err);
   }

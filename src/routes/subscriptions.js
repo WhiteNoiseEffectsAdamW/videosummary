@@ -20,6 +20,23 @@ router.get('/', async (req, res, next) => {
       rows.forEach((r) => { lastPostedMap[r.channel_id] = r.last_posted; });
     }
     res.json(subs.map((s) => ({ ...s, lastPosted: lastPostedMap[s.channel_id] || null })));
+
+    // Backfill avatar URLs for subscriptions that don't have one yet (fire-and-forget)
+    const missing = subs.filter((s) => !s.avatar_url && s.channel_id);
+    if (missing.length) {
+      Promise.allSettled(missing.map(async (s) => {
+        try {
+          const url = `https://www.youtube.com/channel/${s.channel_id}`;
+          const pageRes = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; bot)' } });
+          if (!pageRes.ok) return;
+          const html = await pageRes.text();
+          const avatarMatch = html.match(/"avatar":\{"thumbnails":\[\{"url":"([^"]+)"/);
+          if (!avatarMatch) return;
+          const avatarUrl = avatarMatch[1].replace(/=s\d+-/, '=s88-');
+          await db('subscriptions').where({ id: s.id }).update({ avatar_url: avatarUrl });
+        } catch {}
+      })).catch(() => {});
+    }
   } catch (err) {
     next(err);
   }

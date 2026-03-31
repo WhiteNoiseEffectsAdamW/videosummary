@@ -54,6 +54,9 @@
       "Bash(curl -s \"https://headwaterapp.com/api/og/V9ZlRhRePg0\" -o \"c:\\\\Users\\\\Adam W\\\\Desktop\\\\og-test.png\")",
       "Bash(start \"c:\\\\Users\\\\Adam W\\\\Desktop\\\\og-test.png\")",
       "Bash(curl -s -X POST http://localhost:3001/api/auth/login -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"test\"\",\"\"password\"\":\"\"test\"\"}')"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\Adam W\\.claude\\projects\\c--Users-Adam-W-Desktop-videosummary\\memory"
     ]
   }
 }
