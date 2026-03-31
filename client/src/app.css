@@ -840,11 +840,11 @@ body {
   .mobile-tab-logout { color: #64748b; }
   .mobile-tab-logout:hover { color: #ef4444; }
 
-  /* Pad page content so it clears the tab bar */
-  .page { padding-bottom: 60px; }
-  .page-inner { padding-bottom: 80px; }
-  .content { padding-bottom: 80px; }
-  .auth-page { padding-bottom: 60px; }
+  /* Pad page content so it clears the tab bar + safe area */
+  .page { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+  .page-inner { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .content { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .auth-page { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
 }
 
 /* Auth pages */
