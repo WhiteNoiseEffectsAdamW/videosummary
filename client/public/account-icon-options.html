@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    body { background: #0c0f14; display: flex; gap: 40px; padding: 40px; align-items: center; flex-wrap: wrap; }
+    .opt { display: flex; flex-direction: column; align-items: center; gap: 12px; color: #94a3b8; font-family: sans-serif; font-size: 12px; }
+    svg { color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+  <!-- 1: Person silhouette (classic) -->
+  <div class="opt">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+    </svg>
+    1. Person
+  </div>
+
+  <!-- 2: Person with circle (profile badge) -->
+  <div class="opt">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="9" r="3"/>
+      <path d="M6.5 19c.5-3 2.8-5 5.5-5s5 2 5.5 5"/>
+    </svg>
+    2. Profile badge
+  </div>
+
+  <!-- 3: Person with settings gear -->
+  <div class="opt">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="10" cy="7" r="3.5"/>
+      <path d="M3 20c0-3.5 3-6 7-6"/>
+      <circle cx="18" cy="17" r="2.5"/>
+      <path d="M18 14.5v-.5M18 19.5v-.5M15.7 15.7l-.4-.4M20.7 19.7l-.4-.4M14.5 18H15M21 18h.5M15.7 19.7l-.4.4M20.7 15.7l-.4.4"/>
+    </svg>
+    3. Person + gear
+  </div>
+
+  <!-- 4: ID card / account card -->
+  <div class="opt">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="5" width="20" height="14" rx="2"/>
+      <circle cx="8" cy="12" r="2.5"/>
+      <line x1="13" y1="10" x2="19" y2="10"/>
+      <line x1="13" y1="14" x2="17" y2="14"/>
+    </svg>
+    4. ID card
+  </div>
+
+  <!-- 5: Simple initials circle (no SVG path, just shape) -->
+  <div class="opt">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="9" r="3"/>
+      <path d="M7 19.5c.8-2.5 2.7-4 5-4s4.2 1.5 5 4"/>
+    </svg>
+    5. Contained
+  </div>
+
+</body>
+</html>

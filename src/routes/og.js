@@ -195,4 +195,32 @@ router.get('/:videoId', async (req, res) => {
   }
 });
 
+// Thumbnail proxy — serves YouTube thumbnails from headwater.app domain
+// Improves email deliverability (images align with sending domain)
+router.get('/thumb/:videoId', async (req, res) => {
+  const { videoId } = req.params;
+  if (!/^[\w-]{5,20}$/.test(videoId)) return res.status(400).end();
+
+  const urls = [
+    `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
+    `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`,
+  ];
+
+  for (const url of urls) {
+    try {
+      const upstream = await fetch(url);
+      if (!upstream.ok) continue;
+      const buf = Buffer.from(await upstream.arrayBuffer());
+      // hqdefault returns a 120x90 placeholder for videos with no thumbnail — detect by size
+      if (buf.length < 2000) continue;
+      res.set('Content-Type', 'image/jpeg');
+      res.set('Cache-Control', 'public, max-age=86400');
+      return res.send(buf);
+    } catch {
+      continue;
+    }
+  }
+  res.status(404).end();
+});
+
 module.exports = router;

@@ -44,7 +44,16 @@
       "WebFetch(domain:claro.com)",
       "WebFetch(domain:felo.com)",
       "Bash(curl -s \"http://localhost:3001/api/summary?url=https://www.youtube.com/watch?v=UclrVWafRAI\")",
-      "Bash(xargs wc:*)"
+      "Bash(xargs wc:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(start \"c:\\\\Users\\\\Adam W\\\\Desktop\\\\videosummary\\\\client\\\\public\\\\og-preview.html\")",
+      "Bash(start \"c:\\\\Users\\\\Adam W\\\\Desktop\\\\videosummary\\\\client\\\\public\\\\og-options.html\")",
+      "Bash(curl -sI \"https://headwaterapp.com/api/og/F3QpgXBtDeo\")",
+      "Bash(curl -s \"https://headwaterapp.com/api/og/F3QpgXBtDeo\")",
+      "Bash(curl -sI \"https://headwaterapp.com/api/og/V9ZlRhRePg0\")",
+      "Bash(curl -s \"https://headwaterapp.com/api/og/V9ZlRhRePg0\" -o \"c:\\\\Users\\\\Adam W\\\\Desktop\\\\og-test.png\")",
+      "Bash(start \"c:\\\\Users\\\\Adam W\\\\Desktop\\\\og-test.png\")",
+      "Bash(curl -s -X POST http://localhost:3001/api/auth/login -H \"Content-Type: application/json\" -d '{\"\"email\"\":\"\"test\"\",\"\"password\"\":\"\"test\"\"}')"
     ]
   }
 }

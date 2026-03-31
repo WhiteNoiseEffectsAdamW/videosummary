@@ -28,7 +28,11 @@ async function resolveChannelUrl(url) {
   const nameMatch = html.match(/"canonicalBaseUrl":"\/@([^"]+)"/);
   const titleMatch = html.match(/"channelMetadataRenderer":\{"title":"([^"]+)"/);
   const channelName = titleMatch ? titleMatch[1] : (nameMatch ? nameMatch[1] : null);
-  return { channelId: match[1], channelName };
+
+  const avatarMatch = html.match(/"avatar":\{"thumbnails":\[\{"url":"([^"]+)"/);
+  const avatarUrl = avatarMatch ? avatarMatch[1].replace(/=s\d+-/, '=s88-') : null;
+
+  return { channelId: match[1], channelName, avatarUrl };
 }
 
 // GET /api/channels/resolve?url= — resolve any YouTube channel URL to a channel ID

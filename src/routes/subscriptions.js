@@ -57,13 +57,14 @@ router.get('/check', async (req, res, next) => {
 // Body: { channelId, channelName }
 router.post('/', async (req, res, next) => {
   try {
-    const { channelId, channelName } = req.body;
+    const { channelId, channelName, avatarUrl } = req.body;
     if (!channelId) return res.status(400).json({ error: 'channelId is required.' });
 
     const sub = await create({
       userId: req.user.id,
       channelId,
       channelName: channelName || channelId,
+      avatarUrl: avatarUrl || null,
     });
     res.status(201).json(sub);
   } catch (err) {

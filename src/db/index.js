@@ -155,6 +155,11 @@ async function migrate() {
       await db('subscriptions').where({ id: sub.id }).update({ sort_order: order++ });
     }
   }
+
+  const hasAvatarUrl = await db.schema.hasColumn('subscriptions', 'avatar_url');
+  if (!hasAvatarUrl) {
+    await db.schema.alterTable('subscriptions', (t) => t.string('avatar_url'));
+  }
 }
 
 module.exports = { db, migrate };

@@ -75,7 +75,7 @@ export default function FollowingPage() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ channelId: resolved.channelId, channelName: resolved.channelName || resolved.channelId }),
+        body: JSON.stringify({ channelId: resolved.channelId, channelName: resolved.channelName || resolved.channelId, avatarUrl: resolved.avatarUrl || null }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -224,8 +224,10 @@ export default function FollowingPage() {
     dragId.current = null;
   }
 
-  // Touch drag — imperative listeners with { passive: false } so preventDefault works
+  // Touch drag — long-press to activate, then drag
   const handleRefs = useRef({});
+  const longPressTimer = useRef(null);
+  const [draggingId, setDraggingId] = useState(null);
 
   useEffect(() => {
     const cleanups = [];
@@ -233,10 +235,19 @@ export default function FollowingPage() {
       const el = handleRefs.current[c.id];
       if (!el) return;
 
-      const onStart = (e) => { dragId.current = c.id; };
+      const onStart = (e) => {
+        longPressTimer.current = setTimeout(() => {
+          dragId.current = c.id;
+          setDraggingId(c.id);
+        }, 300);
+      };
 
       const onMove = (e) => {
-        if (!dragId.current) return;
+        if (!dragId.current) {
+          // Cancel long press if finger moves before activation
+          clearTimeout(longPressTimer.current);
+          return;
+        }
         e.preventDefault();
         const touch = e.touches[0];
         const target = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -255,9 +266,11 @@ export default function FollowingPage() {
       };
 
       const onEnd = () => {
+        clearTimeout(longPressTimer.current);
         if (!dragId.current) return;
         setChannels((current) => { saveOrder(current.map((x) => x.id)); return current; });
         dragId.current = null;
+        setDraggingId(null);
       };
 
       el.addEventListener('touchstart', onStart, { passive: true });
@@ -368,26 +381,35 @@ export default function FollowingPage() {
             const digestOn = c.digest !== false;
             const shortsOn = c.include_shorts === true;
             const status = channelStatus[c.channel_id];
+            const displayName = (c.channel_name || c.channel_id).replace(/^@/, '');
+            const initials = displayName.slice(0, 2).toUpperCase();
             return (
-              <li key={c.id} data-id={c.id} className="channel-item"
+              <li key={c.id} data-id={c.id}
+                className={`channel-item${draggingId === c.id ? ' channel-item-dragging' : ''}`}
+                ref={(el) => { handleRefs.current[c.id] = el; }}
                 draggable
-                onDragStart={(e) => handleDragStart(e, c.id)}
+                onDragStart={(e) => { dragId.current = c.id; setDraggingId(c.id); e.dataTransfer.effectAllowed = 'move'; }}
                 onDragOver={(e) => handleDragOver(e, c.id)}
-                onDrop={handleDrop}
+                onDrop={(e) => { e.preventDefault(); setChannels((current) => { saveOrder(current.map((x) => x.id)); return current; }); dragId.current = null; setDraggingId(null); }}
+                onDragEnd={() => { dragId.current = null; setDraggingId(null); }}
               >
-                <div
-                  className="channel-drag-handle"
-                  title="Drag to reorder"
-                  ref={(el) => { handleRefs.current[c.id] = el; }}
-                >⠿</div>
-                <div>
-                  <div className="channel-name">{(c.channel_name || c.channel_id).replace(/^@/, '')}</div>
+                {/* Avatar */}
+                <div className="channel-avatar">
+                  {c.avatar_url
+                    ? <img src={c.avatar_url} alt="" onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }} />
+                    : null}
+                  <span className="channel-avatar-initials" style={c.avatar_url ? { display: 'none' } : {}}>{initials}</span>
+                </div>
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="channel-name">{displayName}</div>
                   {status === 'scanning' && <div className="channel-scan-status">Checking for new videos…</div>}
                   {status === 'done' && <div className="channel-scan-status">Done — check My Videos shortly.</div>}
                   {!status && c.lastPosted && (
                     <div className="channel-last-posted">Last posted {formatRelative(c.lastPosted)}</div>
                   )}
                 </div>
+
                 <div className="channel-item-actions">
                   <button
                     className={`btn-digest-pill${digestOn ? ' pill-on' : ' pill-off'}`}

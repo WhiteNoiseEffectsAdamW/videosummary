@@ -6,10 +6,10 @@ async function findByUserId(userId) {
   return db(TABLE).where({ user_id: userId, active: true }).orderBy('sort_order', 'asc').orderBy('created_at', 'asc');
 }
 
-async function create({ userId, channelId, channelName }) {
+async function create({ userId, channelId, channelName, avatarUrl }) {
   const maxRow = await db(TABLE).where({ user_id: userId }).max('sort_order as m').first();
   const sortOrder = (maxRow?.m ?? -1) + 1;
-  await db(TABLE).insert({ user_id: userId, channel_id: channelId, channel_name: channelName, sort_order: sortOrder });
+  await db(TABLE).insert({ user_id: userId, channel_id: channelId, channel_name: channelName, avatar_url: avatarUrl || null, sort_order: sortOrder });
   return db(TABLE).where({ user_id: userId, channel_id: channelId }).first();
 }
 

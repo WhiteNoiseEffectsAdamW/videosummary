@@ -59,53 +59,58 @@ function renderDigestText(summaries) {
 
 function renderDigestHtml(summaries) {
   const count = summaries.length;
+  const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   const videoSections = summaries.map((s, i) => {
     const data = JSON.parse(s.summary_json);
     const { tldr, quotes = [] } = data;
     const videoUrl = `https://www.youtube.com/watch?v=${s.video_id}`;
-    const thumb = `https://img.youtube.com/vi/${s.video_id}/hqdefault.jpg`;
     const quote = quotes[0];
     const isLast = i === summaries.length - 1;
+    const channelName = cleanName(s.channel_name);
 
     return `
-      <div style="margin-bottom:${isLast ? '0' : '36px'};padding-bottom:${isLast ? '0' : '36px'};${isLast ? '' : 'border-bottom:1px solid #f0f0f0;'}">
-        <a href="${videoUrl}" style="display:block;line-height:0;margin-bottom:14px;">
-          <img src="${thumb}" alt="${esc(s.title || '')}" width="512"
-            style="display:block;width:100%;height:auto;max-height:200px;object-fit:cover;border-radius:6px;" />
-        </a>
-        ${cleanName(s.channel_name) ? `<div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#22d3ee;margin-bottom:6px;">${esc(cleanName(s.channel_name))}</div>` : ''}
-        <div style="font-size:17px;font-weight:700;color:#111;line-height:1.3;margin-bottom:10px;">${esc(s.title || s.video_id)}</div>
-        ${tldr ? `<div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:12px;border-left:3px solid #22d3ee;padding-left:12px;">${esc(tldr.length > 280 ? tldr.slice(0, 280) + '…' : tldr)}</div>` : ''}
-        ${quote ? `<div style="color:#777;font-size:13px;font-style:italic;line-height:1.55;margin-bottom:14px;">&ldquo;${esc(quote.text.length > 200 ? quote.text.slice(0, 200) + '…' : quote.text)}&rdquo;</div>` : ''}
-        <a href="${APP_URL}/s/${s.video_id}" style="font-size:13px;font-weight:600;color:#111;text-decoration:none;margin-right:16px;">Read the breakdown &rarr;</a>
-        <a href="${videoUrl}" style="font-size:13px;color:#aaa;text-decoration:none;">Watch on YouTube &rarr;</a>
+      <div style="margin-bottom:${isLast ? '0' : '40px'};padding-bottom:${isLast ? '0' : '40px'};${isLast ? '' : 'border-bottom:1px solid #ebebeb;'}">
+        ${channelName ? `<div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#22d3ee;margin-bottom:7px;">${esc(channelName)}</div>` : ''}
+        <div style="font-size:18px;font-weight:700;color:#111;line-height:1.3;margin-bottom:12px;">
+          <a href="${APP_URL}/s/${s.video_id}" style="color:#111;text-decoration:none;">${esc(s.title || s.video_id)}</a>
+        </div>
+        ${tldr ? `<div style="font-size:15px;color:#333;line-height:1.75;margin-bottom:16px;">${esc(tldr)}</div>` : ''}
+        ${quote ? `
+        <div style="margin:20px 0;padding:14px 18px;background:#f9f9f9;border-left:3px solid #d4d4d4;">
+          <div style="font-size:14px;font-style:italic;color:#555;line-height:1.6;">&ldquo;${esc(quote.text.length > 220 ? quote.text.slice(0, 220) + '&hellip;' : quote.text)}&rdquo;</div>
+        </div>` : ''}
+        <div style="margin-top:14px;">
+          <a href="${APP_URL}/s/${s.video_id}" style="font-size:14px;color:#22d3ee;text-decoration:none;font-weight:600;">Full breakdown &rarr;</a>
+          <span style="color:#ddd;margin:0 10px;">&middot;</span>
+          <a href="${videoUrl}" style="font-size:13px;color:#bbb;text-decoration:none;">Watch on YouTube</a>
+        </div>
       </div>`;
   }).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Your morning digest</title></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Morning Digest</title></head>
 <body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
   <div style="max-width:560px;margin:0 auto;padding:40px 24px 56px;">
 
     <!-- Header -->
-    <div style="margin-bottom:36px;border-bottom:2px solid #f0f0f0;padding-bottom:24px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#22d3ee;margin-bottom:10px;">Headwater</div>
-      <div style="font-size:24px;font-weight:700;color:#111;line-height:1.2;margin-bottom:8px;">Your morning digest</div>
-      <div style="font-size:13px;color:#999;line-height:1.5;">${count} new video${count !== 1 ? 's' : ''} from your channels &mdash; you won&rsquo;t be notified again until something new posts.</div>
+    <div style="margin-bottom:40px;border-bottom:2px solid #f0f0f0;padding-bottom:28px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#22d3ee;margin-bottom:12px;">Headwater</div>
+      <div style="font-size:26px;font-weight:700;color:#111;line-height:1.2;margin-bottom:6px;">Morning Digest</div>
+      <div style="font-size:13px;color:#aaa;line-height:1.5;">${dateStr} &nbsp;&middot;&nbsp; ${count} new video${count !== 1 ? 's' : ''} from your channels</div>
     </div>
 
     <!-- Videos -->
     ${videoSections}
 
     <!-- Footer -->
-    <div style="border-top:1px solid #f0f0f0;margin-top:48px;padding-top:24px;font-size:12px;color:#bbb;line-height:1.8;">
+    <div style="border-top:1px solid #f0f0f0;margin-top:48px;padding-top:24px;font-size:12px;color:#bbb;line-height:1.9;">
       <a href="${APP_URL}" style="color:#999;font-weight:600;text-decoration:none;">Headwater</a><br>
       Summaries are AI-generated and may be incomplete or inaccurate.<br>
-      <a href="${APP_URL}/following" style="color:#999;font-weight:500;text-decoration:none;">Manage your channels</a>
+      <a href="${APP_URL}/following" style="color:#999;font-weight:500;text-decoration:none;">Manage channels</a>
       &nbsp;&middot;&nbsp;
-      <a href="${APP_URL}/following" style="color:#bbb;">Unsubscribe</a><br>
+      <a href="${APP_URL}/following" style="color:#bbb;text-decoration:none;">Unsubscribe</a>
     </div>
 
   </div>
