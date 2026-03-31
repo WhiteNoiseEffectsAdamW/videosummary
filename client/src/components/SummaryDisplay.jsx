@@ -1,6 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
+
+const FIRST_SUMMARY_KEY = 'hw_first_summary_seen';
 
 function CopyQuoteButton({ text, timestamp }) {
   const [copied, setCopied] = useState(false);
@@ -46,6 +48,8 @@ export default function SummaryDisplay({ data }) {
   const [copied, setCopied] = useState(false);
   const [toast, setToast] = useState(null);
   const [followState, setFollowState] = useState('idle'); // idle | loading | following | error
+  const followSectionRef = useRef(null);
+  const isFirstSummary = !localStorage.getItem(FIRST_SUMMARY_KEY);
 
   // Check if already following this channel on mount
   useEffect(() => {
@@ -55,6 +59,16 @@ export default function SummaryDisplay({ data }) {
       .then(d => { if (d.following) setFollowState('following'); })
       .catch(() => {});
   }, [user, channelId]);
+
+  // First-time visit: mark seen and auto-scroll to follow section after delay
+  useEffect(() => {
+    if (!isFirstSummary || followState === 'following') return;
+    localStorage.setItem(FIRST_SUMMARY_KEY, '1');
+    const timer = setTimeout(() => {
+      followSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, []);
 
   async function handleFollow() {
     if (followState !== 'idle') return;
@@ -228,6 +242,39 @@ export default function SummaryDisplay({ data }) {
               <CopyQuoteButton text={q.text} timestamp={q.timestamp} />
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Follow section — shown when channel is known and user hasn't followed yet */}
+      {channelName && followState !== 'following' && (
+        <div className="follow-section" ref={followSectionRef}>
+          <div className="follow-section-text">
+            <div className="follow-section-headline">
+              Get {channelName} in your morning digest.
+            </div>
+            <div className="follow-section-sub">
+              New videos, summarized overnight, in your inbox before 8am.
+            </div>
+          </div>
+          {user ? (
+            <button
+              className="follow-section-btn"
+              onClick={handleFollow}
+              disabled={followState === 'loading'}
+            >
+              {followState === 'loading' ? 'Adding…' : followState === 'error' ? 'Try again' : 'Add to my digest'}
+            </button>
+          ) : (
+            <Link to="/register" className="follow-section-btn">Add to my digest</Link>
+          )}
+          <div className="follow-section-reassure">Free · One email per morning · Unsubscribe anytime</div>
+        </div>
+      )}
+
+      {channelName && followState === 'following' && (
+        <div className="follow-section follow-section-done">
+          <div className="follow-section-headline">✓ You follow {channelName}</div>
+          <div className="follow-section-sub">New videos will appear in your morning digest.</div>
         </div>
       )}
 

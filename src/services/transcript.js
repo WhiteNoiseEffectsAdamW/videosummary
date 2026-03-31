@@ -124,8 +124,7 @@ async function fetchViaYtDlp(videoId) {
   }
 }
 
-const MAX_CHARS = 80_000;
-const SAMPLE_THRESHOLD = 120_000;
+const MAX_CHARS = 50_000;
 const NUM_WINDOWS = 8;
 
 // For long transcripts (>120k chars): sample 8 evenly-spaced time windows.
@@ -185,12 +184,8 @@ async function getTranscript(videoId) {
     if (fullText.length <= MAX_CHARS) {
       // Short/medium video — full transcript
       text = fullText;
-    } else if (fullText.length <= SAMPLE_THRESHOLD) {
-      // Slightly over cap — head/tail trim, middle loss is small
-      const half = Math.floor(MAX_CHARS / 2);
-      text = fullText.slice(0, half) + '\n\n[... middle of transcript trimmed for length ...]\n\n' + fullText.slice(-half);
     } else {
-      // Long video (2+ hours) — 8-window time-based sampling
+      // Over cap — 8-window time-based sampling regardless of how long
       text = sampleSegments(segments, durationMs);
       isSampled = true;
       console.log(`[transcript] sampled ${NUM_WINDOWS} windows from ${Math.round(fullText.length / 1000)}k chars`);

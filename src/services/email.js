@@ -8,6 +8,15 @@ const DIVIDER = '─────────────────────
 
 const cleanName = (name) => (name || '').replace(/^@/, '');
 
+// Normalize all-caps titles to title case (e.g. "THIS IS A TITLE" → "This Is a Title")
+function normalizeTitle(title) {
+  if (!title) return title;
+  if (title === title.toUpperCase() && title.length > 4) {
+    return title.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+  }
+  return title;
+}
+
 function getResend() {
   if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY not set');
   return new Resend(process.env.RESEND_API_KEY);
@@ -81,7 +90,7 @@ function renderDigestHtml(summaries) {
             </td>
             <td style="vertical-align:top;">
               <div style="font-size:18px;font-weight:700;color:#111;line-height:1.3;">
-                <a href="${APP_URL}/s/${s.video_id}" style="color:#111;text-decoration:none;">${esc(s.title || s.video_id)}</a>
+                <a href="${APP_URL}/s/${s.video_id}" style="color:#111;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a>
               </div>
             </td>
           </tr>
@@ -147,8 +156,8 @@ async function sendDigest(toEmail, summaries) {
     from: FROM,
     to: toEmail,
     subject: capped.length === 1
-      ? capped[0].title || 'Your morning digest'
-      : `${capped[0].title || 'New videos'} — plus ${capped.length - 1} more`,
+      ? normalizeTitle(capped[0].title) || 'Your morning digest'
+      : `${normalizeTitle(capped[0].title) || 'New videos'} — plus ${capped.length - 1} more`,
     html: renderDigestHtml(capped),
     text: renderDigestText(capped),
     headers: {

@@ -485,6 +485,54 @@ body {
 .btn-watch-yt:hover { color: #94a3b8; }
 
 /* AI disclaimer */
+/* Follow section — digest CTA after quotes */
+.follow-section {
+  margin: 24px 0;
+  padding: 24px;
+  border-left: 3px solid #22d3ee;
+  background: rgba(34,211,238,0.04);
+  border-radius: 0 10px 10px 0;
+}
+.follow-section-done {
+  border-left-color: #22d3ee;
+  background: rgba(34,211,238,0.03);
+}
+.follow-section-headline {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.follow-section-sub {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.follow-section-done .follow-section-sub { margin-bottom: 0; }
+.follow-section-btn {
+  display: inline-block;
+  background: #22d3ee;
+  color: #0c0f14;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+.follow-section-btn:hover { opacity: 0.88; }
+.follow-section-btn:disabled { opacity: 0.5; cursor: default; }
+.follow-section-reassure {
+  font-size: 11px;
+  color: #475569;
+}
+
 .summary-disclaimer {
   font-size: 12px;
   color: #475569;
@@ -1370,9 +1418,20 @@ body {
 /* Viewed title */
 .vrow-title-viewed { color: #64748b; }
 
-/* Bulk bar — lives in the videos-header when rows are selected */
-.bulk-bar { display: flex; align-items: center; gap: 10px; }
-.bulk-bar-count { font-size: 13px; color: #22d3ee; font-weight: 600; }
+/* Bulk sticky bar — floats at top when rows are selected */
+.bulk-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px;
+  background: #0f172a;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  margin: 0 -16px 16px;
+}
 .bulk-bar-clear { background: none; border: none; font-size: 13px; color: #64748b; cursor: pointer; padding: 0; font-family: inherit; }
 .bulk-bar-clear:hover { color: #94a3b8; }
 .bulk-bar-delete {

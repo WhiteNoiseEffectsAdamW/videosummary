@@ -203,15 +203,15 @@ export default function VideosPage() {
         />
       )}
 
+      {anySelected && (
+        <div className="bulk-sticky">
+          <button className="bulk-bar-clear" onClick={clearSelection}>Deselect all</button>
+          <button className="bulk-bar-delete" onClick={() => setConfirmIds([...selected])}>Delete ({selected.size})</button>
+        </div>
+      )}
+
       <div className="videos-header">
         <h1 className="page-title" style={{ margin: 0 }}>My Videos</h1>
-        {anySelected && (
-          <div className="bulk-bar">
-            <span className="bulk-bar-count">{selected.size} selected</span>
-            <button className="bulk-bar-clear" onClick={clearSelection}>Deselect all</button>
-            <button className="bulk-bar-delete" onClick={() => requestDelete([...selected])}>Delete ({selected.size})</button>
-          </div>
-        )}
       </div>
 
       {loading && <div style={{ padding: '48px 0', color: '#555', fontSize: 14, textAlign: 'center' }}>Loading…</div>}
