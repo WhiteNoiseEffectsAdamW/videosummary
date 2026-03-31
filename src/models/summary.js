@@ -92,8 +92,12 @@ async function findByChannelIds(channelIds, limit = 50) {
   return rows.map((row) => ({ ...row, summary: JSON.parse(row.summary_json) }));
 }
 
+async function updateTitle(videoId, title) {
+  return db(TABLE).where({ video_id: videoId }).update({ title });
+}
+
 module.exports = {
-  findByVideoId, create,
+  findByVideoId, create, updateTitle,
   upsertUserSave, dismissUserSave, findSavedByUserId, findSavedByUserIdSince,
   findByChannelIdsSince, findByChannelIds,
 };
