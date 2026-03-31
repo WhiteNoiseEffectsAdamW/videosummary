@@ -348,13 +348,15 @@ export default function FollowingPage() {
                   <div className="channel-name">{displayName}</div>
                   {status?.state === 'scanning' || status === 'scanning' ? <div className="channel-scan-status">Checking for new videos…</div> : null}
                   {(status?.state === 'done') && <div className="channel-scan-status">{status.found > 0 ? `${status.found} new video${status.found !== 1 ? 's' : ''} added` : 'No new videos'}</div>}
-                  {!status && c.lastPosted && (
-                    <div className="channel-last-posted">Last posted {formatRelative(c.lastPosted)}</div>
+                  {!status && (c.lastPosted || shortsOn) && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
+                      {c.lastPosted && <span className="channel-last-posted" style={{ margin: 0 }}>Last posted {formatRelative(c.lastPosted)}</span>}
+                      {shortsOn && <span className="pill-shorts">Shorts</span>}
+                    </div>
                   )}
                 </div>
 
                 <div className="channel-item-actions">
-                  {shortsOn && <span className="pill-shorts">Shorts</span>}
                   <button
                     className={`btn-digest-pill${digestOn ? ' pill-on' : ' pill-off'}`}
                     onClick={() => handleToggleChannel(c.id, digestOn)}

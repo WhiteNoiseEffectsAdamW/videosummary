@@ -69,16 +69,27 @@ function renderDigestHtml(summaries) {
     const isLast = i === summaries.length - 1;
     const channelName = cleanName(s.channel_name);
 
+    const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
+
     return `
       <div style="margin-bottom:${isLast ? '0' : '40px'};padding-bottom:${isLast ? '0' : '40px'};${isLast ? '' : 'border-bottom:1px solid #ebebeb;'}">
         ${channelName ? `<div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#22d3ee;margin-bottom:7px;">${esc(channelName)}</div>` : ''}
-        <div style="font-size:18px;font-weight:700;color:#111;line-height:1.3;margin-bottom:12px;">
-          <a href="${APP_URL}/s/${s.video_id}" style="color:#111;text-decoration:none;">${esc(s.title || s.video_id)}</a>
-        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:12px;">
+          <tr>
+            <td style="vertical-align:top;padding-right:14px;width:100px;">
+              <a href="${APP_URL}/s/${s.video_id}"><img src="${thumb}" alt="" width="100" style="display:block;width:100px;height:64px;object-fit:cover;border-radius:4px;" /></a>
+            </td>
+            <td style="vertical-align:top;">
+              <div style="font-size:18px;font-weight:700;color:#111;line-height:1.3;">
+                <a href="${APP_URL}/s/${s.video_id}" style="color:#111;text-decoration:none;">${esc(s.title || s.video_id)}</a>
+              </div>
+            </td>
+          </tr>
+        </table>
         ${tldr ? `<div style="font-size:15px;color:#333;line-height:1.75;margin-bottom:16px;">${esc(tldr)}</div>` : ''}
         ${quote ? `
         <div style="margin:20px 0;padding:14px 18px;background:#f9f9f9;border-left:3px solid #d4d4d4;">
-          <div style="font-size:14px;font-style:italic;color:#555;line-height:1.6;">&ldquo;${esc(quote.text.length > 220 ? quote.text.slice(0, 220) + '&hellip;' : quote.text)}&rdquo;</div>
+          <div style="font-size:14px;font-style:italic;color:#555;line-height:1.6;">&ldquo;${esc(quote.text.length > 220 ? quote.text.slice(0, 220) + '…' : quote.text)}&rdquo;</div>
         </div>` : ''}
         <div style="margin-top:14px;">
           <a href="${APP_URL}/s/${s.video_id}" style="font-size:14px;color:#22d3ee;text-decoration:none;font-weight:600;">Full breakdown &rarr;</a>
