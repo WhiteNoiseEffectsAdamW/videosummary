@@ -1187,6 +1187,8 @@ body {
 }
 .channel-item:hover { border-color: rgba(255,255,255,0.13); }
 .channel-item[draggable] { cursor: grab; -webkit-user-select: none; user-select: none; }
+.channel-item[draggable] * { pointer-events: none; }
+.channel-item[draggable] button, .channel-item[draggable] .channel-menu-wrap { pointer-events: auto; }
 .channel-item[draggable]:active { cursor: grabbing; }
 .channel-item-dragging { opacity: 0.4; border-color: rgba(34,211,238,0.3); }
 .channel-item-pulse { animation: longpress-pulse 0.4s ease; }
@@ -1313,14 +1315,18 @@ body {
 /* Checkbox — right side, replaces × */
 .vrow-checkbox-wrap { opacity: 0; transition: opacity 0.12s; flex-shrink: 0; padding: 4px 0 4px 4px; }
 .vrow-checkbox-wrap.vrow-checkbox-visible { opacity: 1; }
+.vrow {
+  -webkit-user-select: none;
+  user-select: none;
+}
 .vrow-checkbox {
   width: 16px; height: 16px;
   accent-color: #22d3ee;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
-  background: rgba(255,255,255,0.15);
-  border: 1.5px solid rgba(255,255,255,0.3);
+  background: transparent;
+  border: 1.5px solid #475569;
   border-radius: 4px;
   position: relative;
   transition: background 0.12s, border-color 0.12s;
