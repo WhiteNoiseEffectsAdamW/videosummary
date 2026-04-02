@@ -84,7 +84,7 @@ app.use('/api/og', ogRouter);
 if (process.env.NODE_ENV === 'production') {
   const fs = require('fs');
   const clientDist = path.join(__dirname, '..', 'client', 'dist');
-  const { findByVideoId } = require('./models/summary');
+  const { findByVideoId, findBySlug } = require('./models/summary');
   const APP_URL = process.env.APP_URL || 'https://headwater.app';
 
   function escAttr(str) {
@@ -94,15 +94,20 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(clientDist));
 
   // Per-video OG tags for share pages
-  app.get('/s/:videoId', async (req, res) => {
+  app.get('/s/:slug', async (req, res) => {
     try {
-      const summary = await findByVideoId(req.params.videoId);
+      const { slug } = req.params;
+      const isLegacyId = /^[a-zA-Z0-9_-]{11}$/.test(slug);
+      const summary = isLegacyId ? await findByVideoId(slug) : await findBySlug(slug);
       if (!summary) return res.sendFile(path.join(clientDist, 'index.html'));
 
-      const title = escAttr(`${summary.title || req.params.videoId} — Headwater Summary`);
+      // Redirect legacy YouTube ID URLs to slug URL
+      if (isLegacyId && summary.slug) return res.redirect(301, `/s/${summary.slug}`);
+
+      const title = escAttr(`${summary.title || slug} — Headwater Summary`);
       const description = escAttr(summary.summary?.tldr || 'AI-generated video summary from Headwater.');
-      const image = `${APP_URL}/api/og/${req.params.videoId}`;
-      const url = `${APP_URL}/s/${req.params.videoId}`;
+      const image = `${APP_URL}/api/og/${summary.video_id}`;
+      const url = `${APP_URL}/s/${summary.slug || slug}`;
 
       let html = fs.readFileSync(path.join(clientDist, 'index.html'), 'utf8');
       html = html

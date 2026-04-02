@@ -24,7 +24,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
     if (didLongPress.current) { didLongPress.current = false; return; }
     if (anySelected) { onToggle(video.videoId); return; }
     markViewed(video.videoId);
-    navigate(`/s/${video.videoId}`);
+    navigate(`/s/${video.slug || video.videoId}`);
   }
 
   function handleTouchStart(e) {

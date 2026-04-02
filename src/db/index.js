@@ -160,6 +160,18 @@ async function migrate() {
   if (!hasAvatarUrl) {
     await db.schema.alterTable('subscriptions', (t) => t.string('avatar_url'));
   }
+
+  // Opaque slug for public summary URLs — replaces exposing YouTube video IDs
+  const hasSlug = await db.schema.hasColumn('summaries', 'slug');
+  if (!hasSlug) {
+    const { nanoid } = require('nanoid');
+    await db.schema.alterTable('summaries', (t) => t.string('slug').unique());
+    // Backfill existing rows
+    const rows = await db('summaries').whereNull('slug').select('id');
+    for (const row of rows) {
+      await db('summaries').where({ id: row.id }).update({ slug: nanoid(10) });
+    }
+  }
 }
 
 module.exports = { db, migrate };

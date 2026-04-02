@@ -53,7 +53,7 @@ function SummarizerPage() {
       .then((r) => r.json())
       .then((json) => {
         if (json.error) throw new Error(json.error);
-        navigate(`/s/${json.videoId}`, { replace: true });
+        navigate(`/s/${json.slug || json.videoId}`, { replace: true });
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -73,7 +73,7 @@ function SummarizerPage() {
       const res = await fetch(`/api/summary?url=${encodeURIComponent(url.trim())}`, { credentials: 'include' });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || `HTTP ${res.status}`);
-      navigate(`/s/${json.videoId}`);
+      navigate(`/s/${json.slug || json.videoId}`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -134,7 +134,7 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/s/:videoId" element={<PublicSummaryPage />} />
+          <Route path="/s/:slug" element={<PublicSummaryPage />} />
           <Route path="/welcome" element={<RequireAuth><WelcomePage /></RequireAuth>} />
           <Route path="/following" element={<RequireAuth><FollowingPage /></RequireAuth>} />
           <Route path="/channels" element={<Navigate to="/following" replace />} />

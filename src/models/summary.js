@@ -1,4 +1,5 @@
 const { db } = require('../db');
+const { nanoid } = require('nanoid');
 
 const TABLE = 'summaries';
 const SAVES = 'user_saves';
@@ -9,9 +10,17 @@ async function findByVideoId(videoId) {
   return { ...row, summary: JSON.parse(row.summary_json) };
 }
 
+async function findBySlug(slug) {
+  const row = await db(TABLE).where({ slug }).first();
+  if (!row) return null;
+  return { ...row, summary: JSON.parse(row.summary_json) };
+}
+
 async function create({ videoId, channelId, channelName, title, summary, transcriptLength, durationSeconds, inputTokens, outputTokens }) {
+  const slug = nanoid(10);
   await db(TABLE).insert({
     video_id: videoId,
+    slug,
     channel_id: channelId || null,
     channel_name: channelName || null,
     title,
@@ -97,7 +106,7 @@ async function updateTitle(videoId, title) {
 }
 
 module.exports = {
-  findByVideoId, create, updateTitle,
+  findByVideoId, findBySlug, create, updateTitle,
   upsertUserSave, dismissUserSave, findSavedByUserId, findSavedByUserIdSince,
   findByChannelIdsSince, findByChannelIds,
 };

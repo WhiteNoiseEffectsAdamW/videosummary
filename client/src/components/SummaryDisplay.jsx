@@ -42,7 +42,7 @@ function formatDuration(seconds) {
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, thumbnailUrl, title, titleClaim, channelName, channelId, durationSeconds } = data;
+  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, slug, thumbnailUrl, title, titleClaim, channelName, channelId, durationSeconds } = data;
   const savesMins = durationSeconds > 0 ? Math.round(durationSeconds / 60) : null;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
@@ -97,7 +97,7 @@ export default function SummaryDisplay({ data }) {
   }
 
   async function handleShare() {
-    const url = `${window.location.origin}/s/${videoId}`;
+    const url = `${window.location.origin}/s/${slug || videoId}`;
     if (navigator.share) {
       try {
         await navigator.share({ title: title || 'Video summary', url });

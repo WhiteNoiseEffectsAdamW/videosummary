@@ -56,7 +56,7 @@ function DigestEmailMockup({ data }) {
                   )}
                   {data.quotes?.[0] && <div className="digest-email-quote">&ldquo;{data.quotes[0].text}&rdquo;</div>}
                   <div className="digest-email-links">
-                    <a href={`/s/${data.videoId}`} className="digest-email-fullsummary">Full summary →</a>
+                    <a href={`/s/${data.slug || data.videoId}`} className="digest-email-fullsummary">Full summary →</a>
                     <a href={videoUrl} target="_blank" rel="noopener noreferrer" className="digest-email-watch">Watch →</a>
                   </div>
                 </div>

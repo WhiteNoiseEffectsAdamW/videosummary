@@ -67,7 +67,7 @@ router.get('/', anonLimit, async (req, res, next) => {
       fetchVideoMeta(videoId).then(({ title }) => {
         if (title && title !== cached.title) summaryModel.updateTitle(videoId, title).catch(() => {});
       }).catch(() => {});
-      return res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, channelId: cached.channel_id || null, durationSeconds: cached.duration_seconds || null, ...cached.summary });
+      return res.json({ videoId, slug: cached.slug, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, channelId: cached.channel_id || null, durationSeconds: cached.duration_seconds || null, ...cached.summary });
     }
 
     const [{ text, durationSeconds, isSampled }, meta] = await Promise.all([
@@ -89,24 +89,37 @@ router.get('/', anonLimit, async (req, res, next) => {
 
     summaryModel.upsertUserSave(userId, videoId).catch(() => {});
 
-    return res.json({ videoId, cached: false, thumbnailUrl, title: meta.title || summary.tldr?.slice(0, 100) || videoId, channelName: meta.channelName || null, durationSeconds, ...summary });
+    const created = await summaryModel.findByVideoId(videoId);
+    return res.json({ videoId, slug: created?.slug, cached: false, thumbnailUrl, title: meta.title || summary.tldr?.slice(0, 100) || videoId, channelName: meta.channelName || null, durationSeconds, ...summary });
   } catch (err) {
     next(err);
   }
 });
 
-// GET /api/summary/:videoId — fetch a single cached summary by video ID (public)
-router.get('/:videoId', async (req, res, next) => {
+// GET /api/summary/:slug — fetch by opaque slug (new) or legacy YouTube ID (redirect)
+router.get('/:slug', async (req, res, next) => {
   try {
-    const { videoId } = req.params;
-    const cached = await summaryModel.findByVideoId(videoId);
+    const { slug } = req.params;
+
+    // Legacy: if param looks like a YouTube ID (11 chars), look up by video_id
+    const isLegacyId = /^[a-zA-Z0-9_-]{11}$/.test(slug);
+    const cached = isLegacyId
+      ? await summaryModel.findByVideoId(slug)
+      : await summaryModel.findBySlug(slug);
+
     if (!cached) return res.status(404).json({ error: 'Summary not found.' });
+
+    // Redirect legacy YouTube ID URLs to slug URL
+    if (isLegacyId && cached.slug) {
+      return res.redirect(301, `/api/summary/${cached.slug}`);
+    }
+
+    const videoId = cached.video_id;
     const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-    // Background: refresh title if YouTube changed it
     fetchVideoMeta(videoId).then(({ title }) => {
       if (title && title !== cached.title) summaryModel.updateTitle(videoId, title).catch(() => {});
     }).catch(() => {});
-    res.json({ videoId, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, channelId: cached.channel_id || null, durationSeconds: cached.duration_seconds || null, ...cached.summary });
+    res.json({ videoId, slug: cached.slug, cached: true, thumbnailUrl, title: cached.title, channelName: cached.channel_name, channelId: cached.channel_id || null, durationSeconds: cached.duration_seconds || null, ...cached.summary });
   } catch (err) {
     next(err);
   }

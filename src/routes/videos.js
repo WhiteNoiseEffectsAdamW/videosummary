@@ -17,6 +17,7 @@ router.get('/', requireAuth, async (req, res, next) => {
 
     const result = savedRows.map((row) => ({
       videoId: row.video_id,
+      slug: row.slug || null,
       channelId: row.channel_id || null,
       channelName: row.channel_name || (row.channel_id ? (channelMap[row.channel_id] || null) : null),
       title: row.title,

@@ -50,7 +50,7 @@ function renderDigestText(summaries) {
     lines.push('');
     if (quotes.length > 0) lines.push(`"${quotes[0].text}"`);
     lines.push('');
-    lines.push(`Full summary: ${APP_URL}/s/${s.video_id}`);
+    lines.push(`Full summary: ${APP_URL}/s/${s.slug || s.video_id}`);
     lines.push(`Watch: ${videoUrl}`);
     lines.push('');
   }
@@ -86,11 +86,11 @@ function renderDigestHtml(summaries) {
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:12px;">
           <tr>
             <td style="vertical-align:top;padding-right:14px;width:100px;">
-              <a href="${APP_URL}/s/${s.video_id}"><img src="${thumb}" alt="" width="100" style="display:block;width:100px;height:64px;object-fit:cover;border-radius:4px;" /></a>
+              <a href="${APP_URL}/s/${s.slug || s.video_id}"><img src="${thumb}" alt="" width="100" style="display:block;width:100px;height:64px;object-fit:cover;border-radius:4px;" /></a>
             </td>
             <td style="vertical-align:top;">
               <div style="font-size:18px;font-weight:700;color:#111;line-height:1.3;">
-                <a href="${APP_URL}/s/${s.video_id}" style="color:#111;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a>
+                <a href="${APP_URL}/s/${s.slug || s.video_id}" style="color:#111;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a>
               </div>
             </td>
           </tr>
@@ -101,7 +101,7 @@ function renderDigestHtml(summaries) {
           <div style="font-size:14px;font-style:italic;color:#555;line-height:1.6;">&ldquo;${esc(quote.text)}&rdquo;</div>
         </div>` : ''}
         <div style="margin-top:14px;">
-          <a href="${APP_URL}/s/${s.video_id}" style="font-size:14px;color:#22d3ee;text-decoration:none;font-weight:600;">Full breakdown &rarr;</a>
+          <a href="${APP_URL}/s/${s.slug || s.video_id}" style="font-size:14px;color:#22d3ee;text-decoration:none;font-weight:600;">Full breakdown &rarr;</a>
           <span style="color:#ddd;margin:0 10px;">&middot;</span>
           <a href="${videoUrl}" style="font-size:13px;color:#bbb;text-decoration:none;">Watch on YouTube</a>
         </div>

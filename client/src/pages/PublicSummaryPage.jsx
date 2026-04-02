@@ -5,20 +5,21 @@ import SummaryDisplay from '../components/SummaryDisplay.jsx';
 import ErrorBoundary from '../components/ErrorBoundary.jsx';
 
 export default function PublicSummaryPage() {
-  const { videoId } = useParams();
+  const { slug } = useParams();
+  const videoId = slug; // used for legacy compat in meta tags only
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch(`/api/summary/${videoId}`)
+    fetch(`/api/summary/${slug}`)
       .then((r) => r.json())
       .then((json) => {
         if (json.error) throw new Error(json.error);
         setData(json);
       })
       .catch((err) => setError(err.message));
-  }, [videoId]);
+  }, [slug]);
 
   useEffect(() => {
     if (!data) return;
