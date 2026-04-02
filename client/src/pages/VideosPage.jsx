@@ -13,7 +13,7 @@ function markViewed(videoId) {
 
 function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) {
   const navigate = useNavigate();
-  const date = new Date(video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  const date = new Date(video.publishedAt || video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const longPressTimer = React.useRef(null);
   const touchStart = React.useRef({ x: 0, y: 0 });
   const didLongPress = React.useRef(false);

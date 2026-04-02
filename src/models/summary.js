@@ -16,7 +16,7 @@ async function findBySlug(slug) {
   return { ...row, summary: JSON.parse(row.summary_json) };
 }
 
-async function create({ videoId, channelId, channelName, title, summary, transcriptLength, durationSeconds, inputTokens, outputTokens }) {
+async function create({ videoId, channelId, channelName, title, summary, transcriptLength, durationSeconds, inputTokens, outputTokens, publishedAt }) {
   const slug = nanoid(10);
   await db(TABLE).insert({
     video_id: videoId,
@@ -29,6 +29,7 @@ async function create({ videoId, channelId, channelName, title, summary, transcr
     duration_seconds: durationSeconds || null,
     input_tokens: inputTokens || null,
     output_tokens: outputTokens || null,
+    published_at: publishedAt || null,
   });
   return findByVideoId(videoId);
 }
@@ -52,14 +53,16 @@ async function dismissUserSave(userId, videoId) {
   return db(SAVES).where({ user_id: userId, video_id: videoId }).update({ dismissed: true });
 }
 
-// Get all saved (non-dismissed) summaries for a user
-async function findSavedByUserId(userId, limit = 100) {
-  const rows = await db(SAVES)
+// Get all saved (non-dismissed) summaries for a user, optionally limited to since date
+async function findSavedByUserId(userId, limit = 100, since = null) {
+  let query = db(SAVES)
     .join(TABLE, `${SAVES}.video_id`, `${TABLE}.video_id`)
     .where({ [`${SAVES}.user_id`]: userId, [`${SAVES}.dismissed`]: false })
     .orderBy(`${SAVES}.created_at`, 'desc')
     .limit(limit)
     .select(`${TABLE}.*`, `${SAVES}.created_at as saved_at`);
+  if (since) query = query.where(`${SAVES}.created_at`, '>=', since);
+  const rows = await query;
   return rows.map((row) => ({ ...row, summary: JSON.parse(row.summary_json) }));
 }
 
@@ -105,8 +108,19 @@ async function updateTitle(videoId, title) {
   return db(TABLE).where({ video_id: videoId }).update({ title });
 }
 
+async function incrementMonthlySummaryCount(userId) {
+  if (!userId) return;
+  const yearMonth = new Date().toISOString().slice(0, 7); // '2026-04'
+  const existing = await db('summary_usage').where({ user_id: userId, year_month: yearMonth }).first();
+  if (existing) {
+    await db('summary_usage').where({ user_id: userId, year_month: yearMonth }).increment('count', 1);
+  } else {
+    await db('summary_usage').insert({ user_id: userId, year_month: yearMonth, count: 1 });
+  }
+}
+
 module.exports = {
   findByVideoId, findBySlug, create, updateTitle,
   upsertUserSave, dismissUserSave, findSavedByUserId, findSavedByUserIdSince,
-  findByChannelIdsSince, findByChannelIds,
+  findByChannelIdsSince, findByChannelIds, incrementMonthlySummaryCount,
 };

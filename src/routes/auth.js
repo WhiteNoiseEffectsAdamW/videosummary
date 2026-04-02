@@ -25,7 +25,7 @@ const registerLimiter = rateLimit({
 });
 
 function serializeUser(u) {
-  return { id: u.id, email: u.email, name: u.name, emailDigest: u.email_digest !== false, emailVerified: !!u.email_verified };
+  return { id: u.id, email: u.email, name: u.name, emailDigest: u.email_digest !== false, emailVerified: !!u.email_verified, subscriptionStatus: u.subscription_status || 'free' };
 }
 
 async function issueVerification(user) {

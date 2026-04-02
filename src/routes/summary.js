@@ -34,7 +34,21 @@ async function fetchVideoMeta(videoId) {
     const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`);
     if (!res.ok) return {};
     const data = await res.json();
-    return { title: data.title || null, channelName: data.author_name || null };
+    const meta = { title: data.title || null, channelName: data.author_name || null, publishedAt: null };
+
+    if (process.env.SUPADATA_API_KEY) {
+      try {
+        const url = `https://api.supadata.ai/v1/metadata?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}`;
+        const sr = await fetch(url, { headers: { 'x-api-key': process.env.SUPADATA_API_KEY } });
+        if (sr.ok) {
+          const sd = await sr.json();
+          if (sd.createdAt) meta.publishedAt = new Date(sd.createdAt);
+          if (sd.additionalData?.channelId && !meta.channelId) meta.channelId = sd.additionalData.channelId;
+        }
+      } catch {}
+    }
+
+    return meta;
   } catch {
     return {};
   }
@@ -85,9 +99,11 @@ router.get('/', anonLimit, async (req, res, next) => {
       durationSeconds,
       inputTokens,
       outputTokens,
+      publishedAt: meta.publishedAt || null,
     });
 
     summaryModel.upsertUserSave(userId, videoId).catch(() => {});
+    summaryModel.incrementMonthlySummaryCount(userId).catch(() => {});
 
     const created = await summaryModel.findByVideoId(videoId);
     return res.json({ videoId, slug: created?.slug, cached: false, thumbnailUrl, title: meta.title || summary.tldr?.slice(0, 100) || videoId, channelName: meta.channelName || null, durationSeconds, ...summary });

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
 
 export default function AccountPage() {
@@ -7,6 +7,22 @@ export default function AccountPage() {
   const navigate = useNavigate();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [pwSent, setPwSent] = useState(false);
+  const [pwSending, setPwSending] = useState(false);
+
+  async function handleChangePassword() {
+    setPwSending(true);
+    try {
+      await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email }),
+      });
+      setPwSent(true);
+    } finally {
+      setPwSending(false);
+    }
+  }
 
   async function handleLogout() {
     await logout();
@@ -33,13 +49,36 @@ export default function AccountPage() {
       </div>
 
       <div className="account-section">
+        <div className="account-plan-row">
+          <div>
+            <div className="account-plan-value">
+              {user?.subscriptionStatus === 'pro'
+                ? <span className="account-plan-badge account-plan-badge-pro">Pro</span>
+                : <span className="account-plan-badge account-plan-badge-free">Free</span>}
+            </div>
+          </div>
+          {user?.subscriptionStatus === 'pro'
+            ? <Link to="/upgrade" className="account-plan-link">Manage billing</Link>
+            : <Link to="/upgrade" className="account-plan-link account-plan-link-upgrade">Upgrade to Pro</Link>}
+        </div>
+      </div>
+
+      <div className="account-section">
+        {pwSent
+          ? <div className="account-pw-sent">Password reset email sent — check your inbox.</div>
+          : <button className="account-btn" onClick={handleChangePassword} disabled={pwSending}>
+              {pwSending ? 'Sending…' : 'Change password'}
+            </button>}
+      </div>
+
+      <div className="account-section">
         <button className="account-btn" onClick={handleLogout}>Sign out</button>
       </div>
 
 
       <div className="account-danger-zone">
         {!deleteConfirm ? (
-          <button className="account-btn account-btn-danger" onClick={() => setDeleteConfirm(true)}>
+          <button className="account-delete-link" onClick={() => setDeleteConfirm(true)}>
             Delete account
           </button>
         ) : (

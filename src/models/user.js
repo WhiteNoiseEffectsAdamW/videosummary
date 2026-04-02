@@ -61,4 +61,25 @@ async function countAll() {
   return parseInt(row.n, 10);
 }
 
-module.exports = { findById, findByEmail, create, updatePreferences, deleteById, setResetToken, findByResetToken, clearResetToken, setVerificationToken, findByVerificationToken, markEmailVerified, countAll };
+async function setStripeCustomer(id, { stripeCustomerId, stripeSubscriptionId, subscriptionStatus }) {
+  return db(TABLE).where({ id }).update({
+    stripe_customer_id: stripeCustomerId,
+    stripe_subscription_id: stripeSubscriptionId,
+    subscription_status: subscriptionStatus,
+  });
+}
+
+async function setSubscriptionStatus(id, status) {
+  return db(TABLE).where({ id }).update({ subscription_status: status });
+}
+
+async function findByStripeCustomerId(stripeCustomerId) {
+  return db(TABLE).where({ stripe_customer_id: stripeCustomerId }).first();
+}
+
+module.exports = {
+  findById, findByEmail, create, updatePreferences, deleteById,
+  setResetToken, findByResetToken, clearResetToken,
+  setVerificationToken, findByVerificationToken, markEmailVerified,
+  countAll, setStripeCustomer, setSubscriptionStatus, findByStripeCustomerId,
+};

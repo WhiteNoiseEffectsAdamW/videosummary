@@ -161,6 +161,33 @@ async function migrate() {
     await db.schema.alterTable('subscriptions', (t) => t.string('avatar_url'));
   }
 
+  // Stripe billing columns on users
+  const hasStripeCustomerId = await db.schema.hasColumn('users', 'stripe_customer_id');
+  if (!hasStripeCustomerId) {
+    await db.schema.alterTable('users', (t) => {
+      t.string('stripe_customer_id');
+      t.string('stripe_subscription_id');
+      t.string('subscription_status').defaultTo('free'); // 'free' | 'pro'
+    });
+  }
+
+  // Video publish date
+  const hasPublishedAt = await db.schema.hasColumn('summaries', 'published_at');
+  if (!hasPublishedAt) {
+    await db.schema.alterTable('summaries', (t) => t.timestamp('published_at'));
+  }
+
+  // Monthly summary usage counter — tracking only, no limit enforced yet
+  const hasUsage = await db.schema.hasTable('summary_usage');
+  if (!hasUsage) {
+    await db.schema.createTable('summary_usage', (t) => {
+      t.integer('user_id').notNullable();
+      t.string('year_month', 7).notNullable(); // e.g. '2026-04'
+      t.integer('count').defaultTo(0);
+      t.primary(['user_id', 'year_month']);
+    });
+  }
+
   // Opaque slug for public summary URLs — replaces exposing YouTube video IDs
   const hasSlug = await db.schema.hasColumn('summaries', 'slug');
   if (!hasSlug) {

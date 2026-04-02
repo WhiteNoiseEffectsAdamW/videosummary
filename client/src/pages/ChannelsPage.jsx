@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext.jsx';
 import PopularChannelSelect from '../components/PopularChannelSelect.jsx';
 
@@ -16,6 +17,7 @@ export default function FollowingPage() {
   const [channels, setChannels] = useState([]);
   const [input, setInput] = useState('');
   const [error, setError] = useState(null);
+  const [upgradeRequired, setUpgradeRequired] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
@@ -61,6 +63,7 @@ export default function FollowingPage() {
   async function handleAdd(e) {
     e.preventDefault();
     setError(null);
+    setUpgradeRequired(false);
     if (!input.trim()) return;
     setLoading(true);
     try {
@@ -78,7 +81,10 @@ export default function FollowingPage() {
         body: JSON.stringify({ channelId: resolved.channelId, channelName: resolved.channelName || resolved.channelId, avatarUrl: resolved.avatarUrl || null }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) {
+        if (data.upgradeRequired) { setUpgradeRequired(true); return; }
+        throw new Error(data.error);
+      }
       setChannels((prev) => [...prev, data]);
       setInput('');
       showToast(`✓ Added ${resolved.channelName || resolved.channelId} to your digest`);
@@ -171,7 +177,10 @@ export default function FollowingPage() {
         body: JSON.stringify({ channelId: resolved.channelId, channelName: ch.name }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      if (!res.ok) {
+        if (data.upgradeRequired) { setUpgradeRequired(true); return; }
+        throw new Error(data.error);
+      }
       setChannels((prev) => [...prev, data]);
       showToast(`✓ Added ${ch.name} to your digest`);
       setScanStatus({ name: ch.name, state: 'scanning' });
@@ -294,6 +303,12 @@ export default function FollowingPage() {
           </button>
         </div>
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
+        {upgradeRequired && (
+          <div className="upgrade-inline-prompt">
+            <span>Channel limit reached — Pro unlocks unlimited.</span>
+            <Link to="/upgrade" className="upgrade-inline-link">Upgrade →</Link>
+          </div>
+        )}
       </form>
 
       {scanStatus && (

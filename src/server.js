@@ -19,6 +19,7 @@ const subscriptionsRouter = require('./routes/subscriptions');
 const channelsRouter = require('./routes/channels');
 const videosRouter = require('./routes/videos');
 const ogRouter = require('./routes/og');
+const billingRouter = require('./routes/billing');
 const { errorHandler } = require('./middleware/errorHandler');
 const { startPolling } = require('./jobs/poll-channels');
 const { startDigestJob } = require('./jobs/send-digests');
@@ -33,6 +34,9 @@ app.set('trust proxy', 1);
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
   : null; // null = allow all origins (safe when frontend is same-origin on Railway)
+// Stripe webhook needs raw body — must be before express.json()
+app.post('/api/billing/webhook', express.raw({ type: 'application/json' }), billingRouter);
+
 app.use(cors({
   origin: allowedOrigins
     ? (origin, cb) => {
@@ -79,6 +83,7 @@ app.use('/api/channels', channelsRouter);
 app.use('/api/videos', videosRouter);
 app.use('/api/summary', summaryRouter);
 app.use('/api/og', ogRouter);
+app.use('/api/billing', billingRouter);
 
 // Serve React build in production
 if (process.env.NODE_ENV === 'production') {

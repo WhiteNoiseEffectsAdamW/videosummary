@@ -196,15 +196,18 @@ export default function LandingPage() {
         <span className="landing-brand">Headwater</span>
         <div className="landing-nav-right">
           <Link to="/login" className="landing-nav-link">Sign in</Link>
-          <Link to="/register" className="btn-primary">Get early access</Link>
+          <Link to="/register" className="btn-primary">Try it free →</Link>
         </div>
       </header>
 
       {/* Hero — lean, let the demo sell it */}
       <div className="landing-hero">
         <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
-        <p className="landing-sub">Follow channels. We summarize what's new. Skip the rest.</p>
-        <div className="landing-hero-beta">Free while we're in beta.</div>
+        <p className="landing-sub">YouTube is designed to keep you watching. This isn't.</p>
+        <div className="landing-hero-actions">
+          <Link to="/register" className="btn-primary">Try it free →</Link>
+          <span className="landing-hero-meta">3 channels free · No Google account needed</span>
+        </div>
       </div>
 
       {/* Summarizer — demo first, input below */}
@@ -223,10 +226,10 @@ export default function LandingPage() {
           <div style={{ textAlign: 'left' }}>
             <CuratedSummary data={result} />
             <div className="landing-digest-pitch">
-              <div className="landing-digest-pitch-headline">Upstream of the algorithm.</div>
-              <p className="landing-digest-pitch-body">Follow the channels you care about and get a morning digest of what's new — title, summary, standout quote. Set it up once and know what's worth your time every morning.</p>
+              <div className="landing-digest-pitch-headline">Now point it at your channels.</div>
+              <p className="landing-digest-pitch-body">You just saw what it does. Add the channels you actually follow — set it up once and every morning it tells you what's worth your time. Everything else you skip.</p>
               <Link to="/register" className="btn-primary">Follow your first channel →</Link>
-              <span className="landing-inline-cta-sub">Free. No credit card required.</span>
+              <span className="landing-inline-cta-sub">3 channels free · No Google account needed</span>
             </div>
           </div>
         )}
@@ -287,7 +290,7 @@ export default function LandingPage() {
           <div className="digest-copy">
             <div className="digest-eyebrow">Every morning</div>
             <h2 className="digest-heading">Every channel you follow, distilled.</h2>
-            <p className="digest-sub">Before the algorithm picks for you.</p>
+            <p className="digest-sub">One email. No autoplay. No rabbit holes.</p>
           </div>
           <div className="digest-email-wrap">
             <DigestEmailMockup data={demoData} />
@@ -296,13 +299,19 @@ export default function LandingPage() {
       </div>
 
       <div className="landing-digest-cta">
-        <div className="landing-or-signup-how">Add any YouTube channel by name or URL — no Google account needed.</div>
+        <div className="landing-or-signup-how">Set it up once. It runs every morning.</div>
+        <div className="landing-or-signup-sub">Add any YouTube channel by @handle or URL — no Google account needed.</div>
         <Link to="/register" className="btn-primary">Follow your first channel →</Link>
       </div>
 
       <footer className="landing-footer">
         <span>© {new Date().getFullYear()} Headwater</span>
-        <Link to="/login" className="landing-footer-link">Sign in</Link>
+        <div className="landing-footer-links">
+          <Link to="/upgrade" className="landing-footer-link">Pricing</Link>
+          <Link to="/login" className="landing-footer-link">Sign in</Link>
+          <Link to="/privacy" className="landing-footer-link">Privacy</Link>
+          <Link to="/terms" className="landing-footer-link">Terms</Link>
+        </div>
       </footer>
 
     </div>

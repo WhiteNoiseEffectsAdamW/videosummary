@@ -32,7 +32,7 @@ async function fetchChannelVideos(channelId) {
 
 // Summarize a video if not already cached, then link to users.
 // shortsUserIds: subset of userIds who opted in to Shorts (under 2 min).
-async function processVideo(videoId, channelId, channelName, title, userIds = [], shortsUserIds = []) {
+async function processVideo(videoId, channelId, channelName, title, userIds = [], shortsUserIds = [], publishedAt = null) {
   let cached = await summaryModel.findByVideoId(videoId);
   if (!cached) {
     if (!checkPollCap()) { console.warn('[poll] daily API cap reached, skipping', videoId); return false; }
@@ -44,6 +44,7 @@ async function processVideo(videoId, channelId, channelName, title, userIds = []
         videoId, channelId, channelName: channelName || null,
         title: title || summary.tldr?.slice(0, 100) || videoId,
         summary, transcriptLength: text.length, durationSeconds, inputTokens, outputTokens,
+        publishedAt: publishedAt || null,
       });
     } catch (err) {
       if (err.message?.includes('duplicate') || err.message?.includes('UNIQUE') || err.code === '23505') {
@@ -103,8 +104,9 @@ async function pollAllChannels() {
       for (const video of recent) {
         const videoId = video['yt:videoId'];
         const title = typeof video.title === 'string' ? video.title : videoId;
+        const publishedAt = video.published ? new Date(video.published) : null;
         try {
-          await processVideo(videoId, channelId, channelName, title, userIds, shortsUserIds);
+          await processVideo(videoId, channelId, channelName, title, userIds, shortsUserIds, publishedAt);
         } catch (err) {
           console.error(`[poll] failed to process ${videoId}:`, err.message);
         }
@@ -129,8 +131,9 @@ async function scanChannel(channelId, channelName, lookbackMs = 3 * 24 * 60 * 60
     for (const video of recent) {
       const videoId = video['yt:videoId'];
       const title = typeof video.title === 'string' ? video.title : videoId;
+      const publishedAt = video.published ? new Date(video.published) : null;
       try {
-        await processVideo(videoId, channelId, channelName, title, userIds);
+        await processVideo(videoId, channelId, channelName, title, userIds, [], publishedAt);
         found++;
       } catch (err) {
         console.error(`[scan] failed ${videoId}:`, err.message);

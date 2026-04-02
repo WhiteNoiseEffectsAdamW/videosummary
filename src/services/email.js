@@ -233,9 +233,9 @@ async function sendWelcome(toEmail) {
   const html = `<!DOCTYPE html><html lang="en"><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
 <div style="max-width:480px;margin:0 auto;padding:48px 24px;">
   <div style="font-size:13px;color:#999;margin-bottom:32px;">Headwater</div>
-  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">That's when I knew something was broken. YouTube is built to pull you in, not help you decide. So I built the opposite.</p>
-  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Headwater follows your channels and sends a digest each morning — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose. Email-first, because your inbox doesn't have an algorithm working against you.</p>
-  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 28px;">Your first digest lands tomorrow morning.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">YouTube is designed to keep you watching. I built Headwater because I got tired of letting it.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Every morning you get a digest from your channels — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. No one optimizing for your attention.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 28px;">Just you, choosing.</p>
   <a href="${followUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:32px;">Add your channels →</a>
   <p style="font-size:15px;color:#555;margin:0 0 16px;line-height:1.6;">— Adam</p>
   <p style="font-size:13px;color:#888;margin:0 0 48px;line-height:1.75;"><em>P.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.</em></p>
@@ -243,12 +243,12 @@ async function sendWelcome(toEmail) {
 </div>
 </body></html>`;
 
-  const text = `That's when I knew something was broken. YouTube is built to pull you in, not help you decide. So I built the opposite.\n\nHeadwater follows your channels and sends a digest each morning — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose. Email-first, because your inbox doesn't have an algorithm working against you.\n\nYour first digest lands tomorrow morning.\n\nAdd your channels: ${followUrl}\n\n— Adam\n\nP.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.\n\nYou're receiving this because you created a Headwater account.\nUnsubscribe: ${followUrl}`;
+  const text = `YouTube is designed to keep you watching. I built Headwater because I got tired of letting it.\n\nEvery morning you get a digest from your channels — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. No one optimizing for your attention.\n\nJust you, choosing.\n\nAdd your channels: ${followUrl}\n\n— Adam\n\nP.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.\n\nYou're receiving this because you created a Headwater account.\nUnsubscribe: ${followUrl}`;
 
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: 'I was reading YouTube comments to decide what to watch',
+    subject: 'I got tired of letting YouTube decide for me',
     html,
     text,
   });

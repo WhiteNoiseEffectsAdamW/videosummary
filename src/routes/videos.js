@@ -8,9 +8,12 @@ const { sendDigest } = require('../services/email');
 // GET /api/videos — user's saved videos (manual + channel)
 router.get('/', requireAuth, async (req, res, next) => {
   try {
+    const isPro = req.user.subscription_status === 'pro';
+    const historyLimit = isPro ? null : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
     const [subs, savedRows] = await Promise.all([
       subscriptionModel.findByUserId(req.user.id),
-      summaryModel.findSavedByUserId(req.user.id),
+      summaryModel.findSavedByUserId(req.user.id, 100, historyLimit),
     ]);
 
     const channelMap = Object.fromEntries(subs.map((s) => [s.channel_id, s.channel_name || s.channel_id]));
@@ -22,6 +25,7 @@ router.get('/', requireAuth, async (req, res, next) => {
       channelName: row.channel_name || (row.channel_id ? (channelMap[row.channel_id] || null) : null),
       title: row.title,
       savedAt: row.saved_at || row.created_at,
+      publishedAt: row.published_at || null,
       thumbnailUrl: `https://img.youtube.com/vi/${row.video_id}/maxresdefault.jpg`,
       tldr: row.summary?.tldr || null,
       verdict: row.summary?.verdict || null,
