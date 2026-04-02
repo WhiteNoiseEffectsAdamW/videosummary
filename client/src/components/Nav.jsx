@@ -167,11 +167,11 @@ export default function Nav() {
         <div className="about-backdrop" onClick={() => setAboutOpen(false)}>
           <div className="about-sheet" onClick={(e) => e.stopPropagation()}>
             <div className="about-handle" />
-            <div className="about-title">Headwater <span className="about-beta">Private Beta</span></div>
-            <p className="about-body">Built because browsing YouTube shouldn't take longer than watching it.</p>
-            <p className="about-body">Follow the channels you care about, get a morning digest of what's new. No algorithm. Just the channels you chose.</p>
-            <p className="about-body">You're one of the first people using this. If something feels off, reply to any email — I read everything.</p>
-            <p className="about-sig">— Adam</p>
+            <div className="about-title">Headwater</div>
+            <p className="about-body">You found this, so you're probably the kind of person I built it for.</p>
+            <p className="about-body">Headwater exists because your attention belongs to you. Not to an algorithm.</p>
+            <p className="about-body">Glad you're here. Reply to any email if something feels off. I read everything.</p>
+            <p className="about-sig">Adam</p>
           </div>
         </div>
       )}
