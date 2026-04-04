@@ -1651,8 +1651,8 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-.landing-brand { font-family: 'EB Garamond', Georgia, serif; font-size: 22px; font-weight: 400; color: #1a1a1a; letter-spacing: 0; }
-.landing-brand-accent { color: #b8924a; }
+.landing-brand { font-family: 'EB Garamond', Georgia, serif; font-size: 22px; font-weight: 400; color: #1a1612; letter-spacing: 0; }
+.landing-brand-accent { color: inherit; }
 .landing-nav-right { display: flex; align-items: center; gap: 12px; }
 .landing-nav-link {
   font-size: 13px;
@@ -1832,6 +1832,15 @@ body {
 /* Scoped overrides: shared components inside landing page */
 .landing-page .btn-primary { background: #1a1a1a; color: #fafaf7; border-color: transparent; }
 .landing-page .btn-primary:hover:not(:disabled) { background: #333; box-shadow: none; transform: none; }
+/* Nav CTA: outlined, smaller — gives hero CTA unambiguous primacy */
+.landing-nav .btn-primary {
+  background: transparent;
+  color: #1a1612;
+  border: 1px solid #1a1612;
+  font-size: 13px;
+  padding: 7px 14px;
+}
+.landing-nav .btn-primary:hover:not(:disabled) { background: #1a1612; color: #fafaf7; }
 .landing-page .card { background: #fff; border-color: #e8e4dc; box-shadow: none; }
 .landing-page .card:hover { background: #fff; border-color: #ddd8d0; }
 .landing-page .card-label { color: #bbb; }
