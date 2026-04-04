@@ -179,7 +179,7 @@ REMAINING WORK
   AI-generated pattern)
 
 ================================================================================
-HANDOFF PROMPT
+HANDOFF PROMPT — CONTINUING IN EXISTING CHAT
 ================================================================================
 
 Paste this into the existing chat session to continue:
@@ -217,3 +217,111 @@ Summary covers it." not "Skip it."
 
 Next steps: implement the rebrand into the live codebase, or continue
 refining the mockup (empty states, loading states, em-dash list markers).
+
+---
+
+================================================================================
+HANDOFF PROMPT — PULLING TO A NEW MACHINE
+================================================================================
+
+Paste this at the start of a fresh Claude Code session after cloning the repo:
+
+---
+
+This is the Headwater project — a YouTube summarizer that generates structured
+summaries using Claude and delivers them via email digest. I'm picking up from
+a design session. The app itself works; this session was entirely about visual
+direction and design decisions.
+
+REPO: https://github.com/WhiteNoiseEffectsAdamW/videosummary
+BRANCH: master
+
+STACK:
+- Backend: Node/Express, SQLite via knex, Anthropic SDK
+- Frontend: Vite + React
+- Auth: custom JWT middleware
+- Billing: Stripe
+- Env vars needed: ANTHROPIC_API_KEY (required), PORT (optional, default 3001)
+
+TO SET UP:
+  git clone https://github.com/WhiteNoiseEffectsAdamW/videosummary.git
+  cd videosummary
+  cp .env.example .env   # then add ANTHROPIC_API_KEY
+  npm install
+  cd client && npm install && cd ..
+  npm run dev            # backend on :3001
+  cd client && npm run dev  # frontend on :5173
+
+DESIGN STATE — READ THIS CAREFULLY:
+
+The design has been substantially reworked in mockup.html. The live app has
+NOT been updated yet — it still uses the old cyan palette. The mockup is the
+source of truth for where the UI is going. Open it in a browser before
+touching any CSS.
+
+Key files:
+- mockup.html — full UI mockup (landing, My Videos, Following, Account,
+  Upgrade). Six tabs: light landing is default, dark landing is last.
+- email-digest-mockup.html — 600px email digest template. This is the
+  primary brand touchpoint.
+- design-assessment.txt — full critique of the mockup with reasoning
+- design-session-summary.txt — this file; full session log
+
+KEY DESIGN DECISIONS (these are settled — don't relitigate them):
+
+1. PALETTE: Amber-on-near-black for the product. Warm off-white for landing.
+   - Product accent: #c4a35a (on dark surfaces), #b8924a (on light surfaces)
+   - Product backgrounds: #0a0a0a / #1a1a1a near-black
+   - Product text: #f5f0e8 warm white
+   - Landing background: #fafaf7 warm off-white, #f2efe8 secondary
+   - This replaces the old cyan (#22d3ee) palette entirely.
+
+2. TYPOGRAPHY: EB Garamond in exactly two places — nav brand name and landing
+   page h1. Nowhere else. This is a hard rule. Pricing prices were leaking
+   into a third context (decorative serif on $0/$15) and have been fixed to
+   Inter bold. Don't reintroduce serif outside those two contexts.
+
+3. LIGHT LANDING / DARK PRODUCT split is intentional. The landing page
+   (off-white, dark CTAs) is the editorial/marketing face. The product
+   (near-black, amber) is the focused tool. Notion/Linear/Readwise pattern.
+   Don't unify them.
+
+4. NO PRESCRIPTIVE LANGUAGE. The brand promise is "your attention belongs to
+   you." Verdicts give context, never commands. "Familiar if you've read Deep
+   Work. Summary covers it." — not "Skip it." This is baked into the prompt
+   instruction in src/prompts/summarize.js.
+
+5. EMAIL DIGEST — TWO-TIER HIERARCHY. Featured video: full treatment (tldr,
+   quote, topic timestamps, verdict). Secondary videos: compact rows (channel,
+   title, one-line summary, verdict). Subject line leads with channel names
+   ("Inside Dentistry, Cal Newport — 3 new videos"), not count.
+
+6. READ/UNREAD DIFFERENTIATION. Unread video rows: 2px left amber border,
+   weight 600. Read rows: dimmed title (--text-3) and channel (--text-4).
+   Class-based, not inline styles.
+
+7. SUGGESTED CHANNELS vs FOLLOWED CHANNELS. Suggested (popular-chip): dashed
+   border, transparent background — signals "not yet added." Followed
+   (channel-row): solid surface. Hover on suggested previews what following
+   looks like (solid border, amber tint fill).
+
+8. EYEBROW LABEL HIERARCHY. Brand eyebrows (marketing moments): 13px, weight
+   600, 0.04em tracking, uppercase, accent color. Product labels (form labels):
+   12px, weight 600, 0.02em tracking, sentence case, --text-3 color.
+
+PROMPT SCHEMA (src/prompts/summarize.js) returns:
+  { tldr, topics[], quotes[], categories[], titleClaim, verdict }
+  "verdict" was added this session — one sentence, who the video is for,
+  no prescriptive language.
+
+REMAINING WORK:
+- Implement rebrand into live app (replace cyan palette, add EB Garamond,
+  update CSS variables in client/src/app.css)
+- Build email digest sending (Phase 2 — src/jobs/ + src/workers/)
+- Convert email-digest-mockup.html to production template with inlined CSS
+- Design empty states (My Videos with 0 videos, Following with 0 channels)
+- Design loading/skeleton states
+- Fix em-dash list markers on pricing page (minor but recognizable AI pattern)
+
+The CLAUDE.md in the repo root has the full architecture guide. Read that
+plus mockup.html and email-digest-mockup.html before touching any code.
