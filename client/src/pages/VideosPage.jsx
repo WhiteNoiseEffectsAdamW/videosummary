@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 async function markViewed(videoId) {
   await fetch(`/api/videos/${videoId}/viewed`, { method: 'POST', credentials: 'include' });
 }
 
-function VideoRow({ video, onDelete, selected, onToggle, anySelected, onMarkViewed }) {
+function VideoRow({ video, selected, onToggle, anySelected, onMarkViewed }) {
   const viewed = video.viewed;
   const navigate = useNavigate();
   const date = new Date(video.publishedAt || video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
@@ -13,13 +13,30 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, onMarkView
   const touchStart = React.useRef({ x: 0, y: 0 });
   const didLongPress = React.useRef(false);
   const [pulsing, setPulsing] = React.useState(false);
+  const [titleExpanded, setTitleExpanded] = React.useState(false);
+
+  function navigateToSummary() {
+    onMarkViewed(video.videoId);
+    navigate(`/s/${video.slug || video.videoId}`);
+  }
+
+  function handleTitleClick(e) {
+    e.stopPropagation();
+    if (anySelected) { onToggle(video.videoId); return; }
+    setTitleExpanded((v) => !v);
+  }
+
+  function handleThumbClick(e) {
+    e.stopPropagation();
+    if (anySelected) { onToggle(video.videoId); return; }
+    navigateToSummary();
+  }
 
   function handleClick(e) {
     if (e.target.closest('.vrow-checkbox-wrap')) return;
     if (didLongPress.current) { didLongPress.current = false; return; }
     if (anySelected) { onToggle(video.videoId); return; }
-    onMarkViewed(video.videoId);
-    navigate(`/s/${video.slug || video.videoId}`);
+    navigateToSummary();
   }
 
   function handleTouchStart(e) {
@@ -57,7 +74,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, onMarkView
       onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
     >
       <div className="vrow-main">
-        <div className="vrow-title">{video.title || video.videoId}</div>
+        <div className={`vrow-title${titleExpanded ? ' expanded' : ''}`} onClick={handleTitleClick}>{video.title || video.videoId}</div>
         {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
         <div className="vrow-meta">
           <span className="vrow-date">{date}</span>
@@ -68,7 +85,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, onMarkView
         </div>
       </div>
       {video.thumbnailUrl && (
-        <div className="vrow-thumb-wrap">
+        <div className="vrow-thumb-wrap" onClick={handleThumbClick}>
           <img className="vrow-thumb" src={video.thumbnailUrl} alt="" draggable="false"
             onLoad={(e) => {
               if (e.target.src.includes('maxresdefault') && e.target.naturalWidth <= 120) {
@@ -151,15 +168,6 @@ export default function VideosPage() {
   }
 
   function clearSelection() { setSelected(new Set()); }
-
-  // Called with array of videoIds — single delete skips confirm, bulk shows dialog
-  function requestDelete(ids) {
-    if (ids.length === 1) {
-      doDelete(ids);
-    } else {
-      setConfirmIds(ids);
-    }
-  }
 
   async function doDelete(ids) {
     setConfirmIds(null);
@@ -299,7 +307,6 @@ export default function VideosPage() {
                   <VideoRow
                     key={v.videoId}
                     video={v}
-                    onDelete={requestDelete}
                     selected={selected.has(v.videoId)}
                     onToggle={toggleSelect}
                     anySelected={anySelected}

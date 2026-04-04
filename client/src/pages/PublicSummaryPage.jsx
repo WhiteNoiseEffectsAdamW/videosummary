@@ -25,8 +25,7 @@ export default function PublicSummaryPage() {
     if (!data) return;
     const title = data.title ? `${data.title} — Headwater Summary` : 'Headwater Summary';
     const desc = data.tldr?.slice(0, 160) || 'AI-generated video summary';
-    // TODO: replace with dynamic per-video OG route (/api/og/:videoId) once quote rendering is ready
-    const image = 'https://headwater.app/og-image-dark.png';
+    const image = `${window.location.origin}/api/og/${data.videoId || slug}`;
 
     document.title = title;
     setMeta('og:title', title);
@@ -37,7 +36,22 @@ export default function PublicSummaryPage() {
     setMeta('twitter:title', title);
     setMeta('twitter:description', desc);
     setMeta('twitter:image', image);
-  }, [data]);
+
+    // Restore landing defaults on unmount so Safari's native share (which reads
+    // live DOM) doesn't see stale summary-page tags after client-side navigation
+    return () => {
+      const defaultTitle = 'Headwater';
+      const defaultDesc = "Upstream of the algorithm. Follow the channels you care about and get a morning digest of what's new.";
+      const defaultImage = 'https://headwater.app/og-image-light.png';
+      document.title = defaultTitle;
+      setMeta('og:title', defaultTitle);
+      setMeta('og:description', defaultDesc);
+      setMeta('og:image', defaultImage);
+      setMeta('twitter:title', defaultTitle);
+      setMeta('twitter:description', defaultDesc);
+      setMeta('twitter:image', defaultImage);
+    };
+  }, [data, slug]);
 
   function setMeta(property, content) {
     if (!content) return;
