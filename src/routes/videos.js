@@ -32,9 +32,20 @@ router.get('/', requireAuth, async (req, res, next) => {
       categories: row.summary?.categories || [],
       readTimeSaved: row.summary?.readTimeSaved || null,
       durationSeconds: row.duration_seconds || null,
+      viewed: !!row.viewed_at,
     }));
 
     res.json(result);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/videos/:videoId/viewed — mark a video as viewed
+router.post('/:videoId/viewed', requireAuth, async (req, res, next) => {
+  try {
+    await summaryModel.markViewed(req.user.id, req.params.videoId);
+    res.json({ ok: true });
   } catch (err) {
     next(err);
   }

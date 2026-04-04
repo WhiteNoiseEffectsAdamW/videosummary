@@ -193,7 +193,7 @@ export default function LandingPage() {
     <div className="landing-page">
 
       <header className="landing-nav">
-        <span className="landing-brand">Headwater</span>
+        <span className="landing-brand">Head<span className="landing-brand-accent">water</span></span>
         <div className="landing-nav-right">
           <Link to="/login" className="landing-nav-link">Sign in</Link>
           <Link to="/register" className="btn-primary">Try it free →</Link>
@@ -202,7 +202,7 @@ export default function LandingPage() {
 
       {/* Hero — lean, let the demo sell it */}
       <div className="landing-hero">
-        <h1 className="landing-headline">Upstream of<br /><span style={{ color: '#22d3ee' }}>the algorithm.</span></h1>
+        <h1 className="landing-headline">Upstream of<br /><span className="landing-headline-accent">the algorithm.</span></h1>
         <p className="landing-sub">YouTube is designed to keep you watching. This isn't.</p>
         <div className="landing-hero-actions">
           <Link to="/register" className="btn-primary">Try it free →</Link>
@@ -276,7 +276,7 @@ export default function LandingPage() {
             {limitReached && (
               <div className="landing-limit-box">
                 You've used your 3 free summaries.{' '}
-                <Link to="/register" style={{ color: '#22d3ee' }}>Sign up free</Link> to keep going.
+                <Link to="/register" style={{ color: '#b8924a' }}>Sign up free</Link> to keep going.
               </div>
             )}
 

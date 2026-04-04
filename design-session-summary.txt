@@ -314,9 +314,36 @@ PROMPT SCHEMA (src/prompts/summarize.js) returns:
   "verdict" was added this session — one sentence, who the video is for,
   no prescriptive language.
 
+9. OG IMAGE: Two variants, both left-aligned, both Garamond wordmark + Inter
+   tagline. L2 (cream gradient, 4px left stripe, 4% noise) for marketing
+   routes (landing, pricing, about). D2 (dark, amber top bar gradient) for
+   shared product pages (/summary/:id). No Playfair Display anywhere in the
+   brand — it was evaluated and rejected.
+
+10. LANDING BACKGROUND: Cream gradient (linear-gradient 160deg, #fdf8ef →
+    #f5ede0) with 4% noise overlay. But the COLOR SYSTEM stays neutral — keep
+    #777/#999/#aaa grays for text, #e8e4dc for borders, opaque #fff for cards.
+    Do NOT amber-tint the grays (V1 in landing-mockup.html did this and it
+    was rejected — it collapses the hierarchy so amber stops being an accent).
+    7.5% noise (V2) was also rejected — visible grain reads as filter, not
+    texture.
+
+PROMPT SCHEMA (src/prompts/summarize.js) returns:
+  { tldr, topics[], quotes[], categories[], titleClaim, verdict }
+  "verdict" was added this session — one sentence, who the video is for,
+  no prescriptive language.
+
+KEY FILES ADDED IN ADDENDUM:
+- og-preview.html — 10 OG image variants (SVG). L2 and D2 are the chosen ones.
+- landing-mockup.html — 3 landing page color variants. Decision is documented
+  in design-session-addendum.txt.
+- design-session-addendum.txt — full reasoning for OG and landing decisions.
+
 REMAINING WORK:
-- Implement rebrand into live app (replace cyan palette, add EB Garamond,
-  update CSS variables in client/src/app.css)
+- Implement OG images: generate static L2 + D2 PNGs at 1200x630, wire up
+  per-route og:image meta tags (L2 for marketing, D2 for product shares)
+- Update landing page CSS: swap #fafaf7 flat background for cream gradient +
+  4% noise, keep neutral gray color system
 - Build email digest sending (Phase 2 — src/jobs/ + src/workers/)
 - Convert email-digest-mockup.html to production template with inlined CSS
 - Design empty states (My Videos with 0 videos, Following with 0 channels)
@@ -324,4 +351,5 @@ REMAINING WORK:
 - Fix em-dash list markers on pricing page (minor but recognizable AI pattern)
 
 The CLAUDE.md in the repo root has the full architecture guide. Read that
-plus mockup.html and email-digest-mockup.html before touching any code.
+plus mockup.html, email-digest-mockup.html, and design-session-addendum.txt
+before touching any code.

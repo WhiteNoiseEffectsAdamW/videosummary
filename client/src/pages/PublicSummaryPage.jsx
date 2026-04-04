@@ -25,7 +25,8 @@ export default function PublicSummaryPage() {
     if (!data) return;
     const title = data.title ? `${data.title} — Headwater Summary` : 'Headwater Summary';
     const desc = data.tldr?.slice(0, 160) || 'AI-generated video summary';
-    const image = data.thumbnailUrl;
+    // TODO: replace with dynamic per-video OG route (/api/og/:videoId) once quote rendering is ready
+    const image = 'https://headwater.app/og-image-dark.png';
 
     document.title = title;
     setMeta('og:title', title);

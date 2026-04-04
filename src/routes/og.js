@@ -10,8 +10,8 @@ const MAX_CACHE = 500;
 
 const W = 1200;
 const H = 630;
-const NAV_BG = '#0c0f14';
-const CYAN = '#22d3ee';
+const NAV_BG = '#0a0a0a';
+const AMBER = '#c4a35a';
 
 // Load font files once at startup
 const FONT = fs.readFileSync(path.join(__dirname, '../fonts/inter.ttf'));
@@ -61,29 +61,35 @@ function buildSvg(summary, videoId) {
   const QUOTE_LINE_H = 76;
   const BOTTOM_FONT = 32;
   const MAX_QUOTE_LINES = 3;
-  const MAX_CHARS = 28; // chars per line at this font size
+  const MAX_CHARS = 32; // chars per line at this font size
 
   const quotes = summaryData.quotes || [];
   const fits = (t) => wrapText(`\u201c${t}`, MAX_CHARS).length <= MAX_QUOTE_LINES;
 
   // 1. Try the first (best) quote as-is
-  // 2. If it won't fit but has an em dash, try the portion before the dash
-  // 3. Fall back to the shortest substantive quote that fits
-  // 4. Last resort: first quote (will be truncated with ellipsis)
+  // 2. If it won't fit but has an em dash, the portion before the dash counts as a full quote
+  // 3. Fall back to the shortest quote that fits (no minimum length)
+  // 4. Last resort: shortest quote overall (will be truncated with ellipsis)
   let displayQuote = null;
   const firstQuote = quotes[0]?.text || '';
   if (firstQuote && fits(firstQuote)) {
     displayQuote = firstQuote;
   } else if (firstQuote && firstQuote.includes('\u2014')) {
     const beforeDash = firstQuote.split('\u2014')[0].trim();
-    if (beforeDash.length >= 40) displayQuote = beforeDash;
+    if (fits(beforeDash)) displayQuote = beforeDash;
   }
   if (!displayQuote) {
     displayQuote = quotes
       .map(q => q.text || '')
-      .filter(t => t.length >= 40 && fits(t))
+      .filter(t => t.length > 0 && fits(t))
+      .sort((a, b) => a.length - b.length)[0];
+  }
+  if (!displayQuote) {
+    displayQuote = quotes
+      .map(q => q.text || '')
+      .filter(t => t.length > 0)
       .sort((a, b) => a.length - b.length)[0]
-      || firstQuote || summaryData.tldr || summary.title || videoId;
+      || summaryData.tldr || summary.title || videoId;
   }
 
   const allQuoteLines = wrapText(`\u201c${displayQuote}`, MAX_CHARS);
@@ -112,25 +118,25 @@ function buildSvg(summary, videoId) {
         <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.6"/>
       </filter>
       <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="${CYAN}" stop-opacity="1"/>
-        <stop offset="100%" stop-color="${CYAN}" stop-opacity="0.25"/>
+        <stop offset="0%" stop-color="${AMBER}" stop-opacity="1"/>
+        <stop offset="100%" stop-color="${AMBER}" stop-opacity="0.25"/>
       </linearGradient>
     </defs>
 
     <!-- Dark navy overlay — reduces thumbnail to ~12% -->
     <rect x="0" y="0" width="${W}" height="${H}" fill="${NAV_BG}" fill-opacity="0.88"/>
 
-    <!-- Cyan top bar (flush to edge, gradient left→right) -->
+    <!-- Amber top bar (flush to edge, gradient left→right) -->
     <rect x="0" y="0" width="${W}" height="${STRIPE}" fill="url(#barGrad)"/>
 
     <!-- Channel name label -->
-    ${channelName ? `<text x="${PAD_LEFT}" y="${labelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="800" fill="${CYAN}" letter-spacing="4">${escXml(channelName)}</text>` : ''}
+    ${channelName ? `<text x="${PAD_LEFT}" y="${labelY}" font-family="Inter,Arial,sans-serif" font-size="${LABEL_FONT}" font-weight="800" fill="${AMBER}" letter-spacing="4">${escXml(channelName)}</text>` : ''}
 
     <!-- Pull quote -->
-    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#e2e8f0" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
+    ${quoteLines.map((line, i) => `<text x="${PAD_LEFT}" y="${quoteStartY + i * QUOTE_LINE_H}" font-family="Inter,Arial,sans-serif" font-size="${QUOTE_FONT}" font-weight="400" fill="#f5f0e8" font-style="italic" filter="url(#shadow)">${escXml(line)}</text>`).join('\n    ')}
 
     <!-- Headwater Summary label -->
-    <text x="${PAD_LEFT}" y="${bottomY}" font-family="Inter,Arial,sans-serif" font-size="${BOTTOM_FONT}" font-weight="600" fill="#64748b" letter-spacing="4">HEADWATER SUMMARY</text>
+    <text x="${PAD_LEFT}" y="${bottomY}" font-family="Inter,Arial,sans-serif" font-size="${BOTTOM_FONT}" font-weight="600" fill="#7a7060" letter-spacing="4">HEADWATER SUMMARY</text>
   </svg>`;
 }
 

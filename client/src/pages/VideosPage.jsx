@@ -1,17 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const VIEWED_KEY = 'hw_viewed_videos';
-
-function getViewed() {
-  try { return new Set(JSON.parse(localStorage.getItem(VIEWED_KEY) || '[]')); } catch { return new Set(); }
-}
-function markViewed(videoId) {
-  const s = getViewed(); s.add(videoId);
-  localStorage.setItem(VIEWED_KEY, JSON.stringify([...s]));
+async function markViewed(videoId) {
+  await fetch(`/api/videos/${videoId}/viewed`, { method: 'POST', credentials: 'include' });
 }
 
-function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) {
+function VideoRow({ video, onDelete, selected, onToggle, anySelected, onMarkViewed }) {
+  const viewed = video.viewed;
   const navigate = useNavigate();
   const date = new Date(video.publishedAt || video.savedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
   const longPressTimer = React.useRef(null);
@@ -23,7 +18,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
     if (e.target.closest('.vrow-checkbox-wrap')) return;
     if (didLongPress.current) { didLongPress.current = false; return; }
     if (anySelected) { onToggle(video.videoId); return; }
-    markViewed(video.videoId);
+    onMarkViewed(video.videoId);
     navigate(`/s/${video.slug || video.videoId}`);
   }
 
@@ -52,7 +47,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
 
   return (
     <div
-      className={`vrow${selected ? ' vrow-selected' : ''}${viewed && !selected ? ' vrow-viewed' : ''}${pulsing ? ' vrow-pulse' : ''}`}
+      className={`vrow${selected ? ' vrow-selected' : ''}${!viewed && !selected ? ' unread' : ''}${viewed && !selected ? ' read' : ''}${pulsing ? ' vrow-pulse' : ''}`}
       onClick={handleClick}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -62,7 +57,7 @@ function VideoRow({ video, onDelete, selected, onToggle, anySelected, viewed }) 
       onKeyDown={(e) => e.key === 'Enter' && handleClick(e)}
     >
       <div className="vrow-main">
-        <div className={`vrow-title${viewed && !selected ? ' vrow-title-viewed' : ''}`}>{video.title || video.videoId}</div>
+        <div className="vrow-title">{video.title || video.videoId}</div>
         {video.channelName && <div className="vrow-channel">{video.channelName}</div>}
         <div className="vrow-meta">
           <span className="vrow-date">{date}</span>
@@ -130,7 +125,6 @@ export default function VideosPage() {
   const [sortOrder, setSortOrder] = useState(() => localStorage.getItem('hw_sort_order') || 'newest');
   const [selected, setSelected] = useState(new Set());
   const [confirmIds, setConfirmIds] = useState(null); // null | string[]
-  const [viewed, setViewed] = useState(() => getViewed());
 
   function loadVideos() {
     setError(false);
@@ -143,12 +137,10 @@ export default function VideosPage() {
 
   useEffect(() => { loadVideos(); }, []);
 
-  // Sync viewed state from localStorage on focus (in case another tab updated it)
-  useEffect(() => {
-    const sync = () => setViewed(getViewed());
-    window.addEventListener('focus', sync);
-    return () => window.removeEventListener('focus', sync);
-  }, []);
+  function handleMarkViewed(videoId) {
+    markViewed(videoId);
+    setVideos((prev) => prev.map((v) => v.videoId === videoId ? { ...v, viewed: true } : v));
+  }
 
   function toggleSelect(videoId) {
     setSelected((prev) => {
@@ -218,7 +210,19 @@ export default function VideosPage() {
         <h1 className="page-title" style={{ margin: 0 }}>My Videos</h1>
       </div>
 
-      {loading && <div style={{ padding: '48px 0', color: '#555', fontSize: 14, textAlign: 'center' }}>Loading…</div>}
+      {loading && (
+        <div>
+          {[...Array(6)].map((_, i) => (
+            <div className="skel-row" key={i}>
+              <div className="skel-row-main">
+                <div className={`skel skel-line ${i % 2 === 0 ? 'skel-line-long' : 'skel-line-med'}`} />
+                <div className="skel skel-line skel-line-short" />
+              </div>
+              <div className="skel skel-thumb" />
+            </div>
+          ))}
+        </div>
+      )}
       {error && <p className="auth-error">Couldn't load videos. Please refresh.</p>}
 
       {!loading && !error && videos.length === 0 && (
@@ -299,7 +303,7 @@ export default function VideosPage() {
                     selected={selected.has(v.videoId)}
                     onToggle={toggleSelect}
                     anySelected={anySelected}
-                    viewed={viewed.has(v.videoId)}
+                    onMarkViewed={handleMarkViewed}
                   />
                 ))}
               </div>

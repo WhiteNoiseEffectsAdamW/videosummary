@@ -1,0 +1,109 @@
+HEADWATER DESIGN SESSION — ADDENDUM
+April 4, 2026
+Follow-up to design-assessment.txt and design-session-summary.txt
+
+================================================================================
+OG IMAGE DECISION
+================================================================================
+
+CHOSEN: L2 (primary) + D2 (product shares)
+
+L2 — Cream gradient background (#fdf8ef → #f5ede0), 4px amber left stripe at
+50% opacity, EB Garamond 108px wordmark, Inter 28px uppercase tagline with 4px
+letter-spacing, 4% noise. Left-aligned.
+
+D2 — Near-black (#0a0a0a), amber top bar gradient fading right, EB Garamond
+112px wordmark, Inter 34px light uppercase tagline with 2px letter-spacing,
+5.5% noise. Left-aligned.
+
+ROUTING:
+  L2 → marketing pages (landing, pricing, about)
+  D2 → shared product pages (/summary/:id, any user-shared link)
+
+This extends the light-landing/dark-product split to social cards. Two images,
+same typographic hierarchy (Garamond name, Inter tagline), different contexts.
+
+WHY L2 WINS OVERALL:
+- Garamond wordmark matches the product brand (no disconnect on tap-through)
+- Cream background stands out in social feeds full of white and dark cards
+- Left stripe adds editorial structure (margin rule, not decoration)
+- Left-aligned holds at thumbnail size (~300px in iMessage) — reading direction
+  anchors to a consistent left edge
+
+WHY LEFT-ALIGNED, NOT CENTERED:
+- Editorial, not ceremonial. Left alignment reads as a column/masthead.
+  Centered reads as a title card or invitation — wrong personality.
+- The left stripe depends on it. Centered text turns the stripe into a random
+  decorative line. Left-aligned, it's a typographic margin that organizes the
+  composition.
+- At thumbnail size, centered text creates a floating effect with no anchor
+  point. Left-aligned gives the eye a fixed starting edge.
+
+REJECTED VARIANTS AND WHY:
+- D1 (Inter bold): Generic. Every YC startup ships this OG image.
+- D7, L3, L6 (Playfair Display): Introduces a third typeface not in the brand
+  system. Playfair at 900 weight is loud and decorative — different personality
+  than Headwater's restraint. Don't add a font for one asset.
+- D6, L4 (label + italic stacked): Inverts the hierarchy — brand name becomes
+  a small label, tagline becomes dominant. Wrong for OG images where you need
+  people to learn the name at a glance.
+- L5 (Inter bold wordmark): Inter 800 wordmark doesn't match the EB Garamond
+  wordmark in the actual product. Brand dissonance on tap-through.
+- L2b (0.08 noise): At thumbnail size, heavy noise risks looking like JPEG
+  compression artifacts. 0.04 is subliminal, which is correct.
+
+================================================================================
+LANDING PAGE BACKGROUND DECISION
+================================================================================
+
+CHOSEN: Cream gradient + 4% noise from V1, color system from V0.
+
+BACKGROUND:
+  linear-gradient(160deg, #fdf8ef 0%, #f5ede0 100%)
+  4% fractalNoise overlay
+
+COLOR SYSTEM (kept from V0 — NOT V1's amber-tinted grays):
+  Body text:     #777 (neutral gray, not #6b5a3a)
+  Nav links:     #999 (neutral gray, not #9a7d50)
+  Footer text:   #aaa (neutral gray, not #a08a5e)
+  Borders:       #e8e4dc (neutral, not rgba(180,140,60,0.18))
+  Card surfaces: #fff opaque (not rgba(255,255,255,0.6))
+  Card labels:   #bbb (neutral, not #b09060)
+
+WHY THE GRADIENT + NOISE:
+- Addresses the "harder to make feel premium" concern from the original
+  assessment. Flat #fafaf7 is clean but inert. The diagonal gradient adds
+  depth — "paper surface with light falling across it" rather than "white page
+  with warm tint."
+- 4% noise creates the impression of a physical surface (paper, linen) without
+  being identifiable as a filter. Subliminal texture.
+
+WHY NOT V1'S FULL AMBER TINTING:
+- When every secondary element is amber-brown, the amber accent (#b8924a)
+  stops being an accent. It becomes the palette's undertone. The eyebrow
+  "THE VIDEO, NOT THE TITLE" no longer pops against neutral grays — it's just
+  a slightly more saturated version of the brown that's everywhere.
+- Semi-transparent card backgrounds (rgba 255,255,255,0.6) let the gradient
+  bleed through, making card surfaces shift with scroll position. That's
+  visual instability, not texture.
+- The hierarchy flattens. V0's neutral grays create a clear separation between
+  "brand color" (amber) and "structural color" (gray). V1 collapses that.
+
+WHY NOT V2 (7.5% NOISE):
+- At 7.5% the noise becomes a visible grain layer, especially on the gradient.
+  Scrolling a full page, your eye catches the pattern repeating. It reads as
+  "Instagram filter" rather than "paper texture." The point of noise is that
+  you shouldn't be able to point at it.
+
+================================================================================
+UPDATED SETTLED DECISIONS
+================================================================================
+
+Adding to the list from design-session-summary.txt:
+
+9. OG IMAGE: L2 for marketing routes, D2 for product/shared routes. Both
+   left-aligned, both using Garamond wordmark + Inter tagline. No Playfair
+   Display anywhere in the brand.
+
+10. LANDING BACKGROUND: Cream gradient (#fdf8ef → #f5ede0) with 4% noise.
+    Neutral gray color system preserved — amber is accent only, not undertone.

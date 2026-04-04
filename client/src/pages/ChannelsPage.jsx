@@ -19,6 +19,7 @@ export default function FollowingPage() {
   const [error, setError] = useState(null);
   const [upgradeRequired, setUpgradeRequired] = useState(false);
   const [loadError, setLoadError] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [togglingDigest, setTogglingDigest] = useState(false);
@@ -35,7 +36,8 @@ export default function FollowingPage() {
     fetch('/api/subscriptions', { credentials: 'include' })
       .then((r) => r.ok ? r.json() : Promise.reject())
       .then(setChannels)
-      .catch(() => setLoadError(true));
+      .catch(() => setLoadError(true))
+      .finally(() => setInitialLoading(false));
   }, []);
 
   async function handleToggleDigest() {
@@ -325,9 +327,27 @@ export default function FollowingPage() {
         disabled={!!addingPopular}
       />
 
+      {initialLoading && (
+        <div>
+          {[...Array(4)].map((_, i) => (
+            <div className="skel-row" key={i}>
+              <div className="skel skel-avatar" />
+              <div className="skel-row-main">
+                <div className={`skel skel-line ${i % 2 === 0 ? 'skel-line-med' : 'skel-line-short'}`} />
+                <div className="skel skel-line skel-line-short" />
+              </div>
+              <div className="skel skel-pill" />
+            </div>
+          ))}
+        </div>
+      )}
       {loadError && <p className="auth-error">Couldn't load your channels. Please refresh.</p>}
-      {channels.length === 0 && !loadError ? (
-        <p className="empty-state">Add your first channel and we'll send you a digest tomorrow morning.</p>
+      {!initialLoading && channels.length === 0 && !loadError ? (
+        <div className="empty-state-block">
+          <p className="empty-state-title">No channels yet.</p>
+          <p className="empty-state-sub">Add any YouTube channel by @handle or URL. Once you follow one, we'll scan it every few hours and include new videos in your morning digest.</p>
+          <p className="empty-state-sub" style={{ marginTop: -16 }}>Not sure where to start? Try the suggested channels below.</p>
+        </div>
       ) : (
         <ul className="channel-list">
           {channels.map((c) => {

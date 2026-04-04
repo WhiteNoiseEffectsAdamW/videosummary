@@ -101,9 +101,15 @@ async function migrate() {
       t.integer('user_id').notNullable();
       t.string('video_id').notNullable();
       t.boolean('dismissed').defaultTo(false);
+      t.timestamp('viewed_at').nullable();
       t.timestamps(true, true);
       t.unique(['user_id', 'video_id']);
     });
+  } else {
+    const hasViewedAt = await db.schema.hasColumn('user_saves', 'viewed_at');
+    if (!hasViewedAt) {
+      await db.schema.alterTable('user_saves', (t) => t.timestamp('viewed_at').nullable());
+    }
   }
 
   const hasSubs = await db.schema.hasTable('subscriptions');

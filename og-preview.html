@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OG Image Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #333; padding: 40px; font-family: Inter, sans-serif; }
+    h2 { color: #aaa; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin: 40px 0 16px; font-weight: 400; }
+    h2:first-of-type { margin-top: 0; }
+    .grid { display: flex; flex-direction: column; gap: 16px; }
+    .row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .card { flex-shrink: 0; }
+    .label { color: #888; font-size: 11px; margin-bottom: 6px; letter-spacing: 1px; }
+    .preview { width: 600px; height: 315px; display: block; }
+  </style>
+</head>
+<body>
+<div class="grid">
+
+  <h2>Dark — with noise</h2>
+  <div class="row">
+
+    <!-- D1: Inter, amber bar, noise -->
+    <div class="card">
+      <div class="label">D1 · Inter · amber bar · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="d1bar" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#c4a35a" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#c4a35a" stop-opacity="0.15"/>
+          </linearGradient>
+          <filter id="d1noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="#0a0a0a"/>
+        <rect width="1200" height="630" filter="url(#d1noise)" opacity="0.055"/>
+        <rect width="1200" height="16" fill="url(#d1bar)"/>
+        <text x="60" y="310" font-family="Inter,Arial,sans-serif" font-size="96" font-weight="800" fill="#f5f0e8" letter-spacing="-2">Headwater</text>
+        <text x="65" y="375" font-family="Inter,Arial,sans-serif" font-size="40" font-weight="400" fill="#c4a35a">Upstream of the algorithm.</text>
+      </svg>
+    </div>
+
+    <!-- D2: Garamond wordmark, Inter tagline, noise -->
+    <div class="card">
+      <div class="label">D2 · Garamond wordmark · Inter tagline · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="d2bar" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#c4a35a" stop-opacity="1"/>
+            <stop offset="100%" stop-color="#c4a35a" stop-opacity="0.15"/>
+          </linearGradient>
+          <filter id="d2noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="#0a0a0a"/>
+        <rect width="1200" height="630" filter="url(#d2noise)" opacity="0.055"/>
+        <rect width="1200" height="16" fill="url(#d2bar)"/>
+        <text x="56" y="320" font-family="'EB Garamond',Georgia,serif" font-size="112" font-weight="500" fill="#f5f0e8">Headwater</text>
+        <text x="66" y="388" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="300" fill="#c4a35a" letter-spacing="2">UPSTREAM OF THE ALGORITHM.</text>
+      </svg>
+    </div>
+
+  </div>
+  <div class="row">
+
+    <!-- D6: Wordmark label + Garamond italic tagline, bottom bar, noise -->
+    <div class="card">
+      <div class="label">D6 · Label + Garamond italic · bottom bar · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="d6bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#110e09"/>
+            <stop offset="100%" stop-color="#0c0c10"/>
+          </linearGradient>
+          <linearGradient id="d6bar" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#c4a35a"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </linearGradient>
+          <filter id="d6noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="url(#d6bg)"/>
+        <rect width="1200" height="630" filter="url(#d6noise)" opacity="0.055"/>
+        <rect y="614" width="1200" height="16" fill="url(#d6bar)"/>
+        <text x="60" y="220" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="600" fill="#c4a35a" letter-spacing="6">HEADWATER</text>
+        <text x="54" y="360" font-family="'EB Garamond',Georgia,serif" font-size="96" font-weight="400" font-style="italic" fill="#f5f0e8">Upstream of the</text>
+        <text x="54" y="462" font-family="'EB Garamond',Georgia,serif" font-size="96" font-weight="400" font-style="italic" fill="#f5f0e8">algorithm.</text>
+      </svg>
+    </div>
+
+    <!-- D7: Left stripe, Playfair, noise -->
+    <div class="card">
+      <div class="label">D7 · Left stripe · Playfair · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="d7stripe" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c4a35a"/>
+            <stop offset="100%" stop-color="#c4a35a" stop-opacity="0.2"/>
+          </linearGradient>
+          <filter id="d7noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="#080808"/>
+        <rect width="1200" height="630" filter="url(#d7noise)" opacity="0.055"/>
+        <rect x="0" y="0" width="10" height="630" fill="url(#d7stripe)"/>
+        <text x="72" y="318" font-family="'Playfair Display',Georgia,serif" font-size="104" font-weight="900" fill="#f5f0e8" letter-spacing="-1">Headwater</text>
+        <text x="76" y="386" font-family="'EB Garamond',Georgia,serif" font-size="42" font-style="italic" fill="#c4a35a">Upstream of the algorithm.</text>
+      </svg>
+    </div>
+
+  </div>
+
+  <h2>Light — with noise</h2>
+  <div class="row">
+
+    <!-- L2: Cream gradient, left stripe, Garamond — FAVOURITE -->
+    <div class="card">
+      <div class="label">L2 · Cream · left stripe · Garamond ★</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="l2bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fdf8ef"/>
+            <stop offset="100%" stop-color="#f5ede0"/>
+          </linearGradient>
+          <filter id="l2noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="url(#l2bg)"/>
+        <rect width="1200" height="630" filter="url(#l2noise)" opacity="0.04"/>
+        <rect x="60" y="120" width="4" height="390" fill="#c4a35a" opacity="0.5"/>
+        <text x="84" y="310" font-family="'EB Garamond',Georgia,serif" font-size="108" font-weight="500" fill="#1a1612">Headwater</text>
+        <text x="86" y="374" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="400" fill="#c4a35a" letter-spacing="4">UPSTREAM OF THE ALGORITHM.</text>
+      </svg>
+    </div>
+
+    <!-- L2b: L2 but heavier noise -->
+    <div class="card">
+      <div class="label">L2b · Same · heavier noise (0.08)</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="l2bbg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fdf8ef"/>
+            <stop offset="100%" stop-color="#f5ede0"/>
+          </linearGradient>
+          <filter id="l2bnoise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="url(#l2bbg)"/>
+        <rect width="1200" height="630" filter="url(#l2bnoise)" opacity="0.08"/>
+        <rect x="60" y="120" width="4" height="390" fill="#c4a35a" opacity="0.5"/>
+        <text x="84" y="310" font-family="'EB Garamond',Georgia,serif" font-size="108" font-weight="500" fill="#1a1612">Headwater</text>
+        <text x="86" y="374" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="400" fill="#c4a35a" letter-spacing="4">UPSTREAM OF THE ALGORITHM.</text>
+      </svg>
+    </div>
+
+  </div>
+  <div class="row">
+
+    <!-- L3: White, Playfair, bottom bar, noise -->
+    <div class="card">
+      <div class="label">L3 · White · Playfair · bottom bar · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="l3bar" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#c4a35a"/>
+            <stop offset="100%" stop-color="#c4a35a" stop-opacity="0.1"/>
+          </linearGradient>
+          <filter id="l3noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="#ffffff"/>
+        <rect width="1200" height="630" filter="url(#l3noise)" opacity="0.04"/>
+        <rect y="614" width="1200" height="16" fill="url(#l3bar)"/>
+        <text x="60" y="305" font-family="'Playfair Display',Georgia,serif" font-size="104" font-weight="900" fill="#1a1612" letter-spacing="-1">Headwater</text>
+        <text x="65" y="374" font-family="'Playfair Display',Georgia,serif" font-size="42" font-style="italic" fill="#c4a35a">Upstream of the algorithm.</text>
+      </svg>
+    </div>
+
+    <!-- L4: Centered Garamond italic tagline, noise -->
+    <div class="card">
+      <div class="label">L4 · Centered · Garamond italic · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="l4noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="#faf8f4"/>
+        <rect width="1200" height="630" filter="url(#l4noise)" opacity="0.04"/>
+        <text x="600" y="240" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="600" fill="#c4a35a" letter-spacing="6">HEADWATER</text>
+        <text x="600" y="360" text-anchor="middle" font-family="'EB Garamond',Georgia,serif" font-size="84" font-style="italic" fill="#1a1612">Upstream of the</text>
+        <text x="600" y="452" text-anchor="middle" font-family="'EB Garamond',Georgia,serif" font-size="84" font-style="italic" fill="#1a1612">algorithm.</text>
+      </svg>
+    </div>
+
+  </div>
+  <div class="row">
+
+    <!-- L5: Warm gradient, Inter + Garamond sub, noise -->
+    <div class="card">
+      <div class="label">L5 · Warm gradient · Inter + Garamond · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="l5bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#fffef9"/>
+            <stop offset="100%" stop-color="#f7f2e8"/>
+          </linearGradient>
+          <linearGradient id="l5bar" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#c4a35a"/>
+            <stop offset="100%" stop-color="#c4a35a" stop-opacity="0.1"/>
+          </linearGradient>
+          <filter id="l5noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="url(#l5bg)"/>
+        <rect width="1200" height="630" filter="url(l5noise)" opacity="0.04"/>
+        <rect width="1200" height="8" fill="url(#l5bar)"/>
+        <text x="60" y="298" font-family="Inter,Arial,sans-serif" font-size="100" font-weight="800" fill="#1a1612" letter-spacing="-2">Headwater</text>
+        <line x1="60" x2="740" y1="316" y2="316" stroke="#c4a35a" stroke-width="2" opacity="0.4"/>
+        <text x="62" y="372" font-family="'EB Garamond',Georgia,serif" font-size="46" font-style="italic" fill="#8b6e3a">Upstream of the algorithm.</text>
+      </svg>
+    </div>
+
+    <!-- L6: Off-white, Playfair italic stacked, small label, noise -->
+    <div class="card">
+      <div class="label">L6 · Off-white · Playfair italic stacked · noise</div>
+      <svg class="preview" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="l6noise" x="0%" y="0%" width="100%" height="100%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/>
+            <feColorMatrix type="saturate" values="0"/>
+          </filter>
+        </defs>
+        <rect width="1200" height="630" fill="#f9f7f2"/>
+        <rect width="1200" height="630" filter="url(#l6noise)" opacity="0.04"/>
+        <text x="60" y="200" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="500" fill="#c4a35a" letter-spacing="5">HEADWATER</text>
+        <text x="54" y="358" font-family="'Playfair Display',Georgia,serif" font-size="96" font-style="italic" fill="#1a1612">Upstream of</text>
+        <text x="54" y="462" font-family="'Playfair Display',Georgia,serif" font-size="96" font-style="italic" fill="#1a1612">the algorithm.</text>
+      </svg>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

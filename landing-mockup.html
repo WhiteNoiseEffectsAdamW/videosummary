@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing — color mockups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, -apple-system, sans-serif; }
+    a { text-decoration: none; }
+    button { font-family: inherit; cursor: pointer; border: none; }
+
+    /* ── Shared structural styles (no colors) ── */
+    .landing-nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 36px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .landing-brand { font-family: 'EB Garamond', Georgia, serif; font-size: 22px; font-weight: 400; letter-spacing: 0; }
+    .landing-nav-right { display: flex; align-items: center; gap: 12px; }
+    .landing-nav-link { font-size: 13px; font-weight: 500; padding: 7px 14px; border-radius: 7px; border: 1px solid transparent; }
+    .btn-primary { display: inline-block; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+    .landing-hero { max-width: 720px; margin: 0 auto; padding: 80px 24px 40px; text-align: center; }
+    .landing-headline { font-family: 'EB Garamond', Georgia, serif; font-size: clamp(48px, 7vw, 84px); font-weight: 400; line-height: 1.1; margin: 0 0 20px; letter-spacing: -0.01em; }
+    .landing-sub { font-size: 16px; line-height: 1.7; margin: 0 auto; max-width: 480px; }
+    .landing-hero-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 28px; }
+    .landing-hero-meta { font-size: 13px; }
+    .landing-summarizer-section { max-width: 720px; margin: 0 auto; padding: 32px 24px 64px; border-top-width: 1px; border-top-style: solid; text-align: center; }
+    .landing-demo-trust { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 20px; padding: 0 4px; }
+    .landing-try-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; padding: 0 4px; }
+    .landing-demo-card { display: flex; flex-direction: column; }
+    .landing-demo-layout { display: flex; gap: 20px; align-items: flex-start; }
+    .landing-demo-left { flex: 0 0 220px; min-width: 0; }
+    .landing-demo-right { flex: 1; min-width: 0; display: flex; align-items: center; }
+    .landing-thumb-link { display: block; line-height: 0; border-radius: 8px; overflow: hidden; }
+    .landing-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #ccc; }
+    .landing-video-ref { display: flex; flex-direction: column; gap: 3px; margin-top: 10px; margin-bottom: 4px; }
+    .landing-video-meta { display: flex; align-items: baseline; gap: 8px; }
+    .landing-video-channel { font-size: 11px; font-weight: 600; flex-shrink: 0; }
+    .landing-video-title { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .landing-quote { font-size: 14px; font-style: italic; line-height: 1.65; margin-top: 16px; padding-left: 14px; border-left-width: 2px; border-left-style: solid; }
+    .landing-demo-right .landing-quote { margin-top: 0; }
+    .card { border-width: 1px; border-style: solid; border-radius: 10px; padding: 16px 18px; }
+    .card + .card { margin-top: 12px; }
+    .card-label { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+    .tldr-text { font-size: 17px; line-height: 1.8; }
+    .card-title-claim { border-left-width: 2px; border-left-style: solid; }
+    .title-claim-row { display: flex; gap: 12px; margin-bottom: 10px; }
+    .title-claim-row:last-child { margin-bottom: 0; }
+    .title-claim-label { flex-shrink: 0; width: 68px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding-top: 2px; }
+    .title-claim-text { font-size: 14px; line-height: 1.6; }
+    .landing-input-row { display: flex; gap: 8px; width: 100%; max-width: 560px; margin: 0 auto; }
+    .landing-url-input { flex: 1; border-width: 1px; border-style: solid; border-radius: 7px; padding: 11px 16px; font-size: 15px; font-family: inherit; min-width: 0; outline: none; }
+    .landing-submit-btn { padding: 11px 22px; font-size: 15px; flex-shrink: 0; border-radius: 8px; font-weight: 600; }
+    .digest-section { padding: 80px 24px; border-top-width: 1px; border-top-style: solid; border-bottom-width: 1px; border-bottom-style: solid; }
+    .digest-section-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: flex-start; gap: 64px; }
+    .digest-copy { flex: 1; }
+    .digest-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+    .digest-heading { font-size: 32px; font-weight: 700; margin: 0 0 14px; letter-spacing: -0.02em; }
+    .digest-sub { font-size: 15px; line-height: 1.7; margin: 0 0 24px; }
+    .digest-email-wrap { flex: 1; min-width: 0; }
+    .digest-email-window { border-radius: 10px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+    .digest-email-titlebar { background: #2a2a2a; padding: 10px 14px; display: flex; align-items: center; gap: 6px; }
+    .digest-email-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+    .digest-email-dot:nth-child(1) { background: #ff5f57; }
+    .digest-email-dot:nth-child(2) { background: #febc2e; }
+    .digest-email-dot:nth-child(3) { background: #28c840; }
+    .digest-email-titlebar-label { font-size: 12px; font-weight: 600; color: #888; margin: 0 auto; padding-right: 23px; }
+    .digest-email-chrome { padding: 20px; }
+    .digest-email-from { margin-bottom: 14px; }
+    .digest-email-sender { font-size: 13px; font-weight: 600; }
+    .digest-email-addr { font-weight: 400; }
+    .digest-email-subject { font-size: 13px; margin-top: 2px; }
+    .digest-email-card { border-width: 1px; border-style: solid; border-radius: 8px; overflow: hidden; }
+    .digest-email-row { display: flex; gap: 14px; padding: 16px; }
+    .digest-email-thumb { width: 80px; height: 54px; object-fit: cover; border-radius: 5px; flex-shrink: 0; background: #ddd; }
+    .digest-email-content { flex: 1; min-width: 0; }
+    .digest-email-channel { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 3px; }
+    .digest-email-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; line-height: 1.35; }
+    .digest-email-tldr { font-size: 12px; line-height: 1.55; }
+    .landing-digest-cta { max-width: 860px; margin: 0 auto; padding: 40px 24px 60px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+    .landing-or-signup-how { font-size: 18px; font-weight: 500; }
+    .landing-or-signup-sub { font-size: 13px; margin-top: -4px; }
+    .landing-footer { border-top-width: 1px; border-top-style: solid; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+    .landing-footer-links { display: flex; gap: 20px; align-items: center; }
+    .landing-footer-link { text-decoration: none; }
+
+    /* ── Variant separator ── */
+    .variant-divider { text-align: center; padding: 16px; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; background: #444; color: #aaa; }
+
+    /* ── Noise overlay ── */
+    .with-noise { position: relative; }
+    .with-noise::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      opacity: var(--noise-op, 0.04);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .with-noise > * { position: relative; z-index: 2; }
+
+    /* ════════════════════════════════════════
+       VARIANT 0 — Exact current (baseline)
+    ════════════════════════════════════════ */
+    .v0 { background: #fafaf7; color: #1a1a1a; }
+    .v0 .landing-nav { border-bottom: 1px solid #e8e4dc; background: rgba(250,250,247,0.92); }
+    .v0 .landing-brand { color: #1a1a1a; }
+    .v0 .landing-brand-accent { color: #b8924a; }
+    .v0 .landing-nav-link { color: #999; }
+    .v0 .btn-primary { background: #1a1a1a; color: #fafaf7; }
+    .v0 .landing-headline { color: #1a1a1a; }
+    .v0 .landing-headline-accent { color: #b8924a; }
+    .v0 .landing-sub { color: #777; }
+    .v0 .landing-hero-meta { color: #aaa; }
+    .v0 .landing-summarizer-section { border-top-color: #e8e4dc; }
+    .v0 .landing-demo-trust { color: #b8924a; }
+    .v0 .landing-try-label { color: #bbb; }
+    .v0 .landing-video-channel { color: #b8924a; }
+    .v0 .landing-video-title { color: #777; }
+    .v0 .landing-quote { color: #555; border-left-color: #b8924a; }
+    .v0 .card { background: #fff; border-color: #e8e4dc; }
+    .v0 .card-label { color: #bbb; }
+    .v0 .tldr-text { color: #444; }
+    .v0 .card-title-claim { border-left-color: rgba(184,146,74,0.4); }
+    .v0 .title-claim-label { color: #bbb; }
+    .v0 .title-claim-text { color: #666; }
+    .v0 .landing-url-input { background: #fff; border-color: #e8e4dc; color: #1a1a1a; }
+    .v0 .landing-submit-btn { background: #1a1a1a; color: #fafaf7; }
+    .v0 .digest-section { background: #f2efe8; border-top-color: #e8e4dc; border-bottom-color: #e8e4dc; }
+    .v0 .digest-eyebrow { color: #b8924a; }
+    .v0 .digest-heading { color: #1a1a1a; }
+    .v0 .digest-sub { color: #777; }
+    .v0 .digest-email-chrome { background: #fff; }
+    .v0 .digest-email-sender { color: #1a1a1a; }
+    .v0 .digest-email-addr { color: #888; }
+    .v0 .digest-email-subject { color: #555; }
+    .v0 .digest-email-card { border-color: #e8e4dc; }
+    .v0 .digest-email-channel { color: #b8924a; }
+    .v0 .digest-email-title { color: #1a1a1a; }
+    .v0 .digest-email-tldr { color: #666; }
+    .v0 .landing-or-signup-how { color: #333; }
+    .v0 .landing-or-signup-sub { color: #aaa; }
+    .v0 .landing-footer { border-top-color: #e8e4dc; color: #aaa; }
+    .v0 .landing-footer-link { color: #aaa; }
+
+    /* ════════════════════════════════════════
+       VARIANT 1 — Warm cream + noise
+    ════════════════════════════════════════ */
+    .v1 { background: linear-gradient(160deg, #fdf8ef 0%, #f5ede0 100%); color: #1a1612; --noise-op: 0.04; }
+    .v1 .landing-nav { border-bottom: 1px solid rgba(180,140,60,0.18); background: rgba(253,248,239,0.92); }
+    .v1 .landing-brand { color: #1a1612; }
+    .v1 .landing-brand-accent { color: #c4a35a; }
+    .v1 .landing-nav-link { color: #9a7d50; }
+    .v1 .btn-primary { background: #1a1612; color: #fdf8ef; }
+    .v1 .landing-headline { color: #1a1612; }
+    .v1 .landing-headline-accent { color: #c4a35a; }
+    .v1 .landing-sub { color: #6b5a3a; }
+    .v1 .landing-hero-meta { color: #a08a5e; }
+    .v1 .landing-summarizer-section { border-top-color: rgba(180,140,60,0.18); }
+    .v1 .landing-demo-trust { color: #c4a35a; }
+    .v1 .landing-try-label { color: #b09060; }
+    .v1 .landing-video-channel { color: #c4a35a; }
+    .v1 .landing-video-title { color: #7a6040; }
+    .v1 .landing-quote { color: #6b5a3a; border-left-color: #c4a35a; }
+    .v1 .card { background: rgba(255,255,255,0.6); border-color: rgba(180,140,60,0.2); }
+    .v1 .card-label { color: #b09060; }
+    .v1 .tldr-text { color: #4a3f2e; }
+    .v1 .card-title-claim { border-left-color: rgba(196,163,90,0.5); }
+    .v1 .title-claim-label { color: #b09060; }
+    .v1 .title-claim-text { color: #6b5a3a; }
+    .v1 .landing-url-input { background: rgba(255,255,255,0.7); border-color: rgba(180,140,60,0.25); color: #1a1612; }
+    .v1 .landing-submit-btn { background: #1a1612; color: #fdf8ef; }
+    .v1 .digest-section { background: rgba(240,228,205,0.5); border-top-color: rgba(180,140,60,0.18); border-bottom-color: rgba(180,140,60,0.18); }
+    .v1 .digest-eyebrow { color: #c4a35a; }
+    .v1 .digest-heading { color: #1a1612; }
+    .v1 .digest-sub { color: #6b5a3a; }
+    .v1 .digest-email-chrome { background: #fffdf7; }
+    .v1 .digest-email-sender { color: #1a1612; }
+    .v1 .digest-email-addr { color: #8b7040; }
+    .v1 .digest-email-subject { color: #5a4830; }
+    .v1 .digest-email-card { border-color: rgba(180,140,60,0.2); }
+    .v1 .digest-email-channel { color: #c4a35a; }
+    .v1 .digest-email-title { color: #1a1612; }
+    .v1 .digest-email-tldr { color: #6b5a3a; }
+    .v1 .landing-or-signup-how { color: #2a2018; }
+    .v1 .landing-or-signup-sub { color: #a08a5e; }
+    .v1 .landing-footer { border-top-color: rgba(180,140,60,0.18); color: #a08a5e; }
+    .v1 .landing-footer-link { color: #a08a5e; }
+
+    /* ════════════════════════════════════════
+       VARIANT 2 — Warm cream + heavier noise
+    ════════════════════════════════════════ */
+    .v2 { background: linear-gradient(160deg, #fdf8ef 0%, #f5ede0 100%); color: #1a1612; --noise-op: 0.075; }
+    /* identical colors to v1 — only noise differs */
+    .v2 .landing-nav { border-bottom: 1px solid rgba(180,140,60,0.18); background: rgba(253,248,239,0.92); }
+    .v2 .landing-brand { color: #1a1612; }
+    .v2 .landing-brand-accent { color: #c4a35a; }
+    .v2 .landing-nav-link { color: #9a7d50; }
+    .v2 .btn-primary { background: #1a1612; color: #fdf8ef; }
+    .v2 .landing-headline { color: #1a1612; }
+    .v2 .landing-headline-accent { color: #c4a35a; }
+    .v2 .landing-sub { color: #6b5a3a; }
+    .v2 .landing-hero-meta { color: #a08a5e; }
+    .v2 .landing-summarizer-section { border-top-color: rgba(180,140,60,0.18); }
+    .v2 .landing-demo-trust { color: #c4a35a; }
+    .v2 .landing-try-label { color: #b09060; }
+    .v2 .landing-video-channel { color: #c4a35a; }
+    .v2 .landing-video-title { color: #7a6040; }
+    .v2 .landing-quote { color: #6b5a3a; border-left-color: #c4a35a; }
+    .v2 .card { background: rgba(255,255,255,0.6); border-color: rgba(180,140,60,0.2); }
+    .v2 .card-label { color: #b09060; }
+    .v2 .tldr-text { color: #4a3f2e; }
+    .v2 .card-title-claim { border-left-color: rgba(196,163,90,0.5); }
+    .v2 .title-claim-label { color: #b09060; }
+    .v2 .title-claim-text { color: #6b5a3a; }
+    .v2 .landing-url-input { background: rgba(255,255,255,0.7); border-color: rgba(180,140,60,0.25); color: #1a1612; }
+    .v2 .landing-submit-btn { background: #1a1612; color: #fdf8ef; }
+    .v2 .digest-section { background: rgba(240,228,205,0.5); border-top-color: rgba(180,140,60,0.18); border-bottom-color: rgba(180,140,60,0.18); }
+    .v2 .digest-eyebrow { color: #c4a35a; }
+    .v2 .digest-heading { color: #1a1612; }
+    .v2 .digest-sub { color: #6b5a3a; }
+    .v2 .digest-email-chrome { background: #fffdf7; }
+    .v2 .digest-email-sender { color: #1a1612; }
+    .v2 .digest-email-addr { color: #8b7040; }
+    .v2 .digest-email-subject { color: #5a4830; }
+    .v2 .digest-email-card { border-color: rgba(180,140,60,0.2); }
+    .v2 .digest-email-channel { color: #c4a35a; }
+    .v2 .digest-email-title { color: #1a1612; }
+    .v2 .digest-email-tldr { color: #6b5a3a; }
+    .v2 .landing-or-signup-how { color: #2a2018; }
+    .v2 .landing-or-signup-sub { color: #a08a5e; }
+    .v2 .landing-footer { border-top-color: rgba(180,140,60,0.18); color: #a08a5e; }
+    .v2 .landing-footer-link { color: #a08a5e; }
+
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     VARIANT 0 — Current (baseline reference)
+═══════════════════════════════════════════ -->
+<div class="variant-divider">Variant 0 — Current (baseline)</div>
+<div class="v0">
+
+  <nav class="landing-nav">
+    <span class="landing-brand">Head<span class="landing-brand-accent">water</span></span>
+    <div class="landing-nav-right">
+      <a href="#" class="landing-nav-link">Sign in</a>
+      <a href="#" class="btn-primary">Try it free →</a>
+    </div>
+  </nav>
+
+  <div class="landing-hero">
+    <h1 class="landing-headline">Upstream of<br><span class="landing-headline-accent">the algorithm.</span></h1>
+    <p class="landing-sub">YouTube is designed to keep you watching. This isn't.</p>
+    <div class="landing-hero-actions">
+      <a href="#" class="btn-primary">Try it free →</a>
+      <span class="landing-hero-meta">3 channels free · No Google account needed</span>
+    </div>
+  </div>
+
+  <div class="landing-summarizer-section">
+    <div class="landing-demo-trust">The video, not the title.</div>
+    <div class="landing-demo-card">
+      <div class="landing-demo-layout">
+        <div class="landing-demo-left">
+          <div class="landing-thumb-link">
+            <img class="landing-thumb" src="https://img.youtube.com/vi/3E7hkPZ-HTk/hqdefault.jpg" alt="">
+          </div>
+          <div class="landing-video-ref">
+            <div class="landing-video-meta">
+              <span class="landing-video-channel">Cal Newport</span>
+              <span class="landing-video-title">Quit Social Media. Your Career May Depend on It.</span>
+            </div>
+          </div>
+        </div>
+        <div class="landing-demo-right">
+          <div class="landing-quote">"The ability to focus without distraction is becoming increasingly rare and increasingly valuable."</div>
+        </div>
+      </div>
+      <div class="card card-title-claim" style="margin-top:20px">
+        <div class="card-label">Title vs Reality</div>
+        <div class="title-claim-row"><span class="title-claim-label">Promised</span><span class="title-claim-text">Social media will end your career.</span></div>
+        <div class="title-claim-row"><span class="title-claim-label">Delivered</span><span class="title-claim-text">Title delivers. Newport's argument is cold career math.</span></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-label">TL;DR</div>
+        <p class="tldr-text">The people around you are too distracted to compete with — if you're willing to opt out of what distracts them.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px">
+      <div class="landing-try-label">Try it with your own video</div>
+      <div class="landing-input-row">
+        <input class="landing-url-input" type="text" placeholder="https://www.youtube.com/watch?v=…">
+        <button class="landing-submit-btn">Summarize</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="digest-section">
+    <div class="digest-section-inner">
+      <div class="digest-copy">
+        <div class="digest-eyebrow">Every morning</div>
+        <h2 class="digest-heading">Every channel you follow, distilled.</h2>
+        <p class="digest-sub">One email. No autoplay. No rabbit holes.</p>
+        <a href="#" class="btn-primary" style="font-size:14px;padding:11px 22px">Follow your first channel →</a>
+      </div>
+      <div class="digest-email-wrap">
+        <div class="digest-email-window">
+          <div class="digest-email-titlebar">
+            <span class="digest-email-dot"></span><span class="digest-email-dot"></span><span class="digest-email-dot"></span>
+            <span class="digest-email-titlebar-label">Inbox</span>
+          </div>
+          <div class="digest-email-chrome">
+            <div class="digest-email-from">
+              <div class="digest-email-sender">Headwater <span class="digest-email-addr">&lt;digest@headwaterapp.com&gt;</span></div>
+              <div class="digest-email-subject">3 new videos from your channels</div>
+            </div>
+            <div class="digest-email-card">
+              <div class="digest-email-row">
+                <img class="digest-email-thumb" src="https://img.youtube.com/vi/3E7hkPZ-HTk/mqdefault.jpg" alt="">
+                <div class="digest-email-content">
+                  <div class="digest-email-channel">Cal Newport</div>
+                  <div class="digest-email-title">Quit Social Media. Your Career May Depend on It.</div>
+                  <div class="digest-email-tldr">Title delivers. Newport's argument is cold career math.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-digest-cta">
+    <div class="landing-or-signup-how">Set it up once. It runs every morning.</div>
+    <div class="landing-or-signup-sub">Add any YouTube channel by @handle or URL — no Google account needed.</div>
+    <a href="#" class="btn-primary">Follow your first channel →</a>
+  </div>
+
+  <footer class="landing-footer">
+    <span>© 2025 Headwater</span>
+    <div class="landing-footer-links">
+      <a href="#" class="landing-footer-link">Pricing</a>
+      <a href="#" class="landing-footer-link">Sign in</a>
+      <a href="#" class="landing-footer-link">Privacy</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     VARIANT 1 — Warm cream · noise 0.04
+═══════════════════════════════════════════ -->
+<div class="variant-divider">Variant 1 — Warm cream · noise 0.04</div>
+<div class="v1 with-noise">
+
+  <nav class="landing-nav">
+    <span class="landing-brand">Head<span class="landing-brand-accent">water</span></span>
+    <div class="landing-nav-right">
+      <a href="#" class="landing-nav-link">Sign in</a>
+      <a href="#" class="btn-primary">Try it free →</a>
+    </div>
+  </nav>
+
+  <div class="landing-hero">
+    <h1 class="landing-headline">Upstream of<br><span class="landing-headline-accent">the algorithm.</span></h1>
+    <p class="landing-sub">YouTube is designed to keep you watching. This isn't.</p>
+    <div class="landing-hero-actions">
+      <a href="#" class="btn-primary">Try it free →</a>
+      <span class="landing-hero-meta">3 channels free · No Google account needed</span>
+    </div>
+  </div>
+
+  <div class="landing-summarizer-section">
+    <div class="landing-demo-trust">The video, not the title.</div>
+    <div class="landing-demo-card">
+      <div class="landing-demo-layout">
+        <div class="landing-demo-left">
+          <div class="landing-thumb-link">
+            <img class="landing-thumb" src="https://img.youtube.com/vi/3E7hkPZ-HTk/hqdefault.jpg" alt="">
+          </div>
+          <div class="landing-video-ref">
+            <div class="landing-video-meta">
+              <span class="landing-video-channel">Cal Newport</span>
+              <span class="landing-video-title">Quit Social Media. Your Career May Depend on It.</span>
+            </div>
+          </div>
+        </div>
+        <div class="landing-demo-right">
+          <div class="landing-quote">"The ability to focus without distraction is becoming increasingly rare and increasingly valuable."</div>
+        </div>
+      </div>
+      <div class="card card-title-claim" style="margin-top:20px">
+        <div class="card-label">Title vs Reality</div>
+        <div class="title-claim-row"><span class="title-claim-label">Promised</span><span class="title-claim-text">Social media will end your career.</span></div>
+        <div class="title-claim-row"><span class="title-claim-label">Delivered</span><span class="title-claim-text">Title delivers. Newport's argument is cold career math.</span></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-label">TL;DR</div>
+        <p class="tldr-text">The people around you are too distracted to compete with — if you're willing to opt out of what distracts them.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px">
+      <div class="landing-try-label">Try it with your own video</div>
+      <div class="landing-input-row">
+        <input class="landing-url-input" type="text" placeholder="https://www.youtube.com/watch?v=…">
+        <button class="landing-submit-btn">Summarize</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="digest-section">
+    <div class="digest-section-inner">
+      <div class="digest-copy">
+        <div class="digest-eyebrow">Every morning</div>
+        <h2 class="digest-heading">Every channel you follow, distilled.</h2>
+        <p class="digest-sub">One email. No autoplay. No rabbit holes.</p>
+        <a href="#" class="btn-primary" style="font-size:14px;padding:11px 22px">Follow your first channel →</a>
+      </div>
+      <div class="digest-email-wrap">
+        <div class="digest-email-window">
+          <div class="digest-email-titlebar">
+            <span class="digest-email-dot"></span><span class="digest-email-dot"></span><span class="digest-email-dot"></span>
+            <span class="digest-email-titlebar-label">Inbox</span>
+          </div>
+          <div class="digest-email-chrome">
+            <div class="digest-email-from">
+              <div class="digest-email-sender">Headwater <span class="digest-email-addr">&lt;digest@headwaterapp.com&gt;</span></div>
+              <div class="digest-email-subject">3 new videos from your channels</div>
+            </div>
+            <div class="digest-email-card">
+              <div class="digest-email-row">
+                <img class="digest-email-thumb" src="https://img.youtube.com/vi/3E7hkPZ-HTk/mqdefault.jpg" alt="">
+                <div class="digest-email-content">
+                  <div class="digest-email-channel">Cal Newport</div>
+                  <div class="digest-email-title">Quit Social Media. Your Career May Depend on It.</div>
+                  <div class="digest-email-tldr">Title delivers. Newport's argument is cold career math.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-digest-cta">
+    <div class="landing-or-signup-how">Set it up once. It runs every morning.</div>
+    <div class="landing-or-signup-sub">Add any YouTube channel by @handle or URL — no Google account needed.</div>
+    <a href="#" class="btn-primary">Follow your first channel →</a>
+  </div>
+
+  <footer class="landing-footer">
+    <span>© 2025 Headwater</span>
+    <div class="landing-footer-links">
+      <a href="#" class="landing-footer-link">Pricing</a>
+      <a href="#" class="landing-footer-link">Sign in</a>
+      <a href="#" class="landing-footer-link">Privacy</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═══════════════════════════════════════════
+     VARIANT 2 — Warm cream · heavier noise 0.075
+═══════════════════════════════════════════ -->
+<div class="variant-divider">Variant 2 — Warm cream · noise 0.075</div>
+<div class="v2 with-noise">
+
+  <nav class="landing-nav">
+    <span class="landing-brand">Head<span class="landing-brand-accent">water</span></span>
+    <div class="landing-nav-right">
+      <a href="#" class="landing-nav-link">Sign in</a>
+      <a href="#" class="btn-primary">Try it free →</a>
+    </div>
+  </nav>
+
+  <div class="landing-hero">
+    <h1 class="landing-headline">Upstream of<br><span class="landing-headline-accent">the algorithm.</span></h1>
+    <p class="landing-sub">YouTube is designed to keep you watching. This isn't.</p>
+    <div class="landing-hero-actions">
+      <a href="#" class="btn-primary">Try it free →</a>
+      <span class="landing-hero-meta">3 channels free · No Google account needed</span>
+    </div>
+  </div>
+
+  <div class="landing-summarizer-section">
+    <div class="landing-demo-trust">The video, not the title.</div>
+    <div class="landing-demo-card">
+      <div class="landing-demo-layout">
+        <div class="landing-demo-left">
+          <div class="landing-thumb-link">
+            <img class="landing-thumb" src="https://img.youtube.com/vi/3E7hkPZ-HTk/hqdefault.jpg" alt="">
+          </div>
+          <div class="landing-video-ref">
+            <div class="landing-video-meta">
+              <span class="landing-video-channel">Cal Newport</span>
+              <span class="landing-video-title">Quit Social Media. Your Career May Depend on It.</span>
+            </div>
+          </div>
+        </div>
+        <div class="landing-demo-right">
+          <div class="landing-quote">"The ability to focus without distraction is becoming increasingly rare and increasingly valuable."</div>
+        </div>
+      </div>
+      <div class="card card-title-claim" style="margin-top:20px">
+        <div class="card-label">Title vs Reality</div>
+        <div class="title-claim-row"><span class="title-claim-label">Promised</span><span class="title-claim-text">Social media will end your career.</span></div>
+        <div class="title-claim-row"><span class="title-claim-label">Delivered</span><span class="title-claim-text">Title delivers. Newport's argument is cold career math.</span></div>
+      </div>
+      <div class="card" style="margin-top:12px">
+        <div class="card-label">TL;DR</div>
+        <p class="tldr-text">The people around you are too distracted to compete with — if you're willing to opt out of what distracts them.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:32px">
+      <div class="landing-try-label">Try it with your own video</div>
+      <div class="landing-input-row">
+        <input class="landing-url-input" type="text" placeholder="https://www.youtube.com/watch?v=…">
+        <button class="landing-submit-btn">Summarize</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="digest-section">
+    <div class="digest-section-inner">
+      <div class="digest-copy">
+        <div class="digest-eyebrow">Every morning</div>
+        <h2 class="digest-heading">Every channel you follow, distilled.</h2>
+        <p class="digest-sub">One email. No autoplay. No rabbit holes.</p>
+        <a href="#" class="btn-primary" style="font-size:14px;padding:11px 22px">Follow your first channel →</a>
+      </div>
+      <div class="digest-email-wrap">
+        <div class="digest-email-window">
+          <div class="digest-email-titlebar">
+            <span class="digest-email-dot"></span><span class="digest-email-dot"></span><span class="digest-email-dot"></span>
+            <span class="digest-email-titlebar-label">Inbox</span>
+          </div>
+          <div class="digest-email-chrome">
+            <div class="digest-email-from">
+              <div class="digest-email-sender">Headwater <span class="digest-email-addr">&lt;digest@headwaterapp.com&gt;</span></div>
+              <div class="digest-email-subject">3 new videos from your channels</div>
+            </div>
+            <div class="digest-email-card">
+              <div class="digest-email-row">
+                <img class="digest-email-thumb" src="https://img.youtube.com/vi/3E7hkPZ-HTk/mqdefault.jpg" alt="">
+                <div class="digest-email-content">
+                  <div class="digest-email-channel">Cal Newport</div>
+                  <div class="digest-email-title">Quit Social Media. Your Career May Depend on It.</div>
+                  <div class="digest-email-tldr">Title delivers. Newport's argument is cold career math.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-digest-cta">
+    <div class="landing-or-signup-how">Set it up once. It runs every morning.</div>
+    <div class="landing-or-signup-sub">Add any YouTube channel by @handle or URL — no Google account needed.</div>
+    <a href="#" class="btn-primary">Follow your first channel →</a>
+  </div>
+
+  <footer class="landing-footer">
+    <span>© 2025 Headwater</span>
+    <div class="landing-footer-links">
+      <a href="#" class="landing-footer-link">Pricing</a>
+      <a href="#" class="landing-footer-link">Sign in</a>
+      <a href="#" class="landing-footer-link">Privacy</a>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

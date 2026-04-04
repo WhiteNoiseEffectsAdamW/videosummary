@@ -53,6 +53,11 @@ async function dismissUserSave(userId, videoId) {
   return db(SAVES).where({ user_id: userId, video_id: videoId }).update({ dismissed: true });
 }
 
+// Mark a video as viewed
+async function markViewed(userId, videoId) {
+  return db(SAVES).where({ user_id: userId, video_id: videoId }).update({ viewed_at: new Date() });
+}
+
 // Get all saved (non-dismissed) summaries for a user, optionally limited to since date
 async function findSavedByUserId(userId, limit = 100, since = null) {
   let query = db(SAVES)
@@ -60,7 +65,7 @@ async function findSavedByUserId(userId, limit = 100, since = null) {
     .where({ [`${SAVES}.user_id`]: userId, [`${SAVES}.dismissed`]: false })
     .orderBy(`${SAVES}.created_at`, 'desc')
     .limit(limit)
-    .select(`${TABLE}.*`, `${SAVES}.created_at as saved_at`);
+    .select(`${TABLE}.*`, `${SAVES}.created_at as saved_at`, `${SAVES}.viewed_at`);
   if (since) query = query.where(`${SAVES}.created_at`, '>=', since);
   const rows = await query;
   return rows.map((row) => ({ ...row, summary: JSON.parse(row.summary_json) }));
@@ -121,6 +126,6 @@ async function incrementMonthlySummaryCount(userId) {
 
 module.exports = {
   findByVideoId, findBySlug, create, updateTitle,
-  upsertUserSave, dismissUserSave, findSavedByUserId, findSavedByUserIdSince,
+  upsertUserSave, dismissUserSave, markViewed, findSavedByUserId, findSavedByUserIdSince,
   findByChannelIdsSince, findByChannelIds, incrementMonthlySummaryCount,
 };

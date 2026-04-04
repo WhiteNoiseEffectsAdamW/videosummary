@@ -68,72 +68,126 @@ function renderDigestText(summaries) {
 
 function renderDigestHtml(summaries) {
   const count = summaries.length;
-  const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const channelNames = [...new Set(summaries.map(s => cleanName(s.channel_name)).filter(Boolean))];
+  const channelDisplay = channelNames.slice(0, 2).map(esc).join(', ') + (channelNames.length > 2 ? ' &amp; more' : '');
 
-  const videoSections = summaries.map((s, i) => {
+  const featured = summaries[0];
+  const rest = summaries.slice(1);
+
+  function renderFeatured(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, quotes = [] } = data;
-    const videoUrl = `https://www.youtube.com/watch?v=${s.video_id}`;
+    const { tldr, quotes = [], topics = [], verdict } = data;
     const quote = quotes[0];
-    const isLast = i === summaries.length - 1;
-    const channelName = cleanName(s.channel_name);
-
+    const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
+    const channelName = cleanName(s.channel_name);
+    const durationMins = s.duration_seconds ? Math.round(s.duration_seconds / 60) : null;
+    const topicsCapped = (topics || []).slice(0, 4);
+    const stats = [durationMins ? `${durationMins} min` : null, topicsCapped.length ? `${topicsCapped.length} topics` : null].filter(Boolean).join(' &middot; ');
 
-    return `
-      <div style="margin-bottom:${isLast ? '0' : '40px'};padding-bottom:${isLast ? '0' : '40px'};${isLast ? '' : 'border-bottom:1px solid #ebebeb;'}">
-        ${channelName ? `<div style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#22d3ee;margin-bottom:7px;">${esc(channelName)}</div>` : ''}
-        <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:12px;">
-          <tr>
-            <td style="vertical-align:top;padding-right:14px;width:100px;">
-              <a href="${APP_URL}/s/${s.slug || s.video_id}"><img src="${thumb}" alt="" width="100" style="display:block;width:100px;height:64px;object-fit:cover;border-radius:4px;" /></a>
-            </td>
-            <td style="vertical-align:top;">
-              <div style="font-size:18px;font-weight:700;color:#111;line-height:1.3;">
-                <a href="${APP_URL}/s/${s.slug || s.video_id}" style="color:#111;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a>
-              </div>
-            </td>
-          </tr>
-        </table>
-        ${tldr ? `<div style="font-size:15px;color:#333;line-height:1.75;margin-bottom:16px;">${esc(tldr)}</div>` : ''}
-        ${quote ? `
-        <div style="margin:20px 0;padding:14px 18px;background:#f9f9f9;border-left:3px solid #d4d4d4;">
-          <div style="font-size:14px;font-style:italic;color:#555;line-height:1.6;">&ldquo;${esc(quote.text)}&rdquo;</div>
-        </div>` : ''}
-        <div style="margin-top:14px;">
-          <a href="${APP_URL}/s/${s.slug || s.video_id}" style="font-size:14px;color:#22d3ee;text-decoration:none;font-weight:600;">Full breakdown &rarr;</a>
-          <span style="color:#ddd;margin:0 10px;">&middot;</span>
-          <a href="${videoUrl}" style="font-size:13px;color:#bbb;text-decoration:none;">Watch on YouTube</a>
-        </div>
-      </div>`;
-  }).join('');
+    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-collapse:collapse;background-color:#ffffff;border:1px solid #e8e4dc;">
+  <tr>
+    <td width="96" style="padding:18px 0 16px 20px;vertical-align:top;">
+      <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="96" height="54" style="display:block;border-radius:4px;background-color:#eae6de;" /></a>
+    </td>
+    <td style="padding:18px 20px 16px 14px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      ${channelName ? `<div style="font-size:11px;font-weight:600;color:#b8924a;margin-bottom:3px;">${esc(channelName)}</div>` : ''}
+      <div style="font-size:15px;font-weight:600;color:#1a1a1a;line-height:1.35;margin-bottom:6px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
+      ${stats ? `<div style="font-size:11px;color:#aaa;">${stats}</div>` : ''}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding:0 20px 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      ${tldr ? `<p style="font-size:14px;color:#444;line-height:1.65;margin:0 0 14px;">${esc(tldr)}</p>` : ''}
+      ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:14px;"><tr><td style="border-left:2px solid #b8924a;padding-left:14px;"><p style="font-size:14px;font-style:italic;color:#666;line-height:1.55;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
+      ${verdict ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #f0ece4;"><tr><td style="padding-top:12px;vertical-align:top;width:52px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#bbb;">Verdict</span></td><td style="padding:12px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#555;line-height:1.5;">${esc(verdict)}</span></td></tr></table>` : ''}
+    </td>
+  </tr>
+  ${topicsCapped.length > 0 ? `<tr><td colspan="2" style="padding:0 20px 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #f0ece4;">${topicsCapped.map((t, i) => `<tr><td style="padding:8px 10px 8px 0;vertical-align:top;width:44px;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f5f2ec;' : ''}"><span style="font-size:11px;color:#b8924a;font-weight:500;">${esc(t.timestamp || '')}</span></td><td style="padding:8px 0;vertical-align:top;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f5f2ec;' : ''}"><span style="font-size:13px;font-weight:600;color:#333;">${esc(t.title || '')}</span>${t.description ? `<span style="font-size:13px;color:#666;"> — ${esc(t.description)}</span>` : ''}</td></tr>`).join('')}</table></td></tr>` : ''}
+</table>`;
+  }
+
+  function renderCompact(s) {
+    const data = JSON.parse(s.summary_json);
+    const { tldr, verdict } = data;
+    const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
+    const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
+    const channelName = cleanName(s.channel_name);
+    const tldrShort = tldr ? (tldr.match(/^.+?[.!?](?:\s|$)/) || [tldr])[0].trim() : '';
+
+    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-bottom:1px solid #ede9e1;">
+  <tr>
+    <td style="padding:16px 14px 16px 0;vertical-align:top;width:72px;">
+      <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="72" height="40" style="display:block;border-radius:3px;background-color:#eae6de;" /></a>
+    </td>
+    <td style="padding:16px 0;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      ${channelName ? `<div style="font-size:11px;font-weight:600;color:#b8924a;margin-bottom:2px;">${esc(channelName)}</div>` : ''}
+      <div style="font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35;margin-bottom:4px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
+      ${tldrShort ? `<div style="font-size:13px;color:#777;line-height:1.5;margin-bottom:4px;">${esc(tldrShort)}</div>` : ''}
+      ${verdict ? `<div style="font-size:12px;color:#999;font-style:italic;">${esc(verdict)}</div>` : ''}
+    </td>
+  </tr>
+</table>`;
+  }
 
   return `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Morning Digest</title></head>
-<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <div style="max-width:560px;margin:0 auto;padding:40px 24px 56px;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morning Digest</title>
+</head>
+<body style="margin:0;padding:0;background-color:#e8e4dc;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
+<center>
+<table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#fafaf7" style="border-collapse:collapse;max-width:600px;margin:0 auto;background-color:#fafaf7;">
 
-    <!-- Header -->
-    <div style="margin-bottom:40px;border-bottom:2px solid #f0f0f0;padding-bottom:28px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#22d3ee;margin-bottom:12px;">Headwater</div>
-      <div style="font-size:26px;font-weight:700;color:#111;line-height:1.2;margin-bottom:6px;">Morning Digest</div>
-      <div style="font-size:13px;color:#aaa;line-height:1.5;">${dateStr} &nbsp;&middot;&nbsp; ${count} new video${count !== 1 ? 's' : ''} from your channels</div>
-    </div>
+  <tr>
+    <td style="padding:28px 40px 24px;border-bottom:1px solid #e8e4dc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:20px;font-weight:400;color:#1a1a1a;margin-bottom:16px;">Head<span style="color:#b8924a;">water</span></div>
+      <div style="font-size:13px;color:#999;margin-bottom:4px;">${dateStr}</div>
+      <div style="font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:-0.02em;line-height:1.25;">${channelDisplay} &mdash; <span style="color:#b8924a;">${count} new video${count !== 1 ? 's' : ''}</span></div>
+    </td>
+  </tr>
 
-    <!-- Videos -->
-    ${videoSections}
+  <tr>
+    <td style="padding:20px 40px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#777;line-height:1.6;">Here's what's new from your channels.</td>
+  </tr>
 
-    <!-- Footer -->
-    <div style="border-top:1px solid #f0f0f0;margin-top:48px;padding-top:24px;font-size:12px;color:#bbb;line-height:1.9;">
-      <a href="${APP_URL}" style="color:#999;font-weight:600;text-decoration:none;">Headwater</a><br>
-      Summaries are AI-generated and may be incomplete or inaccurate.<br>
-      <a href="${APP_URL}/following" style="color:#999;font-weight:500;text-decoration:none;">Manage channels</a>
-      &nbsp;&middot;&nbsp;
-      <a href="${APP_URL}/following" style="color:#bbb;text-decoration:none;">Unsubscribe</a>
-    </div>
+  <tr>
+    <td style="padding:20px 40px;">
+      ${renderFeatured(featured)}
+    </td>
+  </tr>
 
-  </div>
+  ${rest.length > 0 ? `
+  <tr>
+    <td style="padding:0 40px;border-top:1px solid #e8e4dc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#aaa;padding-top:20px;margin-bottom:4px;">Also posted</div>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:0 40px;">
+      ${rest.map(renderCompact).join('')}
+    </td>
+  </tr>` : ''}
+
+  <tr>
+    <td style="padding:4px 40px 24px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      <a href="${APP_URL}/videos" style="font-size:13px;font-weight:600;color:#b8924a;text-decoration:none;border-bottom:1px solid rgba(184,146,74,0.3);padding-bottom:1px;">View all summaries in Headwater &rarr;</a>
+    </td>
+  </tr>
+
+  <tr>
+    <td style="padding:28px 40px;border-top:1px solid #e8e4dc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      <p style="font-size:12px;color:#bbb;line-height:1.7;margin:0 0 4px;">You're following ${channelNames.length} channel${channelNames.length !== 1 ? 's' : ''} on <a href="${APP_URL}" style="color:#999;text-decoration:underline;">Headwater</a>.</p>
+      <p style="font-size:12px;color:#bbb;line-height:1.7;margin:0 0 16px;"><a href="${APP_URL}/following" style="color:#999;text-decoration:underline;">Manage channels</a> &middot; <a href="${APP_URL}/account" style="color:#bbb;text-decoration:underline;">Email settings</a> &middot; <a href="${APP_URL}/following" style="color:#bbb;text-decoration:underline;">Unsubscribe</a></p>
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:14px;color:#ccc;">Head<span style="color:#b8924a;">water</span></div>
+    </td>
+  </tr>
+
+</table>
+</center>
 </body>
 </html>`;
 }
@@ -155,9 +209,11 @@ async function sendDigest(toEmail, summaries) {
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: capped.length === 1
-      ? normalizeTitle(capped[0].title) || 'Your morning digest'
-      : `${normalizeTitle(capped[0].title) || 'New videos'} — plus ${capped.length - 1} more`,
+    subject: (() => {
+      const channels = [...new Set(capped.map(s => cleanName(s.channel_name)).filter(Boolean))];
+      if (channels.length) return `${channels.slice(0, 3).join(', ')} — ${capped.length} new video${capped.length !== 1 ? 's' : ''}`;
+      return capped.length === 1 ? normalizeTitle(capped[0].title) || 'Your morning digest' : `${capped.length} new videos from your channels`;
+    })(),
     html: renderDigestHtml(capped),
     text: renderDigestText(capped),
     headers: {
@@ -173,23 +229,22 @@ async function sendNudge(toEmail) {
 
   const html = `<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
 <div style="max-width:480px;margin:0 auto;padding:48px 24px;">
-  <div style="font-size:13px;color:#999;margin-bottom:24px;">Headwater</div>
-  <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 24px;">You're one of the first people trying this, and that means a lot. Here's how to get the most out of it.</p>
-  <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 24px;">You haven't added any channels yet. Add one you already follow on YouTube and tomorrow morning you'll get a summary of anything new.</p>
-  <a href="${followUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:24px;">Follow your first channel →</a>
-  <p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 16px;">Not ready yet? Paste any YouTube URL and see what a summary looks like first.</p>
-  <a href="${tryUrl}" style="font-size:15px;font-weight:600;color:#22d3ee;text-decoration:none;">Try a video →</a>
+  <div style="font-size:13px;color:#999;margin-bottom:32px;">Head<span style="color:#b8924a;">water</span></div>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 24px;">Your first digest is waiting on you — add a channel and it arrives tomorrow morning. Pick one you already follow on YouTube; that's all it takes.</p>
+  <a href="${followUrl}" style="display:inline-block;background:#1a1a1a;color:#fafaf7;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:24px;">Follow your first channel →</a>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 16px;">Not ready yet? Paste any YouTube URL and see what a summary looks like first.</p>
+  <a href="${tryUrl}" style="font-size:15px;font-weight:600;color:#b8924a;text-decoration:none;">Try a video →</a>
   <p style="font-size:15px;color:#555;font-style:italic;margin-top:40px;line-height:1.6;">— Adam at Headwater</p>
   <p style="font-size:12px;color:#bbb;margin-top:16px;line-height:1.6;">If you'd rather not receive emails like this, <a href="${followUrl}" style="color:#bbb;">unsubscribe here</a>.</p>
 </div>
 </body></html>`;
 
-  const text = `You're one of the first people trying this, and that means a lot. Here's how to get the most out of it.\n\nYou haven't added any channels yet. Add one you already follow on YouTube and tomorrow morning you'll get a summary of anything new.\n\nFollow your first channel: ${followUrl}\n\nNot ready yet? Paste any YouTube URL and see what a summary looks like first.\n\nTry a video: ${tryUrl}\n\n— Adam at Headwater\n\nIf you'd rather not receive emails like this: ${followUrl}`;
+  const text = `Your first digest is waiting on you — add a channel and it arrives tomorrow morning. Pick one you already follow on YouTube; that's all it takes.\n\nFollow your first channel: ${followUrl}\n\nNot ready yet? Paste any YouTube URL and see what a summary looks like first.\n\nTry a video: ${tryUrl}\n\n— Adam at Headwater\n\nIf you'd rather not receive emails like this: ${followUrl}`;
 
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: 'Finish setting up Headwater',
+    subject: 'Your first digest is one step away',
     html,
     text,
   });
@@ -203,9 +258,10 @@ async function sendPasswordReset(toEmail, resetUrl) {
     text: `You requested a password reset.\n\nClick the link below to set a new password (expires in 1 hour):\n${resetUrl}\n\nIf you didn't request this, ignore this email.`,
     html: `<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
 <div style="max-width:480px;margin:0 auto;padding:48px 24px;">
+  <div style="font-size:13px;color:#999;margin-bottom:32px;">Head<span style="color:#b8924a;">water</span></div>
   <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:24px;">Reset your password</div>
   <p style="font-size:14px;color:#555;line-height:1.6;margin:0 0 24px;">Click the button below to set a new password. This link expires in 1 hour.</p>
-  <a href="${resetUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Reset password</a>
+  <a href="${resetUrl}" style="display:inline-block;background:#1a1a1a;color:#fafaf7;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Reset password</a>
   <p style="font-size:12px;color:#bbb;margin-top:32px;line-height:1.6;">If you didn't request this, ignore this email. Your password won't change.</p>
 </div></body></html>`,
   });
@@ -219,9 +275,10 @@ async function sendVerificationEmail(toEmail, verifyUrl) {
     text: `Verify your email address to complete your Headwater account.\n\n${verifyUrl}\n\nThis link expires in 24 hours. If you didn't create an account, ignore this email.`,
     html: `<!DOCTYPE html><html><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
 <div style="max-width:480px;margin:0 auto;padding:48px 24px;">
+  <div style="font-size:13px;color:#999;margin-bottom:32px;">Head<span style="color:#b8924a;">water</span></div>
   <div style="font-size:20px;font-weight:700;color:#111;margin-bottom:24px;">Verify your email</div>
   <p style="font-size:14px;color:#555;line-height:1.6;margin:0 0 24px;">Click the button below to verify your email address and complete your Headwater account. This link expires in 24 hours.</p>
-  <a href="${verifyUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Verify email</a>
+  <a href="${verifyUrl}" style="display:inline-block;background:#1a1a1a;color:#fafaf7;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;">Verify email</a>
   <p style="font-size:12px;color:#bbb;margin-top:32px;line-height:1.6;">If you didn't create an account, ignore this email.</p>
 </div></body></html>`,
   });
@@ -232,18 +289,18 @@ async function sendWelcome(toEmail) {
 
   const html = `<!DOCTYPE html><html lang="en"><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
 <div style="max-width:480px;margin:0 auto;padding:48px 24px;">
-  <div style="font-size:13px;color:#999;margin-bottom:32px;">Headwater</div>
+  <div style="font-size:13px;color:#999;margin-bottom:32px;">Head<span style="color:#b8924a;">water</span></div>
   <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Thanks for signing up — genuinely means a lot for something I built for myself.</p>
   <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Every morning you'll get a digest from your channels — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose.</p>
   <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 28px;">Add your channels and your first digest arrives tomorrow morning.</p>
-  <a href="${followUrl}" style="display:inline-block;background:#22d3ee;color:#0c0f14;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:32px;">Add your channels →</a>
-  <p style="font-size:15px;color:#555;margin:0 0 16px;line-height:1.6;">— Adam</p>
+  <a href="${followUrl}" style="display:inline-block;background:#1a1a1a;color:#fafaf7;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:32px;">Add your channels →</a>
+  <p style="font-size:15px;color:#555;margin:0 0 16px;line-height:1.6;">— Adam at Headwater</p>
   <p style="font-size:13px;color:#888;margin:0 0 48px;line-height:1.75;"><em>P.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.</em></p>
   <p style="font-size:12px;color:#bbb;line-height:1.6;">You're receiving this because you created a Headwater account.<br><a href="${followUrl}" style="color:#bbb;">Unsubscribe</a></p>
 </div>
 </body></html>`;
 
-  const text = `Thanks for signing up — genuinely means a lot for something I built for myself.\n\nEvery morning you'll get a digest from your channels — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose.\n\nAdd your channels and your first digest arrives tomorrow morning.\n\nAdd your channels: ${followUrl}\n\n— Adam\n\nP.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.\n\nYou're receiving this because you created a Headwater account.\nUnsubscribe: ${followUrl}`;
+  const text = `Thanks for signing up — genuinely means a lot for something I built for myself.\n\nEvery morning you'll get a digest from your channels — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose.\n\nAdd your channels and your first digest arrives tomorrow morning.\n\nAdd your channels: ${followUrl}\n\n— Adam at Headwater\n\nP.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.\n\nYou're receiving this because you created a Headwater account.\nUnsubscribe: ${followUrl}`;
 
   await getResend().emails.send({
     from: FROM,
