@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Headwater — Color Options</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #080d14;
+      color: #f1f5f9;
+      padding: 48px 24px;
+    }
+
+    h1 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      color: #475569;
+      font-size: 13px;
+      margin-bottom: 48px;
+      line-height: 1.6;
+      max-width: 560px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #334155;
+      margin-bottom: 20px;
+      margin-top: 48px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .card-label {
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-label .hex {
+      font-weight: 400;
+      opacity: 0.6;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 11px;
+    }
+
+    .card-body {
+      padding: 24px;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .tagline {
+      font-size: 12px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+      opacity: 0.5;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 9px 18px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      margin-bottom: 20px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .summary-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .nav-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 16px;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .nav-link {
+      font-size: 12px;
+      opacity: 0.4;
+    }
+
+    .nav-link.active {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .divider {
+      height: 1px;
+      margin: 20px 0;
+      opacity: 0.15;
+    }
+
+    /* ─── CURRENT ─── */
+    .current {
+      background: #0d1520;
+      border: 1px solid #1e293b;
+    }
+    .current .card-label { background: #0a101a; color: #64748b; border-bottom: 1px solid #1e293b; }
+    .current .brand-name { color: #f1f5f9; }
+    .current .brand-name span { background: linear-gradient(135deg, #22d3ee, #67e8f9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .current .tagline { color: #f1f5f9; }
+    .current .btn { background: #22d3ee; color: #0f172a; }
+    .current .pill { background: rgba(34,211,238,0.12); color: #67e8f9; border: 1px solid rgba(34,211,238,0.2); }
+    .current .nav-dot { background: #22d3ee; }
+    .current .nav-link { color: #f1f5f9; }
+    .current .nav-link.active { color: #22d3ee; }
+    .current .divider { background: #f1f5f9; }
+
+    /* ─── STONE AND EMBER ─── */
+    .ember {
+      background: #1a1815;
+      border: 1px solid #2a2620;
+    }
+    .ember .card-label { background: #0e0d0b; color: #9a9082; border-bottom: 1px solid #2a2620; }
+    .ember .brand-name { color: #f0ece4; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 26px; letter-spacing: -0.01em; }
+    .ember .brand-name span { background: linear-gradient(135deg, #c8a96e, #dfc08a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .ember .tagline { color: #f0ece4; font-style: italic; font-family: 'Instrument Serif', Georgia, serif; font-size: 13px; }
+    .ember .btn { background: #c8a96e; color: #0e0d0b; }
+    .ember .pill { background: rgba(200,169,110,0.12); color: #dfc08a; border: 1px solid rgba(200,169,110,0.2); }
+    .ember .nav-dot { background: #c8a96e; }
+    .ember .nav-link { color: #f0ece4; }
+    .ember .nav-link.active { color: #c8a96e; }
+    .ember .divider { background: #f0ece4; }
+
+    /* ─── ACCENT SWAPS on current bg ─── */
+
+    /* Amber */
+    .amber { background: #0d1520; border: 1px solid #1e293b; }
+    .amber .card-label { background: #0a101a; color: #64748b; border-bottom: 1px solid #1e293b; }
+    .amber .brand-name { color: #f1f5f9; }
+    .amber .brand-name span { background: linear-gradient(135deg, #f59e0b, #fcd34d); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .amber .tagline { color: #f1f5f9; }
+    .amber .btn { background: #f59e0b; color: #0f172a; }
+    .amber .pill { background: rgba(245,158,11,0.12); color: #fcd34d; border: 1px solid rgba(245,158,11,0.2); }
+    .amber .nav-dot { background: #f59e0b; }
+    .amber .nav-link { color: #f1f5f9; }
+    .amber .nav-link.active { color: #f59e0b; }
+    .amber .divider { background: #f1f5f9; }
+
+    /* Violet */
+    .violet { background: #0d1520; border: 1px solid #1e293b; }
+    .violet .card-label { background: #0a101a; color: #64748b; border-bottom: 1px solid #1e293b; }
+    .violet .brand-name { color: #f1f5f9; }
+    .violet .brand-name span { background: linear-gradient(135deg, #a78bfa, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .violet .tagline { color: #f1f5f9; }
+    .violet .btn { background: #a78bfa; color: #0f172a; }
+    .violet .pill { background: rgba(167,139,250,0.12); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.2); }
+    .violet .nav-dot { background: #a78bfa; }
+    .violet .nav-link { color: #f1f5f9; }
+    .violet .nav-link.active { color: #a78bfa; }
+    .violet .divider { background: #f1f5f9; }
+
+    /* Sage */
+    .sage { background: #0d1520; border: 1px solid #1e293b; }
+    .sage .card-label { background: #0a101a; color: #64748b; border-bottom: 1px solid #1e293b; }
+    .sage .brand-name { color: #f1f5f9; }
+    .sage .brand-name span { background: linear-gradient(135deg, #6ee7b7, #a7f3d0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .sage .tagline { color: #f1f5f9; }
+    .sage .btn { background: #6ee7b7; color: #0f172a; }
+    .sage .pill { background: rgba(110,231,183,0.12); color: #a7f3d0; border: 1px solid rgba(110,231,183,0.2); }
+    .sage .nav-dot { background: #6ee7b7; }
+    .sage .nav-link { color: #f1f5f9; }
+    .sage .nav-link.active { color: #6ee7b7; }
+    .sage .divider { background: #f1f5f9; }
+
+    /* ─── STONE AND EMBER ACCENT SWAPS ─── */
+
+    /* Ember + violet */
+    .ember-violet {
+      background: #1a1815;
+      border: 1px solid #2a2620;
+    }
+    .ember-violet .card-label { background: #0e0d0b; color: #9a9082; border-bottom: 1px solid #2a2620; }
+    .ember-violet .brand-name { color: #f0ece4; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 26px; }
+    .ember-violet .brand-name span { background: linear-gradient(135deg, #a78bfa, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .ember-violet .tagline { color: #f0ece4; font-style: italic; font-family: 'Instrument Serif', Georgia, serif; font-size: 13px; }
+    .ember-violet .btn { background: #a78bfa; color: #0e0d0b; }
+    .ember-violet .pill { background: rgba(167,139,250,0.12); color: #c4b5fd; border: 1px solid rgba(167,139,250,0.2); }
+    .ember-violet .nav-dot { background: #a78bfa; }
+    .ember-violet .nav-link { color: #f0ece4; }
+    .ember-violet .nav-link.active { color: #a78bfa; }
+    .ember-violet .divider { background: #f0ece4; }
+
+    /* Ember + sage */
+    .ember-sage {
+      background: #1a1815;
+      border: 1px solid #2a2620;
+    }
+    .ember-sage .card-label { background: #0e0d0b; color: #9a9082; border-bottom: 1px solid #2a2620; }
+    .ember-sage .brand-name { color: #f0ece4; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 26px; }
+    .ember-sage .brand-name span { background: linear-gradient(135deg, #6ee7b7, #a7f3d0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .ember-sage .tagline { color: #f0ece4; font-style: italic; font-family: 'Instrument Serif', Georgia, serif; font-size: 13px; }
+    .ember-sage .btn { background: #6ee7b7; color: #0e0d0b; }
+    .ember-sage .pill { background: rgba(110,231,183,0.12); color: #a7f3d0; border: 1px solid rgba(110,231,183,0.2); }
+    .ember-sage .nav-dot { background: #6ee7b7; }
+    .ember-sage .nav-link { color: #f0ece4; }
+    .ember-sage .nav-link.active { color: #6ee7b7; }
+    .ember-sage .divider { background: #f0ece4; }
+
+    /* ─── LIGHT MODE ─── */
+    .light-mode {
+      background: #fafaf8;
+      border: 1px solid #e8e4dc;
+    }
+    .light-mode .card-label { background: #f2efe8; color: #9a9082; border-bottom: 1px solid #e8e4dc; }
+    .light-mode .brand-name { color: #1a1815; font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 26px; }
+    .light-mode .brand-name span { background: linear-gradient(135deg, #c8a96e, #b8894e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .light-mode .tagline { color: #1a1815; font-style: italic; font-family: 'Instrument Serif', Georgia, serif; font-size: 13px; }
+    .light-mode .btn { background: #1a1815; color: #fafaf8; }
+    .light-mode .pill { background: rgba(200,169,110,0.15); color: #8a6930; border: 1px solid rgba(200,169,110,0.3); }
+    .light-mode .nav-dot { background: #c8a96e; }
+    .light-mode .nav-link { color: #1a1815; }
+    .light-mode .nav-link.active { color: #8a6930; font-weight: 700; }
+    .light-mode .divider { background: #1a1815; }
+  </style>
+</head>
+<body>
+
+  <h1>Headwater — Color Directions</h1>
+  <p class="intro">Design team recommendation: "Stone and Ember" — warm near-black backgrounds, muted amber gold accent, Instrument Serif for the brand name. Full comparison below including accent-only swaps on the current background.</p>
+
+  <div class="section-title">Current</div>
+  <div class="grid">
+    <div class="card current">
+      <div class="card-label">Current — Cyan on Navy <span class="hex">#22d3ee / #0d1520</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Design Team Recommendation — Stone & Ember</div>
+  <div class="grid">
+
+    <div class="card ember">
+      <div class="card-label">Stone & Ember — Full rebrand <span class="hex">#c8a96e / #1a1815 · Instrument Serif</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card light-mode">
+      <div class="card-label">Stone & Ember — Light mode variant <span class="hex">#c8a96e / #fafaf8 · Instrument Serif</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">Accent Swaps — Current Background, No Font Change</div>
+  <div class="grid">
+
+    <div class="card amber">
+      <div class="card-label">Amber accent only <span class="hex">#f59e0b / #0d1520</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card violet">
+      <div class="card-label">Violet accent only <span class="hex">#a78bfa / #0d1520</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card sage">
+      <div class="card-label">Sage green accent only <span class="hex">#6ee7b7 / #0d1520</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">Stone & Ember Background — Alternate Accents</div>
+  <div class="grid">
+
+    <div class="card ember-violet">
+      <div class="card-label">Stone bg + Violet accent <span class="hex">#a78bfa / #1a1815 · Instrument Serif</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card ember-sage">
+      <div class="card-label">Stone bg + Sage accent <span class="hex">#6ee7b7 / #1a1815 · Instrument Serif</span></div>
+      <div class="card-body">
+        <div class="brand-name">Head<span>water</span></div>
+        <div class="tagline">The signal, before the feed gets to it.</div>
+        <button class="btn">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill">TL;DR</span>
+          <span class="pill">3 topics</span>
+          <span class="pill">12 min saved</span>
+        </div>
+        <div class="divider"></div>
+        <div class="nav-row">
+          <div class="nav-dot"></div>
+          <span class="nav-link active">My Videos</span>
+          <span class="nav-link">Following</span>
+          <span class="nav-link">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="section-title">Their Palette — EB Garamond vs Instrument Serif</div>
+  <div class="grid">
+
+    <div class="card" style="background:#1a1a1a; border:1px solid #2a2a2a;">
+      <div class="card-label" style="background:#0a0a0a; color:#999; border-bottom:1px solid #2a2a2a;">
+        Their palette + EB Garamond <span class="hex">#c4a35a / #1a1a1a</span>
+      </div>
+      <div class="card-body">
+        <div class="brand-name" style="font-family:'EB Garamond',Georgia,serif; font-weight:400; font-size:28px; letter-spacing:-0.01em; color:#f5f0e8;">
+          Head<span style="background:linear-gradient(135deg,#c4a35a,#d4b36a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">water</span>
+        </div>
+        <div class="tagline" style="color:#e0dcd4; font-family:'EB Garamond',Georgia,serif; font-style:italic; font-size:14px;">The signal, before the feed gets to it.</div>
+        <button class="btn" style="background:#c4a35a; color:#0a0a0a;">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill" style="background:rgba(196,163,90,0.12);color:#d4b36a;border:1px solid rgba(196,163,90,0.2);">TL;DR</span>
+          <span class="pill" style="background:rgba(196,163,90,0.12);color:#d4b36a;border:1px solid rgba(196,163,90,0.2);">3 topics</span>
+          <span class="pill" style="background:rgba(196,163,90,0.12);color:#d4b36a;border:1px solid rgba(196,163,90,0.2);">12 min saved</span>
+        </div>
+        <div class="divider" style="background:#e0dcd4;opacity:0.15;height:1px;margin:16px 0;"></div>
+        <div class="nav-row">
+          <div class="nav-dot" style="background:#c4a35a;"></div>
+          <span class="nav-link active" style="color:#c4a35a;font-weight:600;font-size:12px;">My Videos</span>
+          <span class="nav-link" style="color:#e0dcd4;opacity:0.4;font-size:12px;">Following</span>
+          <span class="nav-link" style="color:#e0dcd4;opacity:0.4;font-size:12px;">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="background:#1a1a1a; border:1px solid #2a2a2a;">
+      <div class="card-label" style="background:#0a0a0a; color:#999; border-bottom:1px solid #2a2a2a;">
+        Their palette + Instrument Serif <span class="hex">#c4a35a / #1a1a1a</span>
+      </div>
+      <div class="card-body">
+        <div class="brand-name" style="font-family:'Instrument Serif',Georgia,serif; font-weight:400; font-size:28px; letter-spacing:-0.01em; color:#f5f0e8;">
+          Head<span style="background:linear-gradient(135deg,#c4a35a,#d4b36a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">water</span>
+        </div>
+        <div class="tagline" style="color:#e0dcd4; font-family:'Instrument Serif',Georgia,serif; font-style:italic; font-size:14px;">The signal, before the feed gets to it.</div>
+        <button class="btn" style="background:#c4a35a; color:#0a0a0a;">Try it free →</button>
+        <div class="summary-row">
+          <span class="pill" style="background:rgba(196,163,90,0.12);color:#d4b36a;border:1px solid rgba(196,163,90,0.2);">TL;DR</span>
+          <span class="pill" style="background:rgba(196,163,90,0.12);color:#d4b36a;border:1px solid rgba(196,163,90,0.2);">3 topics</span>
+          <span class="pill" style="background:rgba(196,163,90,0.12);color:#d4b36a;border:1px solid rgba(196,163,90,0.2);">12 min saved</span>
+        </div>
+        <div class="divider" style="background:#e0dcd4;opacity:0.15;height:1px;margin:16px 0;"></div>
+        <div class="nav-row">
+          <div class="nav-dot" style="background:#c4a35a;"></div>
+          <span class="nav-link active" style="color:#c4a35a;font-weight:600;font-size:12px;">My Videos</span>
+          <span class="nav-link" style="color:#e0dcd4;opacity:0.4;font-size:12px;">Following</span>
+          <span class="nav-link" style="color:#e0dcd4;opacity:0.4;font-size:12px;">Summarize</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

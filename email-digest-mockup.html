@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Headwater — Email Digest Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #e8e4dc;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    /* ── Wrapper simulates inbox view ── */
+    .inbox-frame {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .inbox-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #999;
+      margin-bottom: 12px;
+    }
+
+    /* ── Email container ── */
+    .email {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #fafaf7;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    /* ── Header ── */
+    .email-header {
+      padding: 28px 40px 24px;
+      border-bottom: 1px solid #e8e4dc;
+    }
+
+    .email-brand {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+    .email-brand span { color: #b8924a; }
+
+    .email-date {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 4px;
+    }
+
+    .email-subject {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .email-subject-count {
+      color: #b8924a;
+    }
+
+    /* ── Intro line ── */
+    .email-intro {
+      padding: 20px 40px 0;
+      font-size: 14px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    /* ── Video card ── */
+    .video-card {
+      margin: 20px 40px;
+      border: 1px solid #e8e4dc;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .video-card-top {
+      padding: 18px 20px 16px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .video-thumb {
+      width: 96px;
+      height: 54px;
+      background: #eae6de;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .video-meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .video-channel {
+      font-size: 11px;
+      font-weight: 600;
+      color: #b8924a;
+      margin-bottom: 3px;
+    }
+
+    .video-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a1a;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+
+    .video-stats {
+      font-size: 11px;
+      color: #aaa;
+    }
+
+    .video-stats span + span::before {
+      content: '\00b7';
+      margin: 0 5px;
+    }
+
+    /* ── Summary body ── */
+    .video-body {
+      padding: 0 20px 18px;
+    }
+
+    .video-tldr {
+      font-size: 14px;
+      color: #444;
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .video-quote {
+      font-style: italic;
+      font-size: 14px;
+      color: #666;
+      border-left: 2px solid #b8924a;
+      padding-left: 14px;
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    /* ── Verdict ── */
+    .video-verdict {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid #f0ece4;
+    }
+
+    .verdict-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #bbb;
+      flex-shrink: 0;
+    }
+
+    .verdict-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .verdict-watch {
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .verdict-skip {
+      color: #999;
+    }
+
+    /* ── Topics (expandable in real email via link) ── */
+    .video-topics {
+      padding: 0 20px 18px;
+    }
+
+    .topic-row {
+      display: flex;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f2ec;
+      align-items: baseline;
+    }
+    .topic-row:last-child { border-bottom: none; }
+
+    .topic-time {
+      font-size: 11px;
+      color: #b8924a;
+      font-weight: 500;
+      flex-shrink: 0;
+      width: 40px;
+    }
+
+    .topic-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .topic-title {
+      font-weight: 600;
+      color: #333;
+    }
+
+    /* ── Divider between cards ── */
+    .card-divider {
+      height: 1px;
+      margin: 0 40px;
+    }
+
+    /* ── Minimal card (for less important videos) ── */
+    .video-card-minimal {
+      margin: 0 40px;
+      padding: 16px 0;
+      border-bottom: 1px solid #ede9e1;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .video-card-minimal:last-of-type { border-bottom: none; }
+
+    .minimal-meta { flex: 1; }
+
+    .minimal-channel {
+      font-size: 11px;
+      font-weight: 600;
+      color: #b8924a;
+      margin-bottom: 2px;
+    }
+
+    .minimal-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .minimal-tldr {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .minimal-verdict {
+      font-size: 12px;
+      color: #999;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* ── Section divider ── */
+    .section-break {
+      margin: 8px 40px 0;
+      padding-top: 20px;
+      border-top: 1px solid #e8e4dc;
+    }
+
+    .section-break-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ccc;
+      margin-bottom: 4px;
+    }
+
+    /* ── Footer ── */
+    .email-footer {
+      padding: 28px 40px;
+      margin-top: 8px;
+      border-top: 1px solid #e8e4dc;
+    }
+
+    .footer-line {
+      font-size: 12px;
+      color: #bbb;
+      line-height: 1.7;
+    }
+
+    .footer-link {
+      color: #999;
+      text-decoration: underline;
+    }
+
+    .footer-brand {
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 16px;
+    }
+
+    /* ── CTA button ── */
+    .cta-row {
+      padding: 4px 40px 24px;
+      text-align: center;
+    }
+
+    .cta-link {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #b8924a;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(184,146,74,0.3);
+      padding-bottom: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="inbox-frame">
+    <div class="inbox-label">Email digest preview — 600px</div>
+
+    <div class="email">
+
+      <!-- Header -->
+      <div class="email-header">
+        <div class="email-brand">Head<span>water</span></div>
+        <div class="email-date">Thursday, April 3, 2026</div>
+        <div class="email-subject">Inside Dentistry, Cal Newport — <span class="email-subject-count">3 new videos</span></div>
+      </div>
+
+      <p class="email-intro">Here's what posted overnight from your 3 channels.</p>
+
+      <!-- ════════════════════════════════════════
+           FEATURED VIDEO — full treatment
+      ════════════════════════════════════════ -->
+      <div class="video-card">
+        <div class="video-card-top">
+          <div class="video-thumb"></div>
+          <div class="video-meta">
+            <div class="video-channel">Inside Dentistry</div>
+            <div class="video-title">The Future of AI in Dental Practice Management</div>
+            <div class="video-stats">
+              <span>18 min</span>
+              <span>4 topics</span>
+              <span>Posted 6h ago</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="video-body">
+          <p class="video-tldr">Practical overview of where AI actually saves time in a dental practice today — scheduling, insurance pre-auth, and chart notes — versus where it's overhyped. The honest answer is narrower than vendors suggest but still meaningful.</p>
+
+          <div class="video-quote">"The practices seeing real ROI aren't using AI everywhere. They picked one bottleneck and fixed it completely."</div>
+
+          <div class="video-verdict">
+            <span class="verdict-label">Verdict</span>
+            <span class="verdict-text verdict-watch">Worth the 18 minutes if you manage a practice.</span>
+          </div>
+        </div>
+
+        <div class="video-topics">
+          <div class="topic-row">
+            <span class="topic-time">0:00</span>
+            <span class="topic-text"><span class="topic-title">Where AI works today</span> — scheduling optimization, insurance pre-auth, clinical note generation</span>
+          </div>
+          <div class="topic-row">
+            <span class="topic-time">4:32</span>
+            <span class="topic-text"><span class="topic-title">The overhype problem</span> — diagnostic AI isn't ready for primetime despite vendor claims</span>
+          </div>
+          <div class="topic-row">
+            <span class="topic-time">9:15</span>
+            <span class="topic-text"><span class="topic-title">ROI math</span> — real numbers from three practices that implemented AI scheduling</span>
+          </div>
+          <div class="topic-row">
+            <span class="topic-time">14:40</span>
+            <span class="topic-text"><span class="topic-title">What to do Monday</span> — pick one bottleneck, trial one tool, measure for 30 days</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+           REMAINING VIDEOS — compact treatment
+      ════════════════════════════════════════ -->
+      <div class="section-break">
+        <div class="section-break-label">Also posted</div>
+      </div>
+
+      <div class="video-card-minimal">
+        <div class="video-thumb" style="width:72px; height:40px;"></div>
+        <div class="minimal-meta">
+          <div class="minimal-channel">Cal Newport</div>
+          <div class="minimal-title">Quit Social Media. Your Career May Depend on It.</div>
+          <div class="minimal-tldr">Familiar argument repackaged for a 2026 audience. If you've read Deep Work, nothing new here.</div>
+          <div class="minimal-verdict">Familiar if you've read Deep Work. Summary covers it.</div>
+        </div>
+      </div>
+
+      <div class="video-card-minimal">
+        <div class="video-thumb" style="width:72px; height:40px;"></div>
+        <div class="minimal-meta">
+          <div class="minimal-channel">Inside Dentistry</div>
+          <div class="minimal-title">Howard Farran on Leadership in Modern Dentistry</div>
+          <div class="minimal-tldr">Wide-ranging interview. Strongest 10 minutes are on hiring associate dentists in a post-COVID market.</div>
+          <div class="minimal-verdict">Wide-ranging — strongest section is on hiring (12:40).</div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="cta-link" href="#">View all summaries in Headwater &rarr;</a>
+      </div>
+
+      <!-- Footer -->
+      <div class="email-footer">
+        <div class="footer-line">
+          You're following 3 channels on <a class="footer-link" href="#">Headwater</a>.
+        </div>
+        <div class="footer-line">
+          <a class="footer-link" href="#">Manage channels</a> &middot;
+          <a class="footer-link" href="#">Email settings</a> &middot;
+          <a class="footer-link" href="#">Unsubscribe</a>
+        </div>
+        <div class="footer-brand">Head<span style="color:#b8924a;">water</span></div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

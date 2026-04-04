@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Headwater — Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a0a;
+      --surface:   #1a1a1a;
+      --elevated:  #2a2a2a;
+      --border:    #2a2a2a;
+      --border-hi: #3a3a3a;
+      --accent:    #c4a35a;
+      --accent-hi: #d4b36a;
+      --accent-dim: rgba(196,163,90,0.15);
+      --accent-border: rgba(196,163,90,0.25);
+      --text:      #f5f0e8;
+      --text-2:    #e0dcd4;
+      --text-3:    #999999;
+      --text-4:    #666666;
+      --serif:     'EB Garamond', Georgia, serif;
+      --sans:      'Inter', -apple-system, sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Page switcher ── */
+    .switcher {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: #000;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 0;
+    }
+    .switcher button {
+      font-family: var(--sans);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      background: none;
+      border: none;
+      color: var(--text-4);
+      cursor: pointer;
+      border-right: 1px solid var(--border);
+    }
+    .switcher button.active { color: var(--accent); }
+
+    .page { display: none; padding-top: 41px; }
+    .page.active { display: block; }
+
+    /* ── Nav ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 56px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 41px;
+      background: var(--bg);
+      z-index: 100;
+    }
+
+    .nav-brand {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 400;
+      letter-spacing: 0em;
+      color: var(--text);
+      cursor: pointer;
+    }
+    .nav-brand span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 28px; }
+    .nav-link {
+      font-size: 13px;
+      color: var(--text-3);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .nav-link.active { color: var(--text); font-weight: 500; }
+
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-email {
+      font-size: 13px;
+      color: var(--text-3);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .pro-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      text-transform: uppercase;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 7px;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--accent); color: #0a0a0a; }
+    .btn-primary:hover { background: var(--accent-hi); }
+    .btn-ghost { background: none; color: var(--text-2); border: 1px solid var(--border-hi); }
+
+    /* ── Pills ── */
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--accent-dim);
+      color: var(--accent-hi);
+      border: 1px solid var(--accent-border);
+    }
+
+    /* ══════════════════════════════════════════
+       LANDING PAGE
+    ══════════════════════════════════════════ */
+    .landing-hero {
+      text-align: center;
+      padding: 80px 24px 56px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .landing-headline {
+      font-family: var(--serif);
+      font-size: clamp(48px, 7vw, 84px);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+    .landing-headline span { color: var(--accent); }
+
+    .landing-sub {
+      font-size: 16px;
+      color: var(--text-3);
+      max-width: 420px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .landing-hero-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .landing-hero-meta {
+      font-size: 12px;
+      color: var(--text-4);
+    }
+
+    /* Demo section */
+    .landing-demo-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 24px;
+    }
+
+    .landing-demo-trust {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .demo-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .demo-card-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .demo-thumb {
+      width: 100px;
+      height: 56px;
+      background: var(--elevated);
+      border-radius: 5px;
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+
+    .demo-meta { flex: 1; }
+    .demo-channel { font-size: 11px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+    .demo-title { font-size: 14px; color: var(--text); font-weight: 500; line-height: 1.4; margin-bottom: 8px; }
+    .demo-pills { display: flex; gap: 6px; }
+
+    .demo-card-body { padding: 20px; }
+
+    .demo-section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-4);
+      margin-bottom: 8px;
+    }
+
+    .demo-tldr {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .demo-quote {
+      font-family: var(--sans);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--text-2);
+      border-left: 2px solid var(--accent);
+      padding-left: 16px;
+      line-height: 1.5;
+    }
+
+    /* Digest section */
+    .digest-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 64px 24px;
+    }
+
+    .digest-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .digest-eyebrow {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .digest-heading {
+      font-family: var(--sans);
+      font-size: 36px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .digest-sub {
+      font-size: 15px;
+      color: var(--text-3);
+      line-height: 1.6;
+    }
+
+    .email-mockup {
+      background: #111;
+      border: 1px solid var(--border-hi);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+
+    .email-titlebar {
+      background: var(--elevated);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .email-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--border-hi);
+    }
+
+    .email-label {
+      font-size: 11px;
+      color: var(--text-4);
+      margin-left: 8px;
+    }
+
+    .email-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .email-from { font-weight: 600; color: var(--text); font-size: 12px; margin-bottom: 2px; }
+    .email-subject { font-size: 12px; color: var(--text-3); }
+
+    .email-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+    }
+
+    .email-item-thumb {
+      width: 72px;
+      height: 40px;
+      background: var(--elevated);
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .email-item-channel { font-size: 10px; color: var(--accent); font-weight: 600; margin-bottom: 2px; }
+    .email-item-title { font-size: 12px; color: var(--text); font-weight: 500; line-height: 1.35; margin-bottom: 4px; }
+    .email-item-tldr { font-size: 11px; color: var(--text-3); line-height: 1.4; }
+
+    /* Landing footer */
+    .landing-footer {
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-4);
+      display: flex;
+      justify-content: space-between;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .landing-footer-links { display: flex; gap: 20px; }
+    .landing-footer-link { color: var(--text-4); text-decoration: none; cursor: pointer; }
+    .landing-footer-link:hover { color: var(--text-3); }
+
+    /* ══════════════════════════════════════════
+       MY VIDEOS PAGE
+    ══════════════════════════════════════════ */
+    .page-inner { max-width: 720px; margin: 0 auto; padding: 32px 24px 100px; }
+
+    .page-title {
+      font-family: var(--sans);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: var(--sans);
+      margin-bottom: 12px;
+      outline: none;
+    }
+    .search-input::placeholder { color: var(--text-4); }
+    .search-input:focus { border-color: var(--accent); }
+
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .filter-select {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      color: var(--text-3);
+      font-family: var(--sans);
+      outline: none;
+      cursor: pointer;
+    }
+    .filter-select:focus { border-color: var(--accent); }
+
+    .vlist { display: flex; flex-direction: column; gap: 1px; }
+
+    .vrow {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 16px;
+      background: var(--surface);
+      border-radius: 8px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: border-color 0.15s;
+      margin-bottom: 4px;
+    }
+    .vrow:hover { border-color: var(--border-hi); }
+
+    .vrow-main { flex: 1; min-width: 0; }
+    .vrow-title { font-size: 14px; color: var(--text); font-weight: 500; line-height: 1.4; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .vrow-channel { font-size: 11px; color: var(--accent); font-weight: 600; margin-bottom: 4px; }
+    .vrow-meta { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--text-4); }
+
+    /* Unread row — left accent border */
+    .vrow.unread { border-left: 2px solid var(--accent); }
+    .vrow.unread .vrow-title { color: var(--text); font-weight: 600; }
+
+    /* Read row — dimmed */
+    .vrow.read .vrow-title { color: var(--text-3); font-weight: 400; }
+    .vrow.read .vrow-channel { color: var(--text-4); }
+
+    .vrow-thumb {
+      width: 88px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 5px;
+      background: var(--elevated);
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════════
+       FOLLOWING PAGE
+    ══════════════════════════════════════════ */
+    .channel-input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .channel-input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      font-family: var(--sans);
+      outline: none;
+    }
+    .channel-input:focus { border-color: var(--accent); }
+
+    .channel-list { display: flex; flex-direction: column; gap: 4px; }
+
+    .channel-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+    .channel-row:hover { border-color: var(--border-hi); }
+
+    .channel-info { display: flex; flex-direction: column; gap: 2px; }
+    .channel-name { font-size: 14px; font-weight: 500; color: var(--text); }
+    .channel-handle { font-size: 11px; color: var(--text-4); }
+
+    .channel-remove {
+      font-size: 11px;
+      color: var(--text-4);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+    .channel-remove:hover { color: #e05555; background: rgba(224,85,85,0.08); }
+
+    .popular-section { margin-top: 36px; }
+    .popular-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--text-3);
+      margin-bottom: 14px;
+    }
+
+    .popular-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 8px;
+    }
+
+    .popular-chip {
+      padding: 10px 14px;
+      background: transparent;
+      border: 1px dashed var(--border-hi);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text-4);
+      cursor: pointer;
+      font-family: var(--sans);
+      text-align: left;
+      transition: all 0.15s;
+    }
+    .popular-chip:hover { border-color: var(--accent); border-style: solid; color: var(--text); background: var(--accent-dim); }
+
+    /* ══════════════════════════════════════════
+       ACCOUNT PAGE
+    ══════════════════════════════════════════ */
+    .account-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .account-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: var(--text-3);
+      margin-bottom: 16px;
+    }
+
+    .account-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .account-row:last-child { border-bottom: none; }
+
+    .account-row-label { font-size: 13px; color: var(--text-3); }
+    .account-row-value { font-size: 13px; color: var(--text); font-weight: 500; }
+
+    .plan-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .account-btn {
+      font-size: 12px;
+      color: var(--accent);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-weight: 500;
+    }
+
+    .account-delete-link {
+      display: block;
+      text-align: center;
+      margin-top: 28px;
+      font-size: 12px;
+      color: var(--text-4);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* ══════════════════════════════════════════
+       MOBILE TABS
+    ══════════════════════════════════════════ */
+    .mobile-tabs {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      z-index: 200;
+      padding: 8px 0 20px;
+    }
+
+    @media (max-width: 700px) {
+      .mobile-tabs { display: flex; }
+      nav .nav-links { display: none; }
+    }
+
+    .mobile-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      color: var(--text-4);
+      text-decoration: none;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+    .mobile-tab.active { color: var(--accent); }
+
+    /* ══════════════════════════════════════════
+       UPGRADE PAGE
+    ══════════════════════════════════════════ */
+    .upgrade-page { max-width: 640px; margin: 0 auto; padding: 48px 24px 100px; }
+
+    .upgrade-heading {
+      font-family: var(--sans);
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .upgrade-sub {
+      text-align: center;
+      color: var(--text-3);
+      font-size: 14px;
+      margin-bottom: 40px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--accent);
+      background: #1c1a14;
+    }
+
+    .pricing-tier {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-4);
+      margin-bottom: 12px;
+    }
+
+    .pricing-card.featured .pricing-tier { color: var(--accent); }
+
+    .pricing-price {
+      font-family: var(--sans);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+
+    .pricing-period { font-size: 12px; color: var(--text-4); margin-bottom: 20px; }
+
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+    .pricing-features li { font-size: 13px; color: var(--text-3); padding-left: 16px; position: relative; }
+    .pricing-features li::before { content: '—'; position: absolute; left: 0; color: var(--text-4); }
+    .pricing-card.featured .pricing-features li { color: var(--text-2); }
+
+  </style>
+</head>
+<body>
+
+  <!-- Page switcher -->
+  <div class="switcher">
+    <button class="active" onclick="showPage('landing-light')">Landing</button>
+    <button onclick="showPage('videos')">My Videos</button>
+    <button onclick="showPage('following')">Following</button>
+    <button onclick="showPage('account')">Account</button>
+    <button onclick="showPage('upgrade')">Upgrade</button>
+    <button onclick="showPage('landing')">Landing (Dark)</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       LANDING PAGE
+  ══════════════════════════════════════════ -->
+  <div id="page-landing" class="page">
+
+    <nav>
+      <span class="nav-brand">Head<span>water</span></span>
+      <div class="nav-links">
+        <a class="nav-link" href="#">Sign in</a>
+      </div>
+      <div class="nav-right">
+        <button class="btn btn-primary">Try it free →</button>
+      </div>
+    </nav>
+
+    <div class="landing-hero">
+      <h1 class="landing-headline">Upstream of<br><span>the algorithm.</span></h1>
+      <p class="landing-sub">YouTube is designed to keep you watching. This isn't.</p>
+      <div class="landing-hero-actions">
+        <button class="btn btn-primary">Try it free →</button>
+        <span class="landing-hero-meta">3 channels free · No Google account needed</span>
+      </div>
+    </div>
+
+    <div class="landing-demo-section">
+      <div class="landing-demo-trust">The video, not the title.</div>
+
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <div class="demo-thumb" style="background:#222;"></div>
+          <div class="demo-meta">
+            <div class="demo-channel">Inside Dentistry</div>
+            <div class="demo-title">The Future of AI in Dental Practice Management</div>
+            <div class="demo-pills">
+              <span class="pill">TL;DR</span>
+              <span class="pill">4 topics</span>
+              <span class="pill">18 min saved</span>
+            </div>
+          </div>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-section-label">TL;DR</div>
+          <p class="demo-tldr">Practical overview of where AI actually saves time in a dental practice today — scheduling, insurance pre-auth, and chart notes — versus where it's overhyped. The honest answer is narrower than vendors suggest but still meaningful.</p>
+          <div class="demo-quote">"The practices seeing real ROI aren't using AI everywhere. They picked one bottleneck and fixed it completely."</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border);">
+        <div class="landing-demo-trust">Every morning</div>
+        <p style="font-size:15px; color:var(--text-3); line-height:1.6; margin-bottom:24px;">Add the channels you follow. Every morning it tells you what posted and whether it's worth your time — before you open YouTube.</p>
+        <button class="btn btn-primary">Follow your first channel →</button>
+        <span style="display:block; margin-top:10px; font-size:12px; color:var(--text-4);">3 channels free · No Google account needed</span>
+      </div>
+    </div>
+
+    <div class="digest-section">
+      <div class="digest-inner">
+        <div>
+          <div class="digest-eyebrow">Every morning</div>
+          <h2 class="digest-heading">Every channel you follow, distilled.</h2>
+          <p class="digest-sub">One email. No autoplay. No rabbit holes.</p>
+        </div>
+        <div class="email-mockup">
+          <div class="email-titlebar">
+            <div class="email-dot"></div>
+            <div class="email-dot"></div>
+            <div class="email-dot"></div>
+            <span class="email-label">Inbox</span>
+          </div>
+          <div class="email-header">
+            <div class="email-from">Headwater <span style="color:var(--text-4); font-weight:400;">&lt;digest@headwaterapp.com&gt;</span></div>
+            <div class="email-subject">3 new videos from your channels</div>
+          </div>
+          <div class="email-item">
+            <div class="email-item-thumb"></div>
+            <div>
+              <div class="email-item-channel">Inside Dentistry</div>
+              <div class="email-item-title">The Future of AI in Dental Practice Management</div>
+              <div class="email-item-tldr">Practical, honest. Worth the 18 minutes if you run a practice.</div>
+            </div>
+          </div>
+          <div class="email-item">
+            <div class="email-item-thumb"></div>
+            <div>
+              <div class="email-item-channel">Cal Newport</div>
+              <div class="email-item-title">Quit Social Media. Your Career May Depend on It.</div>
+              <div class="email-item-tldr">Cold career math. Read the summary, skip the video.</div>
+            </div>
+          </div>
+          <div style="padding:10px 16px; font-size:11px; color:var(--text-4);">+ 1 more video</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; padding:56px 24px;">
+      <p style="font-size:18px; color:var(--text-2); margin-bottom:8px; font-family:var(--serif);">Set it up once. It runs every morning.</p>
+      <p style="font-size:13px; color:var(--text-4); margin-bottom:24px;">Add any YouTube channel by @handle or URL — no Google account needed.</p>
+      <button class="btn btn-primary">Follow your first channel →</button>
+    </div>
+
+    <div class="landing-footer">
+      <span>© 2026 Headwater</span>
+      <div class="landing-footer-links">
+        <a class="landing-footer-link" href="#">Pricing</a>
+        <a class="landing-footer-link" href="#">Privacy</a>
+        <a class="landing-footer-link" href="#">Terms</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MY VIDEOS PAGE
+  ══════════════════════════════════════════ -->
+  <div id="page-videos" class="page">
+    <nav>
+      <span class="nav-brand">Head<span>water</span></span>
+      <div class="nav-links">
+        <a class="nav-link active" href="#">My Videos</a>
+        <a class="nav-link" href="#">Following</a>
+        <a class="nav-link" href="#">Summarize</a>
+      </div>
+      <div class="nav-right">
+        <button class="nav-email">adam@gmail.com <span style="color:var(--text-4);">▾</span></button>
+      </div>
+    </nav>
+
+    <div class="page-inner">
+      <h1 class="page-title">My Videos</h1>
+
+      <input class="search-input" type="text" placeholder="Search by title or channel…" />
+
+      <div class="filter-bar">
+        <select class="filter-select"><option>All channels</option><option>Inside Dentistry</option><option>Cal Newport</option></select>
+        <select class="filter-select"><option>All categories</option><option>Education</option><option>Technology</option></select>
+        <select class="filter-select"><option>Newest first</option><option>Oldest first</option></select>
+      </div>
+
+      <div class="vlist">
+        <div class="vrow unread">
+          <div class="vrow-main">
+            <div class="vrow-title">The Future of AI in Dental Practice Management</div>
+            <div class="vrow-channel">Inside Dentistry</div>
+            <div class="vrow-meta"><span>Mon, Apr 1</span><span>18 min</span><span class="pill">Education</span></div>
+          </div>
+          <div class="vrow-thumb" style="background:var(--elevated);"></div>
+        </div>
+        <div class="vrow read">
+          <div class="vrow-main">
+            <div class="vrow-title">Quit Social Media. Your Career May Depend on It.</div>
+            <div class="vrow-channel">Cal Newport</div>
+            <div class="vrow-meta"><span>Sun, Mar 30</span><span>22 min</span><span class="pill">Productivity</span></div>
+          </div>
+          <div class="vrow-thumb" style="background:var(--elevated);"></div>
+        </div>
+        <div class="vrow read">
+          <div class="vrow-main">
+            <div class="vrow-title">Howard Farran on Leadership in Modern Dentistry</div>
+            <div class="vrow-channel">Inside Dentistry</div>
+            <div class="vrow-meta"><span>Sat, Mar 29</span><span>35 min</span><span class="pill">Education</span></div>
+          </div>
+          <div class="vrow-thumb" style="background:var(--elevated);"></div>
+        </div>
+        <div class="vrow read">
+          <div class="vrow-main">
+            <div class="vrow-title">Deep Work: Rules for Success in a Distracted World</div>
+            <div class="vrow-channel">Cal Newport</div>
+            <div class="vrow-meta"><span>Thu, Mar 27</span><span>14 min</span><span class="pill">Productivity</span></div>
+          </div>
+          <div class="vrow-thumb" style="background:var(--elevated);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       FOLLOWING PAGE
+  ══════════════════════════════════════════ -->
+  <div id="page-following" class="page">
+    <nav>
+      <span class="nav-brand">Head<span>water</span></span>
+      <div class="nav-links">
+        <a class="nav-link" href="#">My Videos</a>
+        <a class="nav-link active" href="#">Following</a>
+        <a class="nav-link" href="#">Summarize</a>
+      </div>
+      <div class="nav-right">
+        <button class="nav-email">adam@gmail.com <span style="color:var(--text-4);">▾</span></button>
+      </div>
+    </nav>
+
+    <div class="page-inner">
+      <h1 class="page-title">Following</h1>
+
+      <div class="channel-input-row">
+        <input class="channel-input" type="text" placeholder="@handle or youtube.com/channel/…" />
+        <button class="btn btn-primary">Follow</button>
+      </div>
+
+      <div class="channel-list">
+        <div class="channel-row">
+          <div class="channel-info">
+            <span class="channel-name">Inside Dentistry</span>
+            <span class="channel-handle">@InsideDentistry</span>
+          </div>
+          <button class="channel-remove">Remove</button>
+        </div>
+        <div class="channel-row">
+          <div class="channel-info">
+            <span class="channel-name">Cal Newport</span>
+            <span class="channel-handle">@CalNewportMedia</span>
+          </div>
+          <button class="channel-remove">Remove</button>
+        </div>
+        <div class="channel-row">
+          <div class="channel-info">
+            <span class="channel-name">Howard Farran</span>
+            <span class="channel-handle">@howardfarran</span>
+          </div>
+          <button class="channel-remove">Remove</button>
+        </div>
+      </div>
+
+      <div class="popular-section">
+        <div class="popular-label">Suggested channels</div>
+        <div class="popular-grid">
+          <button class="popular-chip">Lex Fridman</button>
+          <button class="popular-chip">Y Combinator</button>
+          <button class="popular-chip">Paul Graham</button>
+          <button class="popular-chip">Andrew Huberman</button>
+          <button class="popular-chip">Andrej Karpathy</button>
+          <button class="popular-chip">Patrick Boyle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       ACCOUNT PAGE
+  ══════════════════════════════════════════ -->
+  <div id="page-account" class="page">
+    <nav>
+      <span class="nav-brand">Head<span>water</span></span>
+      <div class="nav-links">
+        <a class="nav-link" href="#">My Videos</a>
+        <a class="nav-link" href="#">Following</a>
+        <a class="nav-link" href="#">Summarize</a>
+      </div>
+      <div class="nav-right">
+        <button class="nav-email"><span class="pro-badge">Pro</span> adam@gmail.com <span style="color:var(--text-4);">▾</span></button>
+      </div>
+    </nav>
+
+    <div class="page-inner">
+      <h1 class="page-title">Account</h1>
+
+      <div class="account-section">
+        <div class="account-section-title">Profile</div>
+        <div class="account-row">
+          <span class="account-row-label">Email</span>
+          <span class="account-row-value">adam@gmail.com</span>
+        </div>
+        <div class="account-row">
+          <span class="account-row-label">Password</span>
+          <button class="account-btn">Change password</button>
+        </div>
+        <div class="account-row">
+          <span class="account-row-label">Email digest</span>
+          <span class="account-row-value">On</span>
+        </div>
+      </div>
+
+      <div class="account-section">
+        <div class="account-section-title">Plan &amp; billing</div>
+        <div class="account-row">
+          <span class="account-row-label">Current plan</span>
+          <span class="plan-badge">● Pro</span>
+        </div>
+        <div class="account-row">
+          <span class="account-row-label">Billing</span>
+          <button class="account-btn">Manage billing →</button>
+        </div>
+      </div>
+
+      <a class="account-delete-link">Delete account</a>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       UPGRADE PAGE
+  ══════════════════════════════════════════ -->
+  <div id="page-upgrade" class="page">
+    <nav>
+      <span class="nav-brand">Head<span>water</span></span>
+      <div class="nav-links">
+        <a class="nav-link" href="#">My Videos</a>
+        <a class="nav-link" href="#">Following</a>
+        <a class="nav-link" href="#">Summarize</a>
+      </div>
+      <div class="nav-right">
+        <button class="nav-email">adam@gmail.com <span style="color:var(--text-4);">▾</span></button>
+      </div>
+    </nav>
+
+    <div class="upgrade-page">
+      <h1 class="upgrade-heading">Simple pricing.</h1>
+      <p class="upgrade-sub">Start free. Upgrade when it's worth it.</p>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-tier">Free</div>
+          <div class="pricing-price">$0</div>
+          <div class="pricing-period">forever</div>
+          <ul class="pricing-features">
+            <li>3 channels</li>
+            <li>7-day history</li>
+            <li>Daily digest email</li>
+            <li>On-demand summaries</li>
+          </ul>
+          <button class="btn btn-ghost" style="width:100%;">Current plan</button>
+        </div>
+
+        <div class="pricing-card featured">
+          <div class="pricing-tier">Pro</div>
+          <div class="pricing-price">$15</div>
+          <div class="pricing-period">per month</div>
+          <ul class="pricing-features">
+            <li>Unlimited channels</li>
+            <li>Full history</li>
+            <li>Daily digest email</li>
+            <li>On-demand summaries</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%;">Upgrade to Pro →</button>
+        </div>
+      </div>
+
+      <p style="text-align:center; font-size:12px; color:var(--text-4);">Cancel anytime. No questions asked.</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       LANDING PAGE — LIGHT MODE
+  ══════════════════════════════════════════ -->
+  <div id="page-landing-light" class="page active" style="background:#fafaf7; color:#1a1a1a;">
+
+    <nav style="background:#fafaf7; border-bottom:1px solid #e8e4dc;">
+      <span class="nav-brand" style="color:#1a1a1a;">Head<span style="color:#b8924a;">water</span></span>
+      <div class="nav-links">
+        <a class="nav-link" href="#" style="color:#999;">Sign in</a>
+      </div>
+      <div class="nav-right">
+        <button class="btn btn-primary" style="background:#1a1a1a; color:#fafaf7;">Try it free →</button>
+      </div>
+    </nav>
+
+    <div style="text-align:center; padding:80px 24px 56px; border-bottom:1px solid #e8e4dc;">
+      <h1 style="font-family:'EB Garamond',Georgia,serif; font-size:clamp(48px,7vw,84px); font-weight:400; line-height:1.1; letter-spacing:-0.01em; color:#1a1a1a; margin-bottom:20px;">
+        Upstream of<br><span style="color:#b8924a;">the algorithm.</span>
+      </h1>
+      <p style="font-size:16px; color:#777; max-width:420px; margin:0 auto 32px; line-height:1.6; font-family:'Inter',sans-serif;">
+        YouTube is designed to keep you watching. This isn't.
+      </p>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <button class="btn btn-primary" style="background:#1a1a1a; color:#fafaf7;">Try it free →</button>
+        <span style="font-size:12px; color:#aaa; font-family:'Inter',sans-serif;">3 channels free · No Google account needed</span>
+      </div>
+    </div>
+
+    <div style="max-width:720px; margin:0 auto; padding:56px 24px;">
+      <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#b8924a; margin-bottom:20px; font-family:'Inter',sans-serif;">The video, not the title.</div>
+
+      <div style="background:#fff; border:1px solid #e8e4dc; border-radius:10px; overflow:hidden;">
+        <div style="padding:16px 20px; border-bottom:1px solid #e8e4dc; display:flex; gap:14px; align-items:flex-start;">
+          <div style="width:100px; height:56px; background:#f0ece4; border-radius:5px; flex-shrink:0;"></div>
+          <div>
+            <div style="font-size:11px; color:#b8924a; font-weight:600; margin-bottom:4px; font-family:'Inter',sans-serif;">Inside Dentistry</div>
+            <div style="font-size:14px; color:#1a1a1a; font-weight:500; line-height:1.4; margin-bottom:8px; font-family:'Inter',sans-serif;">The Future of AI in Dental Practice Management</div>
+            <div style="display:flex; gap:6px;">
+              <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; background:rgba(184,146,74,0.1); color:#8a6930; border:1px solid rgba(184,146,74,0.2); font-family:'Inter',sans-serif;">TL;DR</span>
+              <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; background:rgba(184,146,74,0.1); color:#8a6930; border:1px solid rgba(184,146,74,0.2); font-family:'Inter',sans-serif;">18 min saved</span>
+            </div>
+          </div>
+        </div>
+        <div style="padding:20px;">
+          <div style="font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#bbb; margin-bottom:8px; font-family:'Inter',sans-serif;">TL;DR</div>
+          <p style="font-size:14px; color:#444; line-height:1.6; margin-bottom:20px; font-family:'Inter',sans-serif;">Practical overview of where AI actually saves time in a dental practice today — scheduling, insurance pre-auth, and chart notes — versus where it's overhyped.</p>
+          <div style="font-family:'Inter',sans-serif; font-style:italic; font-size:15px; color:#555; border-left:2px solid #b8924a; padding-left:16px; line-height:1.5;">
+            "The practices seeing real ROI aren't using AI everywhere. They picked one bottleneck and fixed it completely."
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#f2efe8; border-top:1px solid #e8e4dc; border-bottom:1px solid #e8e4dc; padding:64px 24px;">
+      <div style="max-width:900px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;">
+        <div>
+          <div style="font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#b8924a; margin-bottom:12px; font-family:'Inter',sans-serif;">Every morning</div>
+          <h2 style="font-family:'Inter',sans-serif; font-size:32px; font-weight:700; line-height:1.2; letter-spacing:-0.02em; margin-bottom:16px; color:#1a1a1a;">Every channel you follow, distilled.</h2>
+          <p style="font-size:15px; color:#777; line-height:1.6; font-family:'Inter',sans-serif;">One email. No autoplay. No rabbit holes.</p>
+        </div>
+        <div style="background:#fff; border:1px solid #e8e4dc; border-radius:10px; overflow:hidden; font-size:13px;">
+          <div style="background:#f2efe8; padding:10px 14px; display:flex; align-items:center; gap:6px; border-bottom:1px solid #e8e4dc;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#ddd;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#ddd;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#ddd;"></div>
+            <span style="font-size:11px;color:#aaa;margin-left:8px;font-family:'Inter',sans-serif;">Inbox</span>
+          </div>
+          <div style="padding:14px 16px; border-bottom:1px solid #e8e4dc;">
+            <div style="font-weight:600; color:#1a1a1a; font-size:12px; margin-bottom:2px; font-family:'Inter',sans-serif;">Headwater <span style="color:#aaa; font-weight:400;">&lt;digest@headwaterapp.com&gt;</span></div>
+            <div style="font-size:12px; color:#777; font-family:'Inter',sans-serif;">3 new videos from your channels</div>
+          </div>
+          <div style="padding:14px 16px; border-bottom:1px solid #e8e4dc; display:flex; gap:12px;">
+            <div style="width:72px;height:40px;background:#f0ece4;border-radius:4px;flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:10px;color:#b8924a;font-weight:600;margin-bottom:2px;font-family:'Inter',sans-serif;">Inside Dentistry</div>
+              <div style="font-size:12px;color:#1a1a1a;font-weight:500;line-height:1.35;margin-bottom:4px;font-family:'Inter',sans-serif;">The Future of AI in Dental Practice Management</div>
+              <div style="font-size:11px;color:#777;font-family:'Inter',sans-serif;">Worth the 18 minutes if you run a practice.</div>
+            </div>
+          </div>
+          <div style="padding:14px 16px; display:flex; gap:12px;">
+            <div style="width:72px;height:40px;background:#f0ece4;border-radius:4px;flex-shrink:0;"></div>
+            <div>
+              <div style="font-size:10px;color:#b8924a;font-weight:600;margin-bottom:2px;font-family:'Inter',sans-serif;">Cal Newport</div>
+              <div style="font-size:12px;color:#1a1a1a;font-weight:500;line-height:1.35;margin-bottom:4px;font-family:'Inter',sans-serif;">Quit Social Media. Your Career May Depend on It.</div>
+              <div style="font-size:11px;color:#777;font-family:'Inter',sans-serif;">Cold career math. Read the summary, skip the video.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; padding:56px 24px;">
+      <p style="font-size:18px; color:#333; margin-bottom:8px; font-family:'Inter',sans-serif; font-weight:500;">Set it up once. It runs every morning.</p>
+      <p style="font-size:13px; color:#aaa; margin-bottom:24px; font-family:'Inter',sans-serif;">Add any YouTube channel by @handle or URL.</p>
+      <button class="btn btn-primary" style="background:#1a1a1a; color:#fafaf7;">Follow your first channel →</button>
+    </div>
+
+    <div style="padding:32px 24px; display:flex; justify-content:space-between; max-width:900px; margin:0 auto; border-top:1px solid #e8e4dc; font-size:12px; color:#aaa; font-family:'Inter',sans-serif;">
+      <span>© 2026 Headwater</span>
+      <div style="display:flex; gap:20px;">
+        <a style="color:#aaa; text-decoration:none; cursor:pointer;">Pricing</a>
+        <a style="color:#aaa; text-decoration:none; cursor:pointer;">Privacy</a>
+        <a style="color:#aaa; text-decoration:none; cursor:pointer;">Terms</a>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function showPage(name) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.switcher button').forEach(b => b.classList.remove('active'));
+      document.getElementById('page-' + name).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

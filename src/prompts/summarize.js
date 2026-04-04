@@ -49,6 +49,7 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
     }
   ],
   "categories": ["<tag>", "<tag>"],
+  "verdict": "<one sentence: who this video is most useful for and whether it's worth the full watch. Be specific about the audience. Never say 'skip' or tell the reader what to do — just give context.>"
 }
 
 RULES:

@@ -1,0 +1,219 @@
+HEADWATER DESIGN SESSION — SUMMARY
+April 3, 2026
+
+This document captures everything done in this session, the reasoning behind
+each decision, and a handoff prompt for continuing in the existing chat.
+
+================================================================================
+WHAT WE DID
+================================================================================
+
+1. DESIGN ASSESSMENT (design-assessment.txt)
+   Thorough critique of mockup.html across 5 dimensions: color palette,
+   typography, light vs dark mode, generic patterns, and a single strongest
+   recommendation. Identified that the amber-on-black palette solves the
+   "vibe coded" problem but narrowly — it trades one template cliche for a
+   less common one. Found the EB Garamond restraint (two places only) to be
+   the strongest decision. Recommended light landing / dark product split.
+
+2. EMAIL DIGEST MOCKUP (email-digest-mockup.html)
+   Built a full 600px HTML email template — the primary brand touchpoint.
+   This was the #1 recommendation from the assessment: design the email first,
+   then let its aesthetic drive the product.
+
+3. PROMPT CHANGE (src/prompts/summarize.js)
+   Added a "verdict" field to the summarization prompt schema. One-sentence
+   contextual note about who a video is most useful for. Explicitly instructed
+   not to tell the user what to do — just give context.
+
+4. MOCKUP REFINEMENTS (mockup.html)
+   Applied all 4 remaining items from the assessment's next-steps list.
+
+================================================================================
+DESIGN DECISIONS & REASONING
+================================================================================
+
+EMAIL DIGEST — TWO-TIER CARD HIERARCHY
+---------------------------------------
+The most important video in a digest gets the full treatment: TL;DR, quote,
+topic timestamps with descriptions, and a verdict line. Less important videos
+get a compact row: channel, title, one-line summary, and a contextual note.
+
+Why: The brand promise is editorial curation. A flat list of identical cards
+says "we processed these." A tiered layout says "we read these and here's what
+matters." The hierarchy itself is the product value.
+
+EMAIL DIGEST — NO PRESCRIPTIVE LANGUAGE
+----------------------------------------
+Early draft had "One worth watching, two you can skip" as the intro and
+"Skip it" verdicts on individual cards. Both were removed/rewritten.
+
+Why: The brand positioning is "Your attention belongs to you. Not to an
+algorithm." Telling users to skip a video is Headwater playing algorithm —
+the exact thing the product is supposed to replace. The verdict line now gives
+context ("Familiar if you've read Deep Work. Summary covers it.") without
+commanding action. The user decides.
+
+EMAIL DIGEST — LIGHT PALETTE ONLY
+-----------------------------------
+The email uses #fafaf7 warm off-white with #fff cards and #b8924a amber.
+No dark mode variant.
+
+Why: Emails need to survive every client (Gmail, Outlook, Apple Mail). Dark
+mode emails frequently break. The warm off-white avoids sterile Gmail-white
+while remaining universally safe. The amber accent shifts slightly darker
+(#b8924a vs #c4a35a) because amber that works on black doesn't automatically
+work on white.
+
+EMAIL DIGEST — SUBJECT LINE LEADS WITH CHANNELS
+-------------------------------------------------
+Changed from "3 new videos from your channels" to
+"Inside Dentistry, Cal Newport — 3 new videos"
+
+Why: Leading with a count is what every newsletter does. Channels first gives
+the user a reason to open it — they see who posted before how many. The count
+becomes supporting detail, not the headline.
+
+VERDICT FIELD IN PROMPT
+------------------------
+Added to src/prompts/summarize.js:
+  "verdict": "<one sentence: who this video is most useful for and whether
+  it's worth the full watch. Be specific about the audience. Never say 'skip'
+  or tell the reader what to do — just give context.>"
+
+Why: The email digest needs a one-line contextual note per video. The existing
+schema (tldr, topics, quotes, categories, titleClaim) covers the summary but
+not the "who is this for" angle. This is additive — no existing fields changed.
+The instruction explicitly prohibits prescriptive language to match the brand
+principle established above.
+
+SERIF LEAK FIX
+---------------
+Changed .pricing-price from font-family: var(--serif) to var(--sans), and
+from font-weight: 400 to 700 with -0.02em letter-spacing.
+
+Why: EB Garamond is confined to exactly two contexts: nav brand name and
+landing page h1. The pricing card prices were a third context, decorative
+rather than editorial, which weakened the rule. Inter bold at 36px with tight
+tracking is visually strong enough for prices without breaking the typography
+system.
+
+READ/UNREAD ROW DIFFERENTIATION
+---------------------------------
+Added .vrow.unread (left 2px amber border, font-weight 600) and .vrow.read
+(dimmed title in --text-3, dimmed channel in --text-4). Removed inline
+style="color:var(--text-3)" overrides from video row titles in favor of
+class-based styling.
+
+Why: The original mockup used the same surface treatment for every video row.
+The only visual difference was an inline color override on "read" titles —
+a hack, not a system. Unread rows now have a left amber accent border that
+draws the eye without being loud. Read rows dim both title and channel name.
+This is information hierarchy: a human thought about which rows matter more.
+
+SUGGESTED CHANNELS — DASHED BORDER
+------------------------------------
+Changed .popular-chip from solid border + filled background to dashed border +
+transparent background. Hover transitions to solid border + amber tint fill.
+
+Why: Followed channels (channel-row) and suggested channels (popular-chip)
+used the same surface treatment, making them visually equivalent. Dashed
+border on transparent signals "not yet added" — a suggestion, not a fact.
+The hover transition (dashed → solid, transparent → amber tint) previews
+what "following" would look like.
+
+EYEBROW LABEL HIERARCHY
+-------------------------
+Split into two tiers:
+- Brand eyebrows (landing-demo-trust, digest-eyebrow): 13px, weight 600,
+  letter-spacing 0.04em, uppercase, accent color. These are marketing
+  moments — "THE VIDEO, NOT THE TITLE" and "EVERY MORNING."
+- Product labels (account-section-title, popular-label): 12px, weight 600,
+  letter-spacing 0.02em, sentence case (not uppercase), --text-3 color.
+  These are form labels — "Profile," "Plan & billing," "Suggested channels."
+
+Why: The original mockup used the same 11px/700/0.1em/uppercase treatment on
+every label regardless of context. This is a classic generated-design tell —
+one token applied uniformly because the system doesn't distinguish importance.
+Brand eyebrows should feel different from form labels because they serve
+different purposes.
+
+LIGHT LANDING AS DEFAULT
+--------------------------
+Swapped the mockup switcher: light landing is now the first/default tab,
+dark landing moved to last tab as "Landing (Dark)."
+
+Why: The light variant is stronger for the landing page. The warm off-white
+palette (#fafaf7 / #f2efe8) with dark CTA buttons (#1a1a1a) is more
+distinctive than amber-on-black. Light mode serves the emotional argument
+("upstream of the algorithm" = calm, editorial) while dark mode serves the
+product utility (replacing YouTube's interface). This is the Notion/Linear/
+Readwise pattern: editorial for marketing, focused for the tool.
+
+================================================================================
+FILES CHANGED
+================================================================================
+
+New files:
+  design-assessment.txt         — full design critique + prioritized next steps
+  email-digest-mockup.html      — 600px email digest template
+  design-session-summary.txt    — this file
+
+Modified files:
+  mockup.html                   — all 4 refinements (serif, surfaces, eyebrows,
+                                  light-first default)
+  src/prompts/summarize.js      — added verdict field to schema
+
+================================================================================
+REMAINING WORK
+================================================================================
+
+- Implement rebrand into live app (replace cyan palette, add EB Garamond,
+  update all CSS variables in app.css)
+- Build actual email digest sending system (Phase 2 — jobs/workers)
+- Convert email-digest-mockup.html to production email template with inline
+  CSS for email client compatibility
+- Design empty states (My Videos with 0 videos, Following with 0 channels)
+- Design loading/skeleton states
+- Address em-dash list markers on pricing page (minor but recognizable as
+  AI-generated pattern)
+
+================================================================================
+HANDOFF PROMPT
+================================================================================
+
+Paste this into the existing chat session to continue:
+
+---
+
+Continuing from a design session. Here's what was done:
+
+1. Full design assessment saved to design-assessment.txt — critiqued the
+   mockup across color, typography, light/dark, and generic patterns.
+
+2. Built email-digest-mockup.html — a 600px email digest template with
+   two-tier card hierarchy (featured video gets full treatment, others get
+   compact rows). Uses light palette (#fafaf7 / #b8924a amber). Subject
+   line leads with channel names, not count. No prescriptive language —
+   verdicts give context without telling users what to do.
+
+3. Added a "verdict" field to src/prompts/summarize.js — one sentence about
+   who the video is most useful for. Additive change, nothing else in the
+   prompt was modified.
+
+4. Refined mockup.html:
+   - Fixed serif leak: pricing prices now Inter bold, not EB Garamond
+   - Read/unread video rows differentiated (unread gets left amber border)
+   - Suggested channel chips now dashed-border/transparent (distinct from
+     followed channels)
+   - Eyebrow labels split into two tiers: brand moments (13px/uppercase/
+     accent) vs product form labels (12px/sentence-case/muted)
+   - Light landing page is now the default tab
+
+Key design principle established: Headwater must never tell users what to do
+with their attention. The brand promise is "your attention belongs to you" —
+so verdicts give context, not commands. "Familiar if you've read Deep Work.
+Summary covers it." not "Skip it."
+
+Next steps: implement the rebrand into the live codebase, or continue
+refining the mockup (empty states, loading states, em-dash list markers).

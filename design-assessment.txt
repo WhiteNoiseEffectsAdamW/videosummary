@@ -1,0 +1,164 @@
+HEADWATER DESIGN ASSESSMENT
+April 3, 2026
+Reviewing mockup.html (6 pages: Landing dark, My Videos, Following, Account, Upgrade, Landing light)
+
+================================================================================
+1. COLOR PALETTE: AMBER ON NEAR-BLACK
+================================================================================
+
+The good: This is a genuine departure from the cyan-on-navy problem. Amber gold
+reads as editorial, intentional, and warm -- it connects to the "headwater"
+metaphor (river stones, morning light, natural source). The near-black
+backgrounds (#0a0a0a / #1a1a1a) are neutral enough to not fight the accent. The
+warm white text stack (#f5f0e8) is a small but important detail -- it unifies the
+palette in a way cool-white never would.
+
+The problem: It's one decision away from looking like a crypto dashboard or a
+"luxury fintech" template. The amber-gold-on-black combo is the second most
+common dark-mode palette after cyan-on-navy in 2024-2025 startup templates.
+You've traded one cliche for a less common one, but it's still a cliche. The
+featured pricing card at #1c1a14 with amber border is the exact pattern you see
+on every "Pro tier" dark-mode SaaS page.
+
+Verdict: The palette is better than cyan. It's not yet distinctive. It solves
+the "Claude Code default" problem but doesn't yet create a "this is obviously
+Headwater" identity. It passes the vibe-coded test narrowly -- a designer could
+have chosen this, but so could a well-prompted LLM.
+
+================================================================================
+2. TYPOGRAPHY: EB GARAMOND IN TWO PLACES
+================================================================================
+
+This is the strongest decision in the mockup. Confining the serif to brand name
++ landing h1 is exactly right. It creates a clear hierarchy: the serif says
+"this is the brand speaking," and Inter everywhere else says "this is the
+product working." The restraint is what makes it feel considered.
+
+One issue: The pricing card uses var(--serif) for the price ($0, $15). That's a
+third context for EB Garamond, and it's decorative rather than editorial. It
+weakens the rule. Either prices should be Inter (bold, large) or you need to
+explicitly expand the rule to "brand moments" -- but that's a slippery slope
+back to "serif sprinkled everywhere."
+
+The light-mode landing page bottom CTA switches the closing tagline from EB
+Garamond (dark version) to Inter with font-weight:500. That's actually a better
+choice -- the serif tagline in dark mode feels slightly precious. Pick one and
+be consistent.
+
+================================================================================
+3. LIGHT MODE
+================================================================================
+
+This is stronger than the dark version. Here's why:
+
+- #fafaf7 (warm off-white) with #f2efe8 section backgrounds creates depth
+  without being stark. It doesn't read as a Bootstrap white page.
+
+- The amber shifts to #b8924a (slightly darker/warmer), which is a good
+  instinct -- amber that works on black doesn't automatically work on white.
+
+- The dark CTA button (background:#1a1a1a; color:#fafaf7) is more distinctive
+  than amber-on-black. A near-black button on warm white is uncommon and
+  confident.
+
+- The email mockup in light mode reads better -- the window chrome metaphor
+  (dots, titlebar) looks more realistic against a light background.
+
+The risk: Light mode is harder to make feel "premium" for a product with this
+positioning. Dark mode signals "I'm not YouTube" more immediately. Light mode
+requires more craft in the details to not feel generic.
+
+Recommendation: Light mode as the landing page, dark mode as the product
+(logged-in pages). This is what Notion, Linear, and Readwise do --
+editorial/calm for marketing, focused/dark for the tool. It also gives you two
+distinct contexts, which makes the brand feel more considered. The landing page
+is where you're making the emotional argument ("upstream of the algorithm"), and
+the warm, quiet, light palette serves that better. The product pages are where
+you're replacing YouTube, and the dark mode serves that utility.
+
+================================================================================
+4. WHAT STILL LOOKS GENERIC
+================================================================================
+
+The eyebrow pattern is overused. font-size:11px; font-weight:700;
+letter-spacing:0.1em; text-transform:uppercase appears on "THE VIDEO, NOT THE
+TITLE," "EVERY MORNING," "POPULAR CHANNELS," "PROFILE," "PLAN," "FREE," "PRO."
+It's the same treatment everywhere. When every label looks identical, none of
+them create hierarchy -- they become wallpaper. This is a classic
+generated-design tell: one "design token" applied uniformly because the system
+doesn't know which labels matter more.
+
+The card/row pattern is uniform. Every interactive element -- video rows,
+channel rows, account rows, popular chips -- uses the same background:
+var(--surface); border: 1px solid var(--border); border-radius: 8px recipe. Real
+design systems have variation in surface treatment based on importance and
+interaction type. A video you haven't read should feel different from one you
+have. A channel you follow should feel different from a suggested one.
+
+The em-dash list markers on pricing features (li::before { content: '--' }) are
+a tell. This is what Claude generates when asked to make a list "look designed"
+instead of using bullets. It's fine, but it's recognizable.
+
+Missing states and moments. There's no empty state (what does "My Videos" look
+like with zero videos?), no loading/skeleton state, no hover effects beyond
+border color changes. These are the details that separate designed products from
+scaffolded ones. The "Remove" button hover going red is one of the only moments
+of interaction personality in the whole mockup.
+
+================================================================================
+5. SINGLE STRONGEST RECOMMENDATION
+================================================================================
+
+Design the email digest as a first-class artifact, and let its aesthetic drive
+the product -- not the other way around.
+
+Here's why: Headwater's primary touchpoint isn't the web app. It's the email
+that arrives every morning. The web app is secondary -- it's where you manage
+settings and browse history. But the email is where the brand promise is
+delivered. Right now, the email mockup in the landing page is a tiny, generic
+preview. The actual email template (when it ships) will be the thing users see
+daily.
+
+If you design the email first -- its typography, spacing, the way a summary card
+looks, how a quote is formatted, how "worth watching" vs "skip it" is expressed
+-- and then extract the product's visual language from that, you'll end up with
+something that feels inevitable rather than assembled. The email forces you to
+work within tighter constraints (inline CSS, limited fonts, narrow width), and
+those constraints tend to produce more distinctive design.
+
+Concretely: design a full-width email mockup at 600px, make it beautiful, then
+bring that card treatment, that typographic hierarchy, and that tone back into
+the web app. The web app should feel like an expanded version of something you
+already love receiving -- not the other way around.
+
+This also solves the "vibe coded" problem permanently, because email templates
+are the one thing AI tools are worst at designing well. If the email looks good,
+the whole product inherits credibility.
+
+================================================================================
+6. NEXT STEPS (PRIORITIZED)
+================================================================================
+
+1. Design the email digest template first. This is the highest-leverage move.
+   Build a full 600px-wide HTML email mockup -- the actual thing users will
+   receive daily. Get the summary card, quote formatting, and "worth watching /
+   skip it" tone right there. Then pull that visual language back into the web
+   app.
+
+2. Go light-mode landing, dark-mode product. Split the two contexts. Use the
+   light variant for the marketing/landing page (it's already stronger), keep
+   dark for logged-in pages. This is a small change with outsized impact on
+   perceived intentionality.
+
+3. Fix the serif leak. Remove EB Garamond from pricing card prices. Keep the
+   rule airtight: serif in brand name + landing h1 only.
+
+4. Break up the uniform surfaces. Differentiate read vs. unread video rows,
+   followed channels vs. suggested channels. Even small things -- a left border
+   accent on unread, a slightly different background on suggestions -- signal
+   that a human thought about information hierarchy.
+
+5. Vary the eyebrow labels. Not every section label needs the same
+   11px/700/uppercase/0.1em treatment. "EVERY MORNING" on the landing page is a
+   brand moment -- it could be larger or use the accent color differently than
+   "PROFILE" on the account page, which is just a form label.
