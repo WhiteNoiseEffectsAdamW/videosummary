@@ -372,7 +372,7 @@ body {
 .pill-id   { background: rgba(196,163,90,0.12); color: #d4b36a; border: 1px solid rgba(196,163,90,0.2); }
 .pill-cache { background: rgba(52,211,153,0.1);  color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
 .pill-time  { background: rgba(251,191,36,0.08); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); margin-left: auto; }
-.pill-cat   { background: rgba(255,255,255,0.05); color: #666666; border: 1px solid rgba(255,255,255,0.1); font-weight: 500; }
+.pill-cat   { background: rgba(196,163,90,0.08); color: #999; border: 1px solid rgba(196,163,90,0.15); font-weight: 500; }
 
 .categories-row {
   display: flex;
@@ -405,7 +405,7 @@ body {
   .card { padding: 16px 14px; border-radius: 10px; }
   .tldr-text { font-size: 15px; }
   .page-inner { padding: 28px 16px 100px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
-  .page-title { font-size: 20px; }
+  .page-title { font-size: 16px; }
   .video-body { padding: 14px 16px 16px; }
   .add-channel-inputs { flex-direction: column; }
   .add-channel-inputs .url-input { width: 100%; box-sizing: border-box; }
@@ -424,7 +424,6 @@ body {
 .summary-header {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
 }
@@ -916,7 +915,7 @@ body {
 .account-danger-zone { margin-top: 40px; border-top: 1px solid #2a2a2a; padding-top: 24px; }
 .account-delete-confirm p { font-size: 13px; color: #666666; margin: 0 0 16px; line-height: 1.6; }
 .account-delete-actions { display: flex; flex-direction: column; gap: 8px; }
-.page-title { font-size: 22px; font-weight: 700; margin: 0 0 20px; }
+.page-title { font-size: 18px; font-weight: 600; color: #999; margin: 0 0 20px; }
 .page-sub { font-size: 14px; color: #555; margin: 0 0 28px; }
 
 .videos-header {
@@ -1413,8 +1412,8 @@ body {
 .vrow-selected { background: rgba(196,163,90,0.04); }
 .vrow-pulse { animation: longpress-pulse 0.4s ease; }
 /* Unread row — left amber border */
-.vrow.unread { border-left: 2px solid #c4a35a; padding-left: 14px; }
-.vrow.unread .vrow-title { font-weight: 600; }
+.vrow.unread { border-left: 3px solid #c4a35a; padding-left: 13px; }
+.vrow.unread .vrow-title { font-weight: 700; color: #f5f0e8; }
 
 /* Read row — dimmed */
 .vrow.read .vrow-title { color: #666666; font-weight: 400; }
@@ -1531,9 +1530,9 @@ body {
 }
 .confirm-delete:hover { background: #dc2626; }
 
-.vrow-thumb-wrap { flex-shrink: 0; order: 2; -webkit-user-drag: none; }
+.vrow-thumb-wrap { flex-shrink: 0; order: -1; -webkit-user-drag: none; }
 .vrow-thumb { -webkit-user-drag: none; }
-.vrow-thumb { width: 96px; height: 60px; object-fit: cover; border-radius: 6px; display: block; }
+.vrow-thumb { width: 120px; height: 68px; object-fit: cover; border-radius: 6px; display: block; }
 
 .vrow-main { flex: 1; min-width: 0; }
 
@@ -1586,7 +1585,7 @@ body {
 
 @media (max-width: 480px) {
   .vrow { padding: 12px; }
-  .vrow-thumb { width: 80px; height: 50px; }
+  .vrow-thumb { width: 110px; height: 62px; }
   .vbadge { font-size: 0; padding: 6px; border-radius: 50%; }
   .vbadge::before { font-size: 10px; font-weight: 700; }
   .vbadge-watch::before   { content: 'W'; }
@@ -1825,7 +1824,7 @@ body {
 .landing-footer-link { color: #aaa; text-decoration: none; }
 .landing-footer-link:hover { color: #555; }
 .landing-hero-actions { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 28px; }
-.landing-hero-meta { font-size: 13px; color: #aaa; }
+.landing-hero-meta { font-size: 13px; color: #bbb; }
 .landing-or-signup-sub { font-size: 13px; color: #aaa; margin-top: -4px; }
 .landing-or-signup-how { font-size: 13px; color: #666; }
 .landing-digest-cta { max-width: 860px; margin: 0 auto; padding: 40px 24px 60px; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
@@ -1928,7 +1927,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e8e4dc;
 }
 .digest-email-sender { font-size: 12px; font-weight: 700; color: #222; }
 .digest-email-subject { font-size: 11px; color: #666; }
