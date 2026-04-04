@@ -247,8 +247,8 @@ body {
 }
 .summary-thumb-inset {
   flex-shrink: 0;
-  width: 120px;
-  height: 80px;
+  width: 144px;
+  height: 81px;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.08);
@@ -451,7 +451,7 @@ body {
 }
 .btn-follow:hover:not(:disabled) { background: rgba(196,163,90,0.08); border-color: rgba(196,163,90,0.5); }
 .btn-follow:disabled { opacity: 0.6; cursor: default; }
-.btn-follow-done { color: #22c55e; border-color: rgba(34,197,94,0.35); }
+.btn-follow-done { color: #c4a35a; background: rgba(196,163,90,0.08); border-color: rgba(196,163,90,0.5); }
 .btn-follow-wrap { display: flex; flex-direction: column; gap: 4px; }
 .btn-follow-sub { font-size: 11px; color: #555555; }
 .summary-header-actions { display: flex; align-items: center; gap: 10px; }
