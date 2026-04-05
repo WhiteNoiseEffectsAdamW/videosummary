@@ -72,8 +72,20 @@ function renderDigestHtml(summaries) {
   const channelNames = [...new Set(summaries.map(s => cleanName(s.channel_name)).filter(Boolean))];
   const channelDisplay = channelNames.slice(0, 2).map(esc).join(', ') + (channelNames.length > 2 ? ' &amp; more' : '');
 
-  const featured = summaries[0];
-  const rest = summaries.slice(1);
+  // Feature the longest video of the day, with an 8-minute floor.
+  // If nothing clears the floor, fall back to the first video (still need a featured slot).
+  const FLOOR_SECONDS = 8 * 60;
+  let featuredIdx = 0;
+  let longest = -1;
+  summaries.forEach((s, i) => {
+    const dur = s.duration_seconds || 0;
+    if (dur >= FLOOR_SECONDS && dur > longest) {
+      longest = dur;
+      featuredIdx = i;
+    }
+  });
+  const featured = summaries[featuredIdx];
+  const rest = summaries.filter((_, i) => i !== featuredIdx);
 
   function renderFeatured(s) {
     const data = JSON.parse(s.summary_json);
@@ -86,25 +98,27 @@ function renderDigestHtml(summaries) {
     const topicsCapped = (topics || []).slice(0, 4);
     const stats = [durationMins ? `${durationMins} min` : null, topicsCapped.length ? `${topicsCapped.length} topics` : null].filter(Boolean).join(' &middot; ');
 
-    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff" style="border-collapse:collapse;background-color:#ffffff;border:1px solid #e8e4dc;">
+    return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
-    <td width="96" style="padding:18px 0 16px 20px;vertical-align:top;">
-      <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="96" height="54" style="display:block;border-radius:4px;background-color:#eae6de;" /></a>
-    </td>
-    <td style="padding:18px 20px 16px 14px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      ${channelName ? `<div style="font-size:11px;font-weight:600;color:#b8924a;margin-bottom:3px;">${esc(channelName)}</div>` : ''}
-      <div style="font-size:15px;font-weight:600;color:#1a1a1a;line-height:1.35;margin-bottom:6px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
-      ${stats ? `<div style="font-size:11px;color:#aaa;">${stats}</div>` : ''}
+    <td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="520" style="display:block;width:100%;max-width:520px;height:auto;border-radius:6px;background-color:#eae6de;" /></a>
     </td>
   </tr>
   <tr>
-    <td colspan="2" style="padding:0 20px 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      ${tldr ? `<p style="font-size:14px;color:#444;line-height:1.65;margin:0 0 14px;">${esc(tldr)}</p>` : ''}
-      ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:14px;"><tr><td style="border-left:2px solid #b8924a;padding-left:14px;"><p style="font-size:14px;font-style:italic;color:#666;line-height:1.55;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
-      ${verdict ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #f0ece4;"><tr><td style="padding-top:12px;vertical-align:top;width:52px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#bbb;">Verdict</span></td><td style="padding:12px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#555;line-height:1.5;">${esc(verdict)}</span></td></tr></table>` : ''}
+    <td style="padding:0 0 10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      ${channelName ? `<div style="font-size:12px;font-weight:600;color:#b8924a;margin-bottom:6px;">${esc(channelName)}</div>` : ''}
+      <div style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;letter-spacing:-0.01em;margin-bottom:8px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
+      ${stats ? `<div style="font-size:12px;color:#aaa;margin-bottom:4px;">${stats}</div>` : ''}
     </td>
   </tr>
-  ${topicsCapped.length > 0 ? `<tr><td colspan="2" style="padding:0 20px 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #f0ece4;">${topicsCapped.map((t, i) => `<tr><td style="padding:8px 10px 8px 0;vertical-align:top;width:44px;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f5f2ec;' : ''}"><span style="font-size:11px;color:#b8924a;font-weight:500;">${esc(t.timestamp || '')}</span></td><td style="padding:8px 0;vertical-align:top;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f5f2ec;' : ''}"><span style="font-size:13px;font-weight:600;color:#333;">${esc(t.title || '')}</span>${t.description ? `<span style="font-size:13px;color:#666;"> — ${esc(t.description)}</span>` : ''}</td></tr>`).join('')}</table></td></tr>` : ''}
+  <tr>
+    <td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      ${tldr ? `<p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
+      ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #b8924a;padding-left:16px;"><p style="font-size:15px;font-style:italic;color:#555;line-height:1.6;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
+      ${verdict ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:14px;vertical-align:top;width:58px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#aaa;">Verdict</span></td><td style="padding:14px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#555;line-height:1.5;">${esc(verdict)}</span></td></tr></table>` : ''}
+    </td>
+  </tr>
+  ${topicsCapped.length > 0 ? `<tr><td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;">${topicsCapped.map((t, i) => `<tr><td style="padding:10px 10px 10px 0;vertical-align:top;width:48px;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:11px;color:#b8924a;font-weight:500;">${esc(t.timestamp || '')}</span></td><td style="padding:10px 0;vertical-align:top;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:13px;font-weight:600;color:#333;">${esc(t.title || '')}</span>${t.description ? `<span style="font-size:13px;color:#666;"> — ${esc(t.description)}</span>` : ''}</td></tr>`).join('')}</table></td></tr>` : ''}
 </table>`;
   }
 
