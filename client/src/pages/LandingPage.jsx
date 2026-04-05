@@ -203,7 +203,7 @@ export default function LandingPage() {
       {/* Hero — lean, let the demo sell it */}
       <div className="landing-hero">
         <h1 className="landing-headline">Upstream of<br /><span className="landing-headline-accent">the algorithm.</span></h1>
-        <p className="landing-sub">YouTube is designed to keep you watching. This isn't.</p>
+        <p className="landing-sub">YouTube is designed to keep you watching.<br />This isn't.</p>
         <div className="landing-hero-actions">
           <Link to="/register" className="btn-primary">Try it free →</Link>
           <span className="landing-hero-meta">3 channels free · No Google account needed</span>

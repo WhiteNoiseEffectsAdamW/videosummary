@@ -98,6 +98,16 @@ if (process.env.NODE_ENV === 'production') {
 
   app.use(express.static(clientDist));
 
+  // Serve static OG images directly from client/public — bypasses Vite/dist
+  // pipeline so these files are guaranteed present regardless of build caching
+  const ogImageDir = path.join(__dirname, '..', 'client', 'public');
+  for (const name of ['og-image-light.png', 'og-image-dark.png']) {
+    app.get(`/${name}`, (req, res) => {
+      res.set('Cache-Control', 'public, max-age=86400');
+      res.sendFile(path.join(ogImageDir, name));
+    });
+  }
+
   // Per-video OG tags for share pages
   app.get('/s/:slug', async (req, res) => {
     try {

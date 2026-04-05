@@ -284,9 +284,9 @@ export default function FollowingPage() {
       </div>
 
       <div className="digest-preview-row">
-        <span className="digest-preview-sub">See what your morning digest looks like — we'll send one to your inbox now.</span>
+        <span className="digest-preview-sub">See what tomorrow morning looks like, delivered to your inbox now.</span>
         <button className="btn-preview-digest" onClick={handlePreviewDigest} disabled={previewSending}>
-          {previewSending ? 'Sending…' : 'Send me a preview'}
+          {previewSending ? 'Sending…' : "Send me tomorrow's digest now"}
         </button>
       </div>
 
@@ -300,7 +300,7 @@ export default function FollowingPage() {
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
           />
-          <button className="btn-summarize" type="submit" disabled={loading}>
+          <button className="btn-add-digest" type="submit" disabled={loading}>
             {loading ? 'Adding…' : 'Add to digest'}
           </button>
         </div>

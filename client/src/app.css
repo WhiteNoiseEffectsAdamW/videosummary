@@ -63,7 +63,6 @@ body::after {
 
 .hero h1 span {
   color: #c4a35a;
-  font-style: italic;
 }
 
 .hero p {
@@ -72,7 +71,6 @@ body::after {
   max-width: 520px;
   margin: 0 auto 36px;
   line-height: 1.6;
-  font-style: italic;
 }
 
 /* ── Search form ─────────────────────────────────────────── */
@@ -94,7 +92,6 @@ body::after {
 
 .form-row:focus-within {
   border-color: rgba(196,163,90,0.5);
-  box-shadow: 0 0 0 3px rgba(196,163,90,0.1);
 }
 
 .url-input {
@@ -131,6 +128,25 @@ body::after {
 .btn-summarize:hover:not(:disabled) { background: #d4b36a; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(196,163,90,0.2); }
 .btn-summarize:active:not(:disabled) { transform: translateY(0); }
 .btn-summarize:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Add-to-digest button — subtle gradient variant of .btn-summarize */
+.btn-add-digest {
+  flex-shrink: 0;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0a0a0a;
+  background: linear-gradient(180deg, #c4a35a 0%, #b8924a 100%);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+.btn-add-digest:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(196,163,90,0.18); }
+.btn-add-digest:active:not(:disabled) { transform: translateY(0); }
+.btn-add-digest:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* ── API key row ─────────────────────────────────────────── */
 .key-row {
@@ -1757,7 +1773,7 @@ body::after {
   color: #777;
   line-height: 1.7;
   margin: 0 auto;
-  max-width: 480px;
+  max-width: 420px;
 }
 .landing-hero-mechanic { font-size: 13px; color: #bbb; margin: 8px auto 0; max-width: 420px; line-height: 1.6; letter-spacing: 0.01em; }
 .landing-hero-beta { font-size: 13px; color: #bbb; margin-top: 10px; }
@@ -1913,11 +1929,11 @@ body::after {
 .landing-page .landing-or-signup-how { font-size: 18px; font-weight: 500; color: #333; }
 
 @media (max-width: 600px) {
-  .landing-headline { font-size: 28px; }
+  .landing-headline { font-size: 40px; }
   .landing-nav { padding: 14px 20px; }
   .landing-nav-link { display: none; }
   .landing-hero { padding: 40px 20px 32px; }
-  .landing-sub { font-size: 15px; }
+  .landing-sub { font-size: 14px; max-width: 320px; }
   .landing-input-row { flex-direction: column; gap: 10px; }
   .landing-submit-btn { width: 100%; padding: 13px; font-size: 15px; }
   .landing-demo { padding: 0 20px 48px; }
