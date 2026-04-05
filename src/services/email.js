@@ -108,29 +108,30 @@ function renderDigestHtml(summaries) {
     <td style="padding:0 0 10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
       ${channelName ? `<div style="font-size:13px;font-weight:700;color:#b8924a;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">${esc(channelName)}</div>` : ''}
       <div style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;letter-spacing:-0.01em;margin-bottom:8px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
-      ${stats ? `<div style="font-size:12px;color:#aaa;margin-bottom:4px;">${stats}</div>` : ''}
+      ${stats ? `<div style="font-size:12px;color:#888;margin-bottom:4px;">${stats}</div>` : ''}
     </td>
   </tr>
   <tr>
     <td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      ${tldr ? `<p style="font-size:15px;color:#333;line-height:1.7;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
-      ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #b8924a;padding-left:16px;"><p style="font-size:15px;font-style:italic;color:#555;line-height:1.6;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
-      ${verdict ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:14px;vertical-align:top;width:58px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#aaa;">Verdict</span></td><td style="padding:14px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#555;line-height:1.5;">${esc(verdict)}</span></td></tr></table>` : ''}
-    </td>
-  </tr>
-  <tr>
-    <td style="padding:4px 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      <a href="${summaryUrl}" style="display:inline-block;font-size:14px;font-weight:600;color:#b8924a;text-decoration:none;padding:10px 20px;border:1px solid #b8924a;border-radius:6px;">Read full summary &rarr;</a>
-      <div style="margin-top:10px;"><a href="https://www.youtube.com/watch?v=${s.video_id}" style="font-size:12px;color:#999;text-decoration:none;border-bottom:1px solid #e0dcd3;padding-bottom:1px;">Watch on YouTube &#x2197;</a></div>
+      ${tldr ? `<p style="font-size:15px;color:#2a2a2a;line-height:1.7;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
+      ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #b8924a;padding-left:16px;"><p style="font-size:15px;font-style:italic;color:#3d3d3d;line-height:1.6;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
+      ${verdict ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:14px;vertical-align:top;width:58px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;">Verdict</span></td><td style="padding:14px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#3d3d3d;line-height:1.5;">${esc(verdict)}</span></td></tr></table>` : ''}
     </td>
   </tr>
   ${topicsCapped.length > 0 ? `<tr><td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;">${topicsCapped.map((t, i) => `<tr><td style="padding:10px 10px 10px 0;vertical-align:top;width:48px;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:11px;color:#b8924a;font-weight:500;">${esc(t.timestamp || '')}</span></td><td style="padding:10px 0;vertical-align:top;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:13px;font-weight:600;color:#333;">${esc(t.title || '')}</span>${t.description ? `<span style="font-size:13px;color:#666;"> — ${esc(t.description)}</span>` : ''}</td></tr>`).join('')}</table></td></tr>` : ''}
+  <tr>
+    <td style="padding:6px 0 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      <a href="${summaryUrl}" style="font-size:14px;font-weight:600;color:#b8924a;text-decoration:none;">Read full summary &rarr;</a>
+      <span style="color:#d8d2c6;padding:0 10px;">&middot;</span>
+      <a href="https://www.youtube.com/watch?v=${s.video_id}" style="font-size:13px;color:#777;text-decoration:none;">Watch on YouTube &#x2197;</a>
+    </td>
+  </tr>
 </table>`;
   }
 
   function renderCompact(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr } = data;
+    const { tldr, verdict } = data;
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
     const channelName = cleanName(s.channel_name);
@@ -144,7 +145,8 @@ function renderDigestHtml(summaries) {
     <td style="padding:16px 0;vertical-align:middle;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
       ${channelName ? `<div style="font-size:11px;font-weight:600;color:#b8924a;margin-bottom:2px;">${esc(channelName)}</div>` : ''}
       <div style="font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35;margin-bottom:4px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
-      ${tldrShort ? `<div style="font-size:13px;color:#777;line-height:1.5;">${esc(tldrShort)}</div>` : ''}
+      ${tldrShort ? `<div style="font-size:13px;color:#555;line-height:1.5;margin-bottom:4px;">${esc(tldrShort)}</div>` : ''}
+      ${verdict ? `<div style="font-size:12px;color:#777;font-style:italic;line-height:1.5;">${esc(verdict)}</div>` : ''}
     </td>
   </tr>
 </table>`;

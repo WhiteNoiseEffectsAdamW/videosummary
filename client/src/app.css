@@ -21,15 +21,6 @@ body::before {
   background-size: 220px 220px;
   opacity: 0.045;
 }
-/* Warm radial glow from top — makes dark pages feel lit, not flat */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: radial-gradient(ellipse 1100px 520px at 50% 0%, rgba(196,163,90,0.015), transparent 65%);
-}
 
 /* Amber focus ring — keyboard nav polish */
 :focus-visible {
@@ -671,7 +662,7 @@ body::after {
 
 .topic-desc {
   font-size: 14px;
-  color: #a8a29a;
+  color: #a3a3a3;
   line-height: 1.6;
 }
 
