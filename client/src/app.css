@@ -28,7 +28,7 @@ body::after {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(ellipse 1100px 520px at 50% 0%, rgba(196,163,90,0.03), transparent 65%);
+  background: radial-gradient(ellipse 1100px 520px at 50% 0%, rgba(196,163,90,0.015), transparent 65%);
 }
 
 /* Amber focus ring — keyboard nav polish */
@@ -63,7 +63,7 @@ body::after {
   font-size: clamp(40px, 6vw, 64px);
   font-weight: 500;
   letter-spacing: -0.01em;
-  color: #f5f0e8;
+  color: #fbf7ee;
   margin-bottom: 14px;
   line-height: 1.05;
 }
@@ -108,7 +108,7 @@ body::after {
   outline: none;
   font-family: inherit;
   font-size: 16px;
-  color: #f5f0e8;
+  color: #fbf7ee;
   padding: 10px 14px;
   min-width: 0;
 }
@@ -188,7 +188,7 @@ body::after {
   outline: none;
   font-family: inherit;
   font-size: 13px;
-  color: #f5f0e8;
+  color: #fbf7ee;
   padding: 8px 12px;
   min-width: 0;
 }
@@ -647,20 +647,6 @@ body::after {
   padding-left: 14px;
   position: relative;
 }
-.tldr-quote::before {
-  content: '\201C';
-  position: absolute;
-  left: 10px;
-  top: -42px;
-  font-family: 'EB Garamond', Georgia, serif;
-  font-style: italic;
-  font-weight: 500;
-  font-size: 140px;
-  line-height: 1;
-  color: rgba(196,163,90,0.10);
-  pointer-events: none;
-  z-index: 0;
-}
 
 .tldr-text {
   font-size: 17px;
@@ -939,7 +925,7 @@ body::after {
   border-radius: 8px;
   padding: 10px 14px;
   font-size: 14px;
-  color: #f5f0e8;
+  color: #fbf7ee;
   outline: none;
   box-sizing: border-box;
   font-family: inherit;
@@ -998,8 +984,8 @@ body::after {
 .field input:-webkit-autofill:focus,
 .field input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px #141414 inset;
-  -webkit-text-fill-color: #f5f0e8;
-  caret-color: #f5f0e8;
+  -webkit-text-fill-color: #fbf7ee;
+  caret-color: #fbf7ee;
   transition: background-color 5000s ease-in-out 0s;
 }
 .auth-switch { font-size: 13px; color: #555; margin-top: 20px; text-align: center; }
@@ -1651,7 +1637,7 @@ body::after {
 .vrow-title {
   font-size: 14px;
   font-weight: 600;
-  color: #f5f0e8;
+  color: #fbf7ee;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1792,7 +1778,7 @@ body::after {
 }
 .landing-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #b8924a; margin-bottom: 16px; }
 .landing-example-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #bbb; margin-bottom: 12px; padding: 0 4px; }
-.landing-demo-trust { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #b8924a; margin-bottom: 20px; padding: 0 4px; }
+.landing-demo-trust { font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #a88440; margin-bottom: 20px; padding: 0 4px; }
 .landing-try-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #bbb; margin-bottom: 10px; padding: 0 4px; }
 .landing-or-signup { margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
 .landing-or-signup-how { font-size: 13px; color: #666666; }
@@ -2197,7 +2183,7 @@ body::after {
   border-radius: 8px;
   padding: 11px 22px;
   font-size: 14px;
-  color: #f5f0e8;
+  color: #fbf7ee;
   box-shadow: 0 4px 24px rgba(0,0,0,0.5);
   z-index: 9999;
   white-space: nowrap;
@@ -2259,7 +2245,7 @@ body::after {
 .pricing-tier-name {
   font-size: 17px;
   font-weight: 700;
-  color: #f5f0e8;
+  color: #fbf7ee;
 }
 .pricing-current-badge {
   font-size: 11px;
@@ -2285,7 +2271,7 @@ body::after {
 .pricing-price {
   font-size: 32px;
   font-weight: 800;
-  color: #f5f0e8;
+  color: #fbf7ee;
   letter-spacing: -0.02em;
   margin-bottom: 20px;
 }
