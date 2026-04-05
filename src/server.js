@@ -90,7 +90,7 @@ if (process.env.NODE_ENV === 'production') {
   const fs = require('fs');
   const clientDist = path.join(__dirname, '..', 'client', 'dist');
   const { findByVideoId, findBySlug } = require('./models/summary');
-  const APP_URL = process.env.APP_URL || 'https://headwater.app';
+  const APP_URL = process.env.APP_URL || 'https://headwaterapp.com';
 
   function escAttr(str) {
     return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

@@ -1,9 +1,9 @@
 const { Resend } = require('resend');
 
-const FROM_ADDRESS = process.env.FROM_EMAIL || 'digest@headwater.app';
+const FROM_ADDRESS = process.env.FROM_EMAIL || 'digest@headwaterapp.com';
 const FROM_NAME = process.env.FROM_NAME || 'Headwater';
 const FROM = `${FROM_NAME} <${FROM_ADDRESS}>`;
-const APP_URL = process.env.APP_URL || 'https://headwater.app';
+const APP_URL = process.env.APP_URL || 'https://headwaterapp.com';
 const DIVIDER = '────────────────────────────────';
 
 const cleanName = (name) => (name || '').replace(/^@/, '');

@@ -201,7 +201,7 @@ router.get('/:videoId', async (req, res) => {
   }
 });
 
-// Thumbnail proxy — serves YouTube thumbnails from headwater.app domain
+// Thumbnail proxy — serves YouTube thumbnails from headwaterapp.com domain
 // Improves email deliverability (images align with sending domain)
 router.get('/thumb/:videoId', async (req, res) => {
   const { videoId } = req.params;

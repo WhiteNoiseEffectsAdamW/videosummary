@@ -7,7 +7,7 @@
 
 **Headwater** is a YouTube summarization app. Users paste a video URL, get a structured AI summary (TL;DR, topics, quotes, title vs. reality). They can follow channels and receive a daily morning digest email with summaries of new videos from those channels.
 
-Live at: **headwater.app** (deployed on Railway)
+Live at: **headwaterapp.com** (deployed on Railway)
 
 GitHub: `WhiteNoiseEffectsAdamW/videosummary`
 
@@ -93,7 +93,7 @@ videosummary/
 | `DATABASE_URL` | Yes (prod) | Railway | Postgres connection string. If absent, uses SQLite locally |
 | `SESSION_SECRET` | Yes (prod) | Railway | Express session secret |
 | `SUPADATA_API_KEY` | Yes (prod) | Railway | Transcript API. If absent, falls back to yt-dlp |
-| `APP_URL` | Yes (prod) | Railway | e.g. `https://headwater.app` — used in email links |
+| `APP_URL` | Yes (prod) | Railway | e.g. `https://headwaterapp.com` — used in email links |
 | `SENTRY_DSN` | No | Railway | Error tracking |
 | `DAILY_USER_CAP` | No | Railway | Max summaries per user per day (default 20) |
 | `POLL_DAILY_CAP` | No | Railway | Max AI calls from cron per day (default 150) |
@@ -208,7 +208,7 @@ Links users to videos in their My Videos list.
 ### Thumbnail handling
 - YouTube thumbnails served via proxy at `/api/og/thumb/:videoId` (fetched from YouTube, cached 24h)
 - Fallback: `maxresdefault` → `hqdefault` on load error
-- Proxy improves email deliverability (images from headwater.app domain, not YouTube CDN)
+- Proxy improves email deliverability (images from headwaterapp.com domain, not YouTube CDN)
 
 ---
 

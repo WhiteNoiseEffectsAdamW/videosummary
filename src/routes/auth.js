@@ -32,7 +32,7 @@ async function issueVerification(user) {
   const token = crypto.randomBytes(32).toString('hex');
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
   await setVerificationToken(user.id, token, expires);
-  const APP_URL = process.env.APP_URL || 'https://headwater.app';
+  const APP_URL = process.env.APP_URL || 'https://headwaterapp.com';
   await sendVerificationEmail(user.email, `${APP_URL}/verify-email?token=${token}`);
 }
 
@@ -122,7 +122,7 @@ router.post('/forgot-password', async (req, res, next) => {
       const token = crypto.randomBytes(32).toString('hex');
       const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
       await setResetToken(user.id, token, expires);
-      const APP_URL = process.env.APP_URL || 'https://headwater.app';
+      const APP_URL = process.env.APP_URL || 'https://headwaterapp.com';
       await sendPasswordReset(user.email, `${APP_URL}/reset-password?token=${token}`);
     }
     res.json({ ok: true });

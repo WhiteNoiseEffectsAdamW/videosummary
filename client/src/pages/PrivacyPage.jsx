@@ -28,14 +28,14 @@ export default function PrivacyPage() {
         <p>Your data is retained for as long as your account is active. You may delete your account at any time from your account settings, which permanently removes your email, save history, and channel subscriptions.</p>
 
         <h2>Your rights</h2>
-        <p>You have the right to access, correct, or delete the personal data we hold about you. To exercise these rights, email us at <a href="mailto:privacy@headwater.app">privacy@headwater.app</a>.</p>
+        <p>You have the right to access, correct, or delete the personal data we hold about you. To exercise these rights, email us at <a href="mailto:privacy@headwaterapp.com">privacy@headwaterapp.com</a>.</p>
         <p>If you are in the EU/EEA, you have additional rights under GDPR including the right to data portability and the right to lodge a complaint with your local supervisory authority.</p>
 
         <h2>Cookies</h2>
         <p>We use a single session cookie to keep you logged in. No third-party tracking or advertising cookies are used.</p>
 
         <h2>Contact</h2>
-        <p>Questions? Email <a href="mailto:privacy@headwater.app">privacy@headwater.app</a>.</p>
+        <p>Questions? Email <a href="mailto:privacy@headwaterapp.com">privacy@headwaterapp.com</a>.</p>
       </div>
     </div>
   );
