@@ -33,7 +33,7 @@ export default function RegisterPage() {
         <p className="auth-sub">The signal, before the feed gets to it.</p>
         <form onSubmit={handleSubmit}>
           <div className="field">
-            <label>Name <span className="optional">(optional)</span></label>
+            <label>Name</label>
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} autoFocus />
           </div>
           <div className="field">

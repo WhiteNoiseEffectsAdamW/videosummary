@@ -82,15 +82,12 @@ export default function Nav() {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const menuRef = React.useRef(null);
 
   React.useEffect(() => {
     function handleClick(e) {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setMenuOpen(false);
-        setDeleteConfirm(false);
       }
     }
     document.addEventListener('mousedown', handleClick);
@@ -100,18 +97,6 @@ export default function Nav() {
   async function handleLogout() {
     await logout();
     navigate('/login');
-  }
-
-  async function handleDeleteAccount() {
-    if (!deleteConfirm) { setDeleteConfirm(true); return; }
-    setDeleting(true);
-    try {
-      await fetch('/api/auth/me', { method: 'DELETE', credentials: 'include' });
-      await logout();
-      navigate('/');
-    } catch {
-      setDeleting(false);
-    }
   }
 
   if (!user || pathname === '/welcome') return null;
@@ -130,7 +115,7 @@ export default function Nav() {
         </div>
         <div className="nav-right">
           <div className="nav-account-wrap" ref={menuRef}>
-            <button className="nav-email-btn" onClick={() => { setMenuOpen((o) => !o); setDeleteConfirm(false); }}>
+            <button className="nav-email-btn" onClick={() => setMenuOpen((o) => !o)}>
               {user.subscriptionStatus === 'pro' && <span className="nav-pro-badge">Pro</span>}
               {user.email} <span className="nav-email-caret">▾</span>
             </button>
@@ -142,20 +127,6 @@ export default function Nav() {
                 </Link>
                 <div className="nav-menu-divider" />
                 <button className="nav-menu-item" onClick={handleLogout}>Sign out</button>
-                <div className="nav-menu-divider" />
-                {!deleteConfirm ? (
-                  <button className="nav-menu-item nav-menu-danger" onClick={handleDeleteAccount}>Delete account</button>
-                ) : (
-                  <div className="nav-menu-delete-confirm">
-                    <p>Are you sure? This can't be undone.</p>
-                    <div className="nav-menu-delete-actions">
-                      <button className="nav-menu-item nav-menu-danger" onClick={handleDeleteAccount} disabled={deleting}>
-                        {deleting ? 'Deleting…' : 'Yes, delete'}
-                      </button>
-                      <button className="nav-menu-item" onClick={() => setDeleteConfirm(false)}>Cancel</button>
-                    </div>
-                  </div>
-                )}
               </div>
             )}
           </div>

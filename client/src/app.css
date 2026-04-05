@@ -3,6 +3,13 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
   position: relative;
 }
+
+/* iOS Safari auto-zooms on focus when input font-size < 16px and never
+   zooms back out. Force 16px on all inputs/textareas/selects at mobile
+   widths so the zoom never triggers. Visual size unchanged at desktop. */
+@media (max-width: 768px) {
+  input, textarea, select { font-size: 16px !important; }
+}
 /* Paper-noise layer on dark pages — landing's opaque cream bg covers this */
 body::before {
   content: '';
@@ -21,7 +28,7 @@ body::after {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(ellipse 1100px 520px at 50% 0%, rgba(196,163,90,0.06), transparent 65%);
+  background: radial-gradient(ellipse 1100px 520px at 50% 0%, rgba(196,163,90,0.03), transparent 65%);
 }
 
 /* Amber focus ring — keyboard nav polish */
@@ -460,8 +467,9 @@ body::after {
   .page-inner { padding: 28px 16px 100px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
   .page-title { font-size: 16px; }
   .video-body { padding: 14px 16px 16px; }
-  .add-channel-inputs { flex-direction: column; }
+  .add-channel-inputs { flex-direction: column; align-items: stretch; }
   .add-channel-inputs .url-input { width: 100%; box-sizing: border-box; }
+  .add-channel-inputs .btn-add-digest { width: 100%; }
 }
 
 .card-label {
@@ -960,8 +968,40 @@ body::after {
 .btn-primary:hover:not(:disabled) { background: #d4b36a; box-shadow: 0 4px 16px rgba(196,163,90,0.2); transform: translateY(-1px); }
 .btn-primary:active:not(:disabled) { transform: translateY(0); }
 .btn-primary:disabled { opacity: 0.5; cursor: default; }
-/* Auth forms need full-width buttons */
-.auth-card .btn-primary { width: 100%; padding: 11px; margin-top: 0; text-align: center; }
+/* Auth forms: outlined amber CTA — mirrors landing nav outlined treatment,
+   lets filled amber inside the app feel like a reward for arriving */
+.auth-card .btn-primary {
+  width: 100%;
+  padding: 11px;
+  margin-top: 0;
+  text-align: center;
+  background: transparent;
+  color: #c4a35a;
+  border: 1px solid rgba(196,163,90,0.5);
+}
+.auth-card .btn-primary:hover:not(:disabled) {
+  background: rgba(196,163,90,0.08);
+  color: #d4b36a;
+  border-color: rgba(196,163,90,0.8);
+  box-shadow: none;
+  transform: none;
+}
+.auth-card .btn-primary:disabled { background: transparent; color: #555; border-color: rgba(196,163,90,0.2); }
+
+/* Suppress double focus ring on auth inputs (wrapper handles focus) */
+.field input:focus-visible,
+.field input:focus { outline: none; }
+
+/* Override Chrome/Safari autofill background on dark auth inputs */
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus,
+.field input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #141414 inset;
+  -webkit-text-fill-color: #f5f0e8;
+  caret-color: #f5f0e8;
+  transition: background-color 5000s ease-in-out 0s;
+}
 .auth-switch { font-size: 13px; color: #555; margin-top: 20px; text-align: center; }
 .auth-switch a { color: #c4a35a; text-decoration: none; }
 .auth-privacy-pledge { font-size: 12px; color: #666666; margin-top: 20px; text-align: center; line-height: 1.6; border-top: 1px solid #2a2a2a; padding-top: 16px; }
@@ -1702,7 +1742,7 @@ body::after {
 /* ── Landing page (light) ─────────────────────────────────── */
 .landing-page {
   min-height: 100vh;
-  background: linear-gradient(160deg, #fdf8ef 0%, #f5ede0 100%);
+  background: linear-gradient(160deg, #fbf6ec 0%, #f8f1e5 100%);
   color: #1a1a1a;
   position: relative;
 }
