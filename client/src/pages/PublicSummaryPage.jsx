@@ -42,7 +42,7 @@ export default function PublicSummaryPage() {
     return () => {
       const defaultTitle = 'Headwater';
       const defaultDesc = "Upstream of the algorithm. Follow the channels you care about and get a morning digest of what's new.";
-      const defaultImage = 'https://headwater.app/og-image-light.png';
+      const defaultImage = 'https://headwater.app/og-image-light.png?v=2';
       document.title = defaultTitle;
       setMeta('og:title', defaultTitle);
       setMeta('og:description', defaultDesc);

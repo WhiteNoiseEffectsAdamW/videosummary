@@ -12,7 +12,7 @@ const AMBER = '#c4a35a';
 // ── L2: Cream gradient, left stripe, Garamond wordmark ──────────────
 function buildL2() {
   const STRIPE_X = 60;
-  const STRIPE_H = 390;
+  const STRIPE_H = 470;
   const STRIPE_Y = Math.round((H - STRIPE_H) / 2);
 
   return `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
@@ -33,11 +33,11 @@ function buildL2() {
   <!-- Left amber stripe -->
   <rect x="${STRIPE_X}" y="${STRIPE_Y}" width="4" height="${STRIPE_H}" fill="${AMBER}" opacity="0.5"/>
 
-  <!-- Wordmark — EB Garamond 108/500 -->
-  <text x="84" y="310" font-family="EB Garamond,Georgia,serif" font-size="108" font-weight="500" fill="#1a1612">Headwater</text>
+  <!-- Wordmark — EB Garamond 148/500 -->
+  <text x="84" y="318" font-family="EB Garamond,Georgia,serif" font-size="148" font-weight="500" fill="#1a1612">Headwater</text>
 
-  <!-- Tagline — Inter 28/400 uppercase -->
-  <text x="86" y="374" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="400" fill="${AMBER}" letter-spacing="4">UPSTREAM OF THE ALGORITHM.</text>
+  <!-- Tagline — Inter 38/500 uppercase -->
+  <text x="86" y="388" font-family="Inter,Arial,sans-serif" font-size="38" font-weight="500" fill="${AMBER}" letter-spacing="3">UPSTREAM OF THE ALGORITHM.</text>
 </svg>`;
 }
 
@@ -61,11 +61,11 @@ function buildD2() {
   <!-- Amber top bar -->
   <rect width="${W}" height="16" fill="url(#bar)"/>
 
-  <!-- Wordmark — EB Garamond 112/500 -->
-  <text x="56" y="320" font-family="EB Garamond,Georgia,serif" font-size="112" font-weight="500" fill="#f5f0e8">Headwater</text>
+  <!-- Wordmark — EB Garamond 156/500 -->
+  <text x="56" y="330" font-family="EB Garamond,Georgia,serif" font-size="156" font-weight="500" fill="#f5f0e8">Headwater</text>
 
-  <!-- Tagline — Inter 34/300 uppercase -->
-  <text x="66" y="388" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="300" fill="${AMBER}" letter-spacing="2">UPSTREAM OF THE ALGORITHM.</text>
+  <!-- Tagline — Inter 42/500 uppercase -->
+  <text x="66" y="404" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="500" fill="${AMBER}" letter-spacing="2">UPSTREAM OF THE ALGORITHM.</text>
 </svg>`;
 }
 
