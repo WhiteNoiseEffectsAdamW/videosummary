@@ -77,14 +77,14 @@ router.post('/', async (req, res, next) => {
     const { channelId, channelName, avatarUrl } = req.body;
     if (!channelId) return res.status(400).json({ error: 'channelId is required.' });
 
-    // Free tier: 3 channel limit
-    const isPro = req.user.subscription_status === 'pro';
-    if (!isPro) {
-      const count = await db('subscriptions').where({ user_id: req.user.id, active: true }).count('id as n').first();
-      if (Number(count.n) >= 3) {
-        return res.status(403).json({ error: 'Free plan includes 3 channels. Upgrade to Pro for unlimited.', upgradeRequired: true });
-      }
-    }
+    // Free tier: channel limit (disabled — free for now, re-enable with Stripe)
+    // const isPro = req.user.subscription_status === 'pro';
+    // if (!isPro) {
+    //   const count = await db('subscriptions').where({ user_id: req.user.id, active: true }).count('id as n').first();
+    //   if (Number(count.n) >= 3) {
+    //     return res.status(403).json({ error: 'Free plan includes 3 channels. Upgrade to Pro for unlimited.', upgradeRequired: true });
+    //   }
+    // }
 
     const sub = await create({
       userId: req.user.id,

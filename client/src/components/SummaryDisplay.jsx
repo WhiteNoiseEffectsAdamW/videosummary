@@ -42,7 +42,7 @@ function formatDuration(seconds) {
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, slug, thumbnailUrl, title, titleClaim, channelName, channelId, durationSeconds } = data;
+  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, slug, thumbnailUrl, title, headsUp, realityCheck, channelName, channelId, durationSeconds } = data;
   const savesMins = durationSeconds > 0 ? Math.round(durationSeconds / 60) : null;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
@@ -186,25 +186,20 @@ export default function SummaryDisplay({ data }) {
       {/* TL;DR — above fold, before categories */}
       <div className="card">
         <div className="card-label">TL;DR</div>
-        {quotes.length > 0 && (
-          <p className="tldr-quote">"{quotes[0].text}"</p>
-        )}
         <p className="tldr-text">{tldr}</p>
       </div>
 
-
-      {/* Title Claim */}
-      {titleClaim?.claim && titleClaim?.reality && (
-        <div className="card card-title-claim">
-          <div className="card-label">Title vs Reality</div>
-          <div className="title-claim-row">
-            <span className="title-claim-label">Promised</span>
-            <span className="title-claim-text">{titleClaim.claim}</span>
-          </div>
-          <div className="title-claim-row">
-            <span className="title-claim-label">Delivered</span>
-            <span className="title-claim-text">{titleClaim.reality}</span>
-          </div>
+      {/* Flags — only render when present */}
+      {headsUp && (
+        <div className="card card-flag card-flag-headsup">
+          <div className="card-label">Heads Up</div>
+          <p className="flag-text">{headsUp}</p>
+        </div>
+      )}
+      {realityCheck && (
+        <div className="card card-flag card-flag-reality">
+          <div className="card-label">Reality Check</div>
+          <p className="flag-text">{realityCheck}</p>
         </div>
       )}
 
@@ -214,13 +209,15 @@ export default function SummaryDisplay({ data }) {
           <div className="card-label">Key Topics</div>
           {topics.map((topic, i) => (
             <div key={i} className="topic-item">
-              <div className="topic-title">{topic.title}</div>
-              <div className="topic-desc">{topic.description}</div>
-              {topic.timestamp && (
-                <a className="topic-ts" href={ytUrl(videoId, topic.timestamp)} target="_blank" rel="noopener noreferrer">
-                  {topic.timestamp}
-                </a>
-              )}
+              <div className="topic-title">
+                {topic.title}
+                {topic.description && <span className="topic-desc"> — {topic.description}</span>}
+                {topic.timestamp && (
+                  <a className="topic-ts" href={ytUrl(videoId, topic.timestamp)} target="_blank" rel="noopener noreferrer">
+                    {topic.timestamp}
+                  </a>
+                )}
+              </div>
             </div>
           ))}
         </div>

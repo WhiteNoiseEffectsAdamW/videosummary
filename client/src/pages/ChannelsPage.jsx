@@ -305,12 +305,7 @@ export default function FollowingPage() {
           </button>
         </div>
         {error && <div className="auth-error" style={{ marginTop: 8 }}>{error}</div>}
-        {upgradeRequired && (
-          <div className="upgrade-inline-prompt">
-            <span>Channel limit reached — Pro unlocks unlimited.</span>
-            <Link to="/upgrade" className="upgrade-inline-link">Upgrade →</Link>
-          </div>
-        )}
+        {/* Upgrade prompt — hidden while free, re-enable with Stripe */}
       </form>
 
       {scanStatus && (

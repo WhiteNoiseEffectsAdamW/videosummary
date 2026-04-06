@@ -116,15 +116,11 @@ export default function Nav() {
         <div className="nav-right">
           <div className="nav-account-wrap" ref={menuRef}>
             <button className="nav-email-btn" onClick={() => setMenuOpen((o) => !o)}>
-              {user.subscriptionStatus === 'pro' && <span className="nav-pro-badge">Pro</span>}
               {user.email} <span className="nav-email-caret">▾</span>
             </button>
             {menuOpen && (
               <div className="nav-account-menu">
                 <Link className="nav-menu-item" to="/account" onClick={() => setMenuOpen(false)}>Account</Link>
-                <Link className="nav-menu-item" to="/upgrade" onClick={() => setMenuOpen(false)}>
-                  {user.subscriptionStatus === 'pro' ? 'Manage billing' : 'Upgrade to Pro'}
-                </Link>
                 <div className="nav-menu-divider" />
                 <button className="nav-menu-item" onClick={handleLogout}>Sign out</button>
               </div>

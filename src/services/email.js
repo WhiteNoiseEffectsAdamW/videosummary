@@ -89,7 +89,7 @@ function renderDigestHtml(summaries) {
 
   function renderFeatured(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, quotes = [], topics = [], verdict } = data;
+    const { tldr, quotes = [], topics = [], verdict, headsUp, realityCheck } = data;
     const quote = quotes[0];
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
@@ -97,6 +97,7 @@ function renderDigestHtml(summaries) {
     const durationMins = s.duration_seconds ? Math.round(s.duration_seconds / 60) : null;
     const topicsCapped = (topics || []).slice(0, 4);
     const stats = [durationMins ? `${durationMins} min` : null, topicsCapped.length ? `${topicsCapped.length} topics` : null].filter(Boolean).join(' &middot; ');
+    const flag = headsUp ? { label: 'Heads Up', text: headsUp } : realityCheck ? { label: 'Reality Check', text: realityCheck } : null;
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
@@ -114,6 +115,7 @@ function renderDigestHtml(summaries) {
   <tr>
     <td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
       ${tldr ? `<p style="font-size:15px;color:#2a2a2a;line-height:1.7;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
+      ${flag ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #c49a2a;padding-left:14px;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c49a2a;">${flag.label}</span><p style="font-size:13px;color:#555;line-height:1.55;margin:4px 0 0;">${esc(flag.text)}</p></td></tr></table>` : ''}
       ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #b8924a;padding-left:16px;"><p style="font-size:15px;font-style:italic;color:#3d3d3d;line-height:1.6;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
       ${verdict ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:14px;vertical-align:top;width:58px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;">Verdict</span></td><td style="padding:14px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#3d3d3d;line-height:1.5;">${esc(verdict)}</span></td></tr></table>` : ''}
     </td>
@@ -131,11 +133,13 @@ function renderDigestHtml(summaries) {
 
   function renderCompact(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, verdict } = data;
+    const { tldr, verdict, headsUp, realityCheck } = data;
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
     const channelName = cleanName(s.channel_name);
     const tldrShort = tldr ? (tldr.match(/^.+?[.!?](?:\s|$)/) || [tldr])[0].trim() : '';
+    const flagLabel = headsUp ? 'Heads Up' : realityCheck ? 'Reality Check' : null;
+    const flagText = headsUp || realityCheck || null;
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-bottom:1px solid #ede9e1;">
   <tr>
@@ -146,6 +150,7 @@ function renderDigestHtml(summaries) {
       ${channelName ? `<div style="font-size:11px;font-weight:600;color:#b8924a;margin-bottom:2px;">${esc(channelName)}</div>` : ''}
       <div style="font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35;margin-bottom:4px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
       ${tldrShort ? `<div style="font-size:13px;color:#555;line-height:1.5;margin-bottom:4px;">${esc(tldrShort)}</div>` : ''}
+      ${flagLabel ? `<div style="font-size:11px;color:#c49a2a;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">${flagLabel}: <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#777;font-size:12px;">${esc(flagText)}</span></div>` : ''}
       ${verdict ? `<div style="font-size:12px;color:#777;font-style:italic;line-height:1.5;">${esc(verdict)}</div>` : ''}
     </td>
   </tr>

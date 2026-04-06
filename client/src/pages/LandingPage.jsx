@@ -206,7 +206,7 @@ export default function LandingPage() {
         <p className="landing-sub">YouTube is designed to keep you watching.<br />This isn't.</p>
         <div className="landing-hero-actions">
           <Link to="/register" className="btn-primary">Try it free →</Link>
-          <span className="landing-hero-meta">3 channels free · No Google account needed</span>
+          <span className="landing-hero-meta">Free · No Google account needed</span>
         </div>
       </div>
 
@@ -229,7 +229,7 @@ export default function LandingPage() {
               <div className="landing-digest-pitch-headline">Now point it at your channels.</div>
               <p className="landing-digest-pitch-body">You just saw what it does. Add the channels you actually follow — set it up once and every morning it tells you what's worth your time. Everything else you skip.</p>
               <Link to="/register" className="btn-primary">Follow your first channel →</Link>
-              <span className="landing-inline-cta-sub">3 channels free · No Google account needed</span>
+              <span className="landing-inline-cta-sub">Free · No Google account needed</span>
             </div>
           </div>
         )}

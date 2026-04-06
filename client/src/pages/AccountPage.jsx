@@ -48,20 +48,7 @@ export default function AccountPage() {
         <div className="account-email">{user?.email}</div>
       </div>
 
-      <div className="account-section">
-        <div className="account-plan-row">
-          <div>
-            <div className="account-plan-value">
-              {user?.subscriptionStatus === 'pro'
-                ? <span className="account-plan-badge account-plan-badge-pro">Pro</span>
-                : <span className="account-plan-badge account-plan-badge-free">Free</span>}
-            </div>
-          </div>
-          {user?.subscriptionStatus === 'pro'
-            ? <Link to="/upgrade" className="account-plan-link">Manage billing</Link>
-            : <Link to="/upgrade" className="account-plan-link account-plan-link-upgrade">Upgrade to Pro</Link>}
-        </div>
-      </div>
+      {/* Plan/billing section — hidden while free, re-enable with Stripe */}
 
       <div className="account-section">
         {pwSent
