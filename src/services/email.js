@@ -144,7 +144,7 @@ function renderDigestHtml(summaries) {
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-bottom:1px solid #ede9e1;">
   <tr>
     <td style="padding:16px 14px 16px 0;vertical-align:middle;width:72px;">
-      <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="72" height="40" style="display:block;border-radius:3px;background-color:#eae6de;" /></a>
+      <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="72" style="display:block;width:72px;height:auto;border-radius:3px;background-color:#eae6de;" /></a>
     </td>
     <td style="padding:16px 0;vertical-align:middle;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
       ${channelName ? `<div style="font-size:11px;font-weight:600;color:#b8924a;margin-bottom:2px;">${esc(channelName)}</div>` : ''}

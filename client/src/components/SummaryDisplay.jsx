@@ -34,6 +34,44 @@ function ytUrl(videoId, ts, leadSeconds = 0) {
 }
 
 
+function esc(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, thumbnailUrl, tldr, topics = [], quotes = [], headsUp, inContext }) {
+  const summaryUrl = `${window.location.origin}/s/${slug || videoId}`;
+  const dur = durationSeconds > 0 ? `${Math.round(durationSeconds / 60)} min` : '';
+  const meta = [channelName, dur].filter(Boolean).join(' · ');
+
+  const topicsHtml = topics.map((t) =>
+    `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;font-size:13px;color:#b8924a;white-space:nowrap;">${esc(t.timestamp || '')}</td><td style="padding:6px 0;vertical-align:top;"><strong style="color:#1a1a1a;">${esc(t.title)}</strong>${t.description ? ` <span style="color:#666;">— ${esc(t.description)}</span>` : ''}</td></tr>`
+  ).join('');
+
+  const quotesHtml = quotes.map((q) =>
+    `<div style="border-left:2px solid #b8924a;padding-left:14px;margin-bottom:12px;"><em style="color:#444;font-size:14px;line-height:1.6;">"${esc(q.text)}"</em>${q.timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(q.timestamp)}</span>` : ''}</div>`
+  ).join('');
+
+  const flagsHtml = [
+    headsUp ? `<div style="border-left:2px solid #c49a2a;padding-left:12px;margin-bottom:14px;"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#c49a2a;">Heads Up</strong><div style="font-size:13px;color:#555;margin-top:4px;">${esc(headsUp)}</div></div>` : '',
+    inContext ? `<div style="border-left:2px solid #c49a2a;padding-left:12px;margin-bottom:14px;"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#c49a2a;">In Context</strong><div style="font-size:13px;color:#555;margin-top:4px;">${esc(inContext)}</div></div>` : '',
+  ].join('');
+
+  return `<div style="max-width:620px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#fafaf7;border:1px solid #e8e4dc;border-radius:8px;padding:24px;line-height:1.6;color:#333;">
+${thumbnailUrl ? `<a href="${summaryUrl}" style="display:block;margin-bottom:16px;line-height:0;"><img src="${esc(thumbnailUrl)}" alt="" style="width:100%;max-width:580px;height:auto;border-radius:6px;display:block;" /></a>` : ''}
+${meta ? `<div style="font-size:12px;font-weight:600;color:#b8924a;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">${esc(meta)}</div>` : ''}
+<div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:12px;line-height:1.3;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(title || videoId)}</a></div>
+${quotes.length > 0 ? `<div style="border-left:3px solid #b8924a;padding-left:14px;margin-bottom:14px;"><em style="font-size:16px;color:#444;line-height:1.6;">"${esc(quotes[0].text)}"</em>${quotes[0].timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(quotes[0].timestamp)}</span>` : ''}</div>` : ''}
+${tldr ? `<p style="font-size:15px;color:#333;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
+${flagsHtml}
+${topics.length > 0 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Key Topics</div><table style="border-collapse:collapse;width:100%;font-size:14px;line-height:1.5;">${topicsHtml}</table></div>` : ''}
+${quotes.length > 1 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Notable Quotes</div>${quotesHtml}</div>` : ''}
+<div style="border-top:1px solid #e8e4dc;padding-top:14px;font-size:12px;color:#bbb;">
+<div style="margin-bottom:4px;">Headwater</div>
+<a href="https://headwaterapp.com" style="color:#b8924a;text-decoration:none;">Get video summaries → headwaterapp.com</a>
+</div>
+</div>`;
+}
+
 function formatDuration(seconds) {
   if (!seconds || seconds <= 0) return null;
   const mins = Math.round(seconds / 60);
@@ -96,18 +134,33 @@ export default function SummaryDisplay({ data }) {
     }
   }
 
-  async function handleShare() {
-    const url = `${window.location.origin}/s/${slug || videoId}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: title || 'Video summary', url });
-      } catch {}
-    } else {
-      navigator.clipboard.writeText(url).then(() => {
-        setToast('Copied!');
-        setTimeout(() => setToast(null), 2500);
-      });
+  const [shareOpen, setShareOpen] = useState(false);
+  const shareRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (shareRef.current && !shareRef.current.contains(e.target)) setShareOpen(false);
     }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  function handleCopyLink() {
+    const url = `${window.location.origin}/s/${slug || videoId}`;
+    navigator.clipboard.writeText(url).then(() => {
+      setToast('Link copied!');
+      setShareOpen(false);
+      setTimeout(() => setToast(null), 2500);
+    });
+  }
+
+  function handleCopyHtml() {
+    const html = buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, thumbnailUrl, tldr, topics, quotes, headsUp, inContext });
+    navigator.clipboard.writeText(html).then(() => {
+      setToast('HTML copied!');
+      setShareOpen(false);
+      setTimeout(() => setToast(null), 2500);
+    });
   }
 
   return (
@@ -169,18 +222,26 @@ export default function SummaryDisplay({ data }) {
           </svg>
           Watch
         </a>
-        <button className="btn-share-subtle" onClick={handleShare} title="Share">
-          {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>Copied!</span> : (
-            <>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-                <polyline points="16 6 12 2 8 6"/>
-                <line x1="12" y1="2" x2="12" y2="15"/>
-              </svg>
-              <span style={{ fontSize: 13, fontWeight: 600 }}>Share</span>
-            </>
+        <div className="share-wrap" ref={shareRef}>
+          <button className="btn-share-subtle" onClick={() => setShareOpen((o) => !o)} title="Share">
+            {toast ? <span style={{ fontSize: 12, fontWeight: 500 }}>{toast}</span> : (
+              <>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                  <polyline points="16 6 12 2 8 6"/>
+                  <line x1="12" y1="2" x2="12" y2="15"/>
+                </svg>
+                <span style={{ fontSize: 13, fontWeight: 600 }}>Share</span>
+              </>
+            )}
+          </button>
+          {shareOpen && (
+            <div className="share-menu">
+              <button className="share-menu-item" onClick={handleCopyLink}>Copy link</button>
+              <button className="share-menu-item" onClick={handleCopyHtml}>Copy HTML</button>
+            </div>
           )}
-        </button>
+        </div>
       </div>
 
       {/* TL;DR — above fold, before categories */}

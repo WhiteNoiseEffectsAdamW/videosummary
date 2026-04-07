@@ -398,6 +398,34 @@ body::before {
 }
 .btn-share-subtle:hover { background: rgba(196,163,90,0.18); border-color: rgba(196,163,90,0.45); }
 
+.share-wrap { position: relative; }
+.share-menu {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  right: 0;
+  background: #1e1e1e;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px 0;
+  min-width: 140px;
+  z-index: 20;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.share-menu-item {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ccc;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+.share-menu-item:hover { background: rgba(255,255,255,0.06); color: #fbf7ee; }
+
 
 /* ── Summary cards ───────────────────────────────────────── */
 .meta-row {
