@@ -74,7 +74,7 @@ export default function PublicSummaryPage() {
             <Link to="/" className="public-brand">Headwater</Link>
             <span className="public-brand-sub">Know what's worth watching before you click.</span>
           </div>
-          <Link to="/register" className="btn-primary public-cta">Try it free</Link>
+          <Link to="/register" className="btn-primary public-cta">Try Headwater free</Link>
         </header>
       )}
 

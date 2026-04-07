@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const DEMO_VIDEO_ID = 'UclrVWafRAI';
+const DEMO_SLUG = 'oGDlq0UniQ';
 
 function useFadeIn() {
   const ref = useRef(null);
@@ -51,8 +51,8 @@ function DigestEmailMockup({ data }) {
                 <div className="digest-email-content">
                   {data.channelName && <div className="digest-email-channel">{data.channelName}</div>}
                   <div className="digest-email-title">{data.title}</div>
-                  {(data.titleClaim?.reality || tldrFirst) && (
-                    <div className="digest-email-tldr">{data.titleClaim?.reality || tldrFirst}</div>
+                  {tldrFirst && (
+                    <div className="digest-email-tldr">{tldrFirst}</div>
                   )}
                   {data.quotes?.[0] && <div className="digest-email-quote">&ldquo;{data.quotes[0].text}&rdquo;</div>}
                   <div className="digest-email-links">
@@ -86,7 +86,7 @@ function DigestEmailMockup({ data }) {
 }
 
 function CuratedSummary({ data }) {
-  const { titleClaim, tldr, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
+  const { headsUp, inContext, tldr, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
   const quote = quotes[0];
 
   return (
@@ -125,17 +125,16 @@ function CuratedSummary({ data }) {
         )}
       </div>
 
-      {titleClaim?.claim && titleClaim?.reality && (
-        <div className="card card-title-claim" style={{ marginTop: 20 }}>
-          <div className="card-label">Title vs Reality</div>
-          <div className="title-claim-row">
-            <span className="title-claim-label">Promised</span>
-            <span className="title-claim-text">{titleClaim.claim}</span>
-          </div>
-          <div className="title-claim-row">
-            <span className="title-claim-label">Delivered</span>
-            <span className="title-claim-text">{titleClaim.reality}</span>
-          </div>
+      {headsUp && (
+        <div className="card card-flag" style={{ marginTop: 20 }}>
+          <div className="card-label">Heads Up</div>
+          <p className="flag-text">{headsUp}</p>
+        </div>
+      )}
+      {inContext && (
+        <div className="card card-flag" style={{ marginTop: 12 }}>
+          <div className="card-label">In Context</div>
+          <p className="flag-text">{inContext}</p>
         </div>
       )}
 
@@ -159,7 +158,7 @@ export default function LandingPage() {
   const [limitReached, setLimitReached] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/summary/${DEMO_VIDEO_ID}`)
+    fetch(`/api/summary/${DEMO_SLUG}`)
       .then((r) => r.json())
       .then((json) => { if (!json.error) setDemoData(json); })
       .catch(() => {});
@@ -205,7 +204,7 @@ export default function LandingPage() {
         <h1 className="landing-headline">Upstream of<br /><span className="landing-headline-accent">the algorithm.</span></h1>
         <p className="landing-sub">YouTube is designed to keep you watching.<br />This isn't.</p>
         <div className="landing-hero-actions">
-          <Link to="/register" className="btn-primary">Try it free →</Link>
+          <Link to="/register" className="btn-primary">Try Headwater free →</Link>
           <span className="landing-hero-meta">Free · No Google account needed</span>
         </div>
       </div>
