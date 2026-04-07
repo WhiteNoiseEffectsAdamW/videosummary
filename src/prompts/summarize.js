@@ -30,8 +30,8 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
 
 {
   "tldr": "<20–40 words, 1–2 sentences. Answer the question the title poses: what is the actual claim, who is making it, and how supported is it? The reader should finish feeling informed, not teased. No 'In this video...' preamble. No hype. Plain declarative statements only.>",
-  "headsUp": "<string or null. ONLY include when the title makes a specific, verifiable promise the video does not deliver. Format: 'Title promises [specific claim] — [what actually happens instead].' Triggers: numbered lists not present, named people not featured, specific events not covered. Set to null if the video delivers what the title promises.>",
-  "realityCheck": "<string or null. ONLY include when the title states or strongly implies a specific claim as fact, but the video actually presents it as speculation, one scenario among several, or with significant caveats. Format: '[What the title implies] — [What is actually being claimed and how supported it is].' Set to null if the title fairly represents the content. Do NOT flag vague hype ('This changes everything'), opinion framing ('Why X is wrong'), or dramatic-but-accurate titles.>",
+  "headsUp": "<string or null. ONLY include when the title makes a specific, verifiable promise the video does not deliver. Format: 'Title promises [specific claim] — [what actually happens instead].' Triggers: numbered lists not present, specific events not covered. Set to null if the video delivers what the title promises.>",
+  "inContext": "<string or null. ONLY include when the title states or strongly implies a specific claim as fact, but the video actually presents it as speculation, one scenario among several, or with significant caveats. Format: '[What the title implies] — [What is actually being claimed and how supported it is].' Set to null if the title fairly represents the content. Do NOT flag vague hype ('This changes everything'), opinion framing ('Why X is wrong'), or dramatic-but-accurate titles.>",
   "topics": [
     {
       "title": "<specific topic title>",
@@ -52,8 +52,8 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
 RULES:
 ${topicsRule}
 ${quotesRule}
-- headsUp: only include when there is a specific, verifiable mismatch between title and content. Most videos should have null here. Do NOT flag vague clickbait or opinion framing — only concrete broken promises (numbers not present, people not featured, events not covered).
-- realityCheck: only include when the title states a specific claim as fact that the video explicitly frames as speculation, hypothesis, or one possibility among several. Most videos should have null here.
+- headsUp: only include when there is a specific, verifiable mismatch between title and content. Most videos should have null here. Do NOT flag vague clickbait or opinion framing — only concrete broken promises (numbers not present, specific events not covered).
+- inContext: only include when the title states a specific claim as fact that the video explicitly frames as speculation, hypothesis, or one possibility among several. Most videos should have null here.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
 - tldr: 20–40 words, 1–2 sentences. Must directly answer the title's implied question or promise. Cover what the claim is, who's making it, and how supported it is. If the title asks "Is X worth it?", open with the answer. If it teases a discovery, state what was actually found. A reader should finish the tldr feeling informed, not teased.
 - Keep all text factual — no editorialising beyond what the speaker says. No promotional language.

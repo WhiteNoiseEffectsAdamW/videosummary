@@ -42,7 +42,7 @@ function formatDuration(seconds) {
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, slug, thumbnailUrl, title, headsUp, realityCheck, channelName, channelId, durationSeconds } = data;
+  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, slug, thumbnailUrl, title, headsUp, inContext, channelName, channelId, durationSeconds } = data;
   const savesMins = durationSeconds > 0 ? Math.round(durationSeconds / 60) : null;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
@@ -204,10 +204,10 @@ export default function SummaryDisplay({ data }) {
           <p className="flag-text">{headsUp}</p>
         </div>
       )}
-      {realityCheck && (
+      {inContext && (
         <div className="card card-flag card-flag-reality">
-          <div className="card-label">Reality Check</div>
-          <p className="flag-text">{realityCheck}</p>
+          <div className="card-label">In Context</div>
+          <p className="flag-text">{inContext}</p>
         </div>
       )}
 

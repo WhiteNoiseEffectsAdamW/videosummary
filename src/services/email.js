@@ -89,7 +89,7 @@ function renderDigestHtml(summaries) {
 
   function renderFeatured(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, quotes = [], topics = [], verdict, headsUp, realityCheck } = data;
+    const { tldr, quotes = [], topics = [], verdict, headsUp, inContext } = data;
     const quote = quotes[0];
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
@@ -97,7 +97,7 @@ function renderDigestHtml(summaries) {
     const durationMins = s.duration_seconds ? Math.round(s.duration_seconds / 60) : null;
     const topicsCapped = (topics || []).slice(0, 4);
     const stats = [durationMins ? `${durationMins} min` : null, topicsCapped.length ? `${topicsCapped.length} topics` : null].filter(Boolean).join(' &middot; ');
-    const flag = headsUp ? { label: 'Heads Up', text: headsUp } : realityCheck ? { label: 'Reality Check', text: realityCheck } : null;
+    const flag = headsUp ? { label: 'Heads Up', text: headsUp } : inContext ? { label: 'In Context', text: inContext } : null;
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
@@ -133,13 +133,13 @@ function renderDigestHtml(summaries) {
 
   function renderCompact(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, verdict, headsUp, realityCheck } = data;
+    const { tldr, verdict, headsUp, inContext } = data;
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
     const channelName = cleanName(s.channel_name);
     const tldrShort = tldr ? (tldr.match(/^.+?[.!?](?:\s|$)/) || [tldr])[0].trim() : '';
-    const flagLabel = headsUp ? 'Heads Up' : realityCheck ? 'Reality Check' : null;
-    const flagText = headsUp || realityCheck || null;
+    const flagLabel = headsUp ? 'Heads Up' : inContext ? 'In Context' : null;
+    const flagText = headsUp || inContext || null;
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-bottom:1px solid #ede9e1;">
   <tr>
