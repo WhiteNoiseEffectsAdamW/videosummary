@@ -44,7 +44,7 @@ function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, th
   const meta = [channelName, dur].filter(Boolean).join(' · ');
 
   const topicsHtml = topics.map((t) =>
-    `<tr><td style="padding:6px 12px 6px 0;vertical-align:top;font-size:13px;color:#b8924a;white-space:nowrap;">${esc(t.timestamp || '')}</td><td style="padding:6px 0;vertical-align:top;"><strong style="color:#1a1a1a;">${esc(t.title)}</strong>${t.description ? ` <span style="color:#666;">— ${esc(t.description)}</span>` : ''}</td></tr>`
+    `<div style="padding:6px 0;font-size:14px;line-height:1.5;"><strong style="color:#1a1a1a;">${esc(t.title)}</strong>${t.description ? ` <span style="color:#666;">— ${esc(t.description)}</span>` : ''}${t.timestamp ? ` <span style="color:#b8924a;font-size:13px;">${esc(t.timestamp)}</span>` : ''}</div>`
   ).join('');
 
   const quotesHtml = quotes.map((q) =>
@@ -63,7 +63,7 @@ ${meta ? `<div style="font-size:12px;font-weight:600;color:#b8924a;text-transfor
 ${quotes.length > 0 ? `<div style="border-left:3px solid #b8924a;padding-left:14px;margin-bottom:14px;">${quotes[0].setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(quotes[0].setup)}</div>` : ''}<em style="font-size:16px;color:#444;line-height:1.6;">"${esc(quotes[0].text)}"</em>${quotes[0].timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(quotes[0].timestamp)}</span>` : ''}</div>` : ''}
 ${tldr ? `<p style="font-size:15px;color:#333;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
 ${flagsHtml}
-${topics.length > 0 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Key Topics</div><table style="border-collapse:collapse;width:100%;font-size:14px;line-height:1.5;">${topicsHtml}</table></div>` : ''}
+${topics.length > 0 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Key Topics</div>${topicsHtml}</div>` : ''}
 ${quotes.length > 1 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Notable Quotes</div>${quotesHtml}</div>` : ''}
 <div style="border-top:1px solid #e8e4dc;padding-top:24px;text-align:left;">
 <a href="https://headwaterapp.com" style="text-decoration:none;display:inline-block;margin-bottom:8px;">
