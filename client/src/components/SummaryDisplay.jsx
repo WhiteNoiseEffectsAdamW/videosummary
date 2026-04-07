@@ -48,7 +48,7 @@ function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, th
   ).join('');
 
   const quotesHtml = quotes.map((q) =>
-    `<div style="border-left:2px solid #b8924a;padding-left:14px;margin-bottom:12px;"><em style="color:#444;font-size:14px;line-height:1.6;">"${esc(q.text)}"</em>${q.timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(q.timestamp)}</span>` : ''}</div>`
+    `<div style="border-left:2px solid #b8924a;padding-left:14px;margin-bottom:12px;">${q.setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(q.setup)}</div>` : ''}<em style="color:#444;font-size:14px;line-height:1.6;">"${esc(q.text)}"</em>${q.timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(q.timestamp)}</span>` : ''}</div>`
   ).join('');
 
   const flagsHtml = [
@@ -60,14 +60,18 @@ function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, th
 ${thumbnailUrl ? `<a href="${summaryUrl}" style="display:block;margin-bottom:16px;line-height:0;"><img src="${esc(thumbnailUrl)}" alt="" style="width:100%;max-width:580px;height:auto;border-radius:6px;display:block;" /></a>` : ''}
 ${meta ? `<div style="font-size:12px;font-weight:600;color:#b8924a;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">${esc(meta)}</div>` : ''}
 <div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:12px;line-height:1.3;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(title || videoId)}</a></div>
-${quotes.length > 0 ? `<div style="border-left:3px solid #b8924a;padding-left:14px;margin-bottom:14px;"><em style="font-size:16px;color:#444;line-height:1.6;">"${esc(quotes[0].text)}"</em>${quotes[0].timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(quotes[0].timestamp)}</span>` : ''}</div>` : ''}
+${quotes.length > 0 ? `<div style="border-left:3px solid #b8924a;padding-left:14px;margin-bottom:14px;">${quotes[0].setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(quotes[0].setup)}</div>` : ''}<em style="font-size:16px;color:#444;line-height:1.6;">"${esc(quotes[0].text)}"</em>${quotes[0].timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(quotes[0].timestamp)}</span>` : ''}</div>` : ''}
 ${tldr ? `<p style="font-size:15px;color:#333;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
 ${flagsHtml}
 ${topics.length > 0 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Key Topics</div><table style="border-collapse:collapse;width:100%;font-size:14px;line-height:1.5;">${topicsHtml}</table></div>` : ''}
 ${quotes.length > 1 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Notable Quotes</div>${quotesHtml}</div>` : ''}
-<div style="border-top:1px solid #e8e4dc;padding-top:14px;font-size:12px;color:#bbb;">
-<div style="margin-bottom:4px;">Headwater</div>
-<a href="https://headwaterapp.com" style="color:#b8924a;text-decoration:none;">Get video summaries → headwaterapp.com</a>
+<div style="border-top:1px solid #e8e4dc;padding-top:24px;text-align:left;">
+<a href="https://headwaterapp.com" style="text-decoration:none;display:inline-block;margin-bottom:8px;">
+<svg width="180" height="34" viewBox="0 0 180 34" xmlns="http://www.w3.org/2000/svg"><text x="0" y="27" style="font-family:Georgia,'Times New Roman',serif;font-size:28px;font-weight:400;"><tspan fill="#1a1a1a">Head</tspan><tspan fill="#b8924a">water</tspan></text></svg>
+</a>
+<div style="font-size:13px;color:#999;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+<a href="https://headwaterapp.com" style="color:#b8924a;text-decoration:none;">Get video summaries &rarr; headwaterapp.com</a>
+</div>
 </div>
 </div>`;
 }
@@ -248,12 +252,15 @@ export default function SummaryDisplay({ data }) {
       <div className="card">
         <div className="card-label">TL;DR</div>
         {quotes.length > 0 && (
-          <p className="tldr-quote">
-            "{quotes[0].text}"
-            {quotes[0].timestamp && (
-              <> — <a className="tldr-quote-ts" href={ytUrl(videoId, quotes[0].timestamp)} target="_blank" rel="noopener noreferrer">{quotes[0].timestamp}</a></>
-            )}
-          </p>
+          <div className="tldr-quote-wrap">
+            {quotes[0].setup && <div className="quote-setup">{quotes[0].setup}</div>}
+            <p className="tldr-quote">
+              "{quotes[0].text}"
+              {quotes[0].timestamp && (
+                <> — <a className="tldr-quote-ts" href={ytUrl(videoId, quotes[0].timestamp)} target="_blank" rel="noopener noreferrer">{quotes[0].timestamp}</a></>
+              )}
+            </p>
+          </div>
         )}
         <p className="tldr-text">{tldr}</p>
       </div>
@@ -298,6 +305,7 @@ export default function SummaryDisplay({ data }) {
           <div className="card-label">Notable Quotes</div>
           {quotes.map((q, i) => (
             <div key={i} className="quote-item">
+              {q.setup && <div className="quote-setup">{q.setup}</div>}
               <div className="quote-text">
                 "{q.text}"
                 {q.timestamp && (

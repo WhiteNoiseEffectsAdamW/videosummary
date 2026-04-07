@@ -736,6 +736,14 @@ body::before {
 .quote-ts { color: #c4a35a; text-decoration: none; }
 .quote-ts:hover { text-decoration: underline; }
 
+.quote-setup {
+  font-size: 13px;
+  font-style: italic;
+  color: #888;
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+
 /* Title */
 .under-thumb-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
 .under-thumb-left { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }

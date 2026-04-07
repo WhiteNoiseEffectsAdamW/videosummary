@@ -65,7 +65,8 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
   "quotes": [
     {
       "text": "<verbatim or near-verbatim quote from the transcript>",
-      "timestamp": "<timestamp where this appears>"
+      "timestamp": "<timestamp where this appears>",
+      "setup": "<optional — under 15 words, no period. One-line context if the quote references a concept, term, or mid-argument reference that won't land on its own. Omit this field entirely if the quote stands alone.>"
     }
   ],
   "categories": ["<tag>", "<tag>"],
@@ -76,6 +77,7 @@ RULES:
 - tldr: 1–2 sentences. Must directly answer the title's implied question or promise. Cover what the claim is, who's making it, and how supported it is. A reader should finish the tldr feeling informed, not teased.
 ${topicsRule}
 ${quotesRule}
+  Prefer quotes that land without explanation. Avoid quotes that reference technical terms the reader hasn't encountered, are mid-argument responses to something unstated, or use "this"/"that" referring to something not in the quote. If a strong quote genuinely needs context, add a "setup" line (under 15 words, no period). But a quote that stands alone is always stronger than one needing scaffolding.
 - headsUp: only include when there is a specific, verifiable mismatch between title and content. Most videos should have null here. Do NOT flag vague clickbait or opinion framing — only concrete broken promises (numbers not present, specific events not covered).
 - inContext: only include when the title states a specific claim as fact that the video explicitly frames as speculation, hypothesis, or one possibility among several. Most videos should have null here.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
