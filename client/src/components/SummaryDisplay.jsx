@@ -186,6 +186,14 @@ export default function SummaryDisplay({ data }) {
       {/* TL;DR — above fold, before categories */}
       <div className="card">
         <div className="card-label">TL;DR</div>
+        {quotes.length > 0 && (
+          <p className="tldr-quote">
+            "{quotes[0].text}"
+            {quotes[0].timestamp && (
+              <> — <a className="tldr-quote-ts" href={ytUrl(videoId, quotes[0].timestamp)} target="_blank" rel="noopener noreferrer">{quotes[0].timestamp}</a></>
+            )}
+          </p>
+        )}
         <p className="tldr-text">{tldr}</p>
       </div>
 
@@ -229,9 +237,8 @@ export default function SummaryDisplay({ data }) {
           <div className="card-label">Notable Quotes</div>
           {quotes.map((q, i) => (
             <div key={i} className="quote-item">
-              <div className="quote-text">"{q.text}"</div>
-              <div className="quote-meta">
-                {q.context}
+              <div className="quote-text">
+                "{q.text}"
                 {q.timestamp && (
                   <a className="quote-ts" href={ytUrl(videoId, q.timestamp)} target="_blank" rel="noopener noreferrer"> — {q.timestamp}</a>
                 )}

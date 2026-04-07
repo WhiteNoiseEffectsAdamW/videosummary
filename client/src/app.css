@@ -622,8 +622,15 @@ body::before {
   margin-bottom: 16px;
   border-left: 3px solid #c4a35a;
   padding-left: 14px;
-  position: relative;
 }
+.tldr-quote-ts {
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c4a35a;
+  text-decoration: none;
+}
+.tldr-quote-ts:hover { text-decoration: underline; }
 
 .tldr-text {
   font-size: 17px;

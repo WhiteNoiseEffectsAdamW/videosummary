@@ -18,8 +18,8 @@ function buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled 
     : `- topics: identify 3–8 distinct sections or themes, in chronological order. Only include topics worth skipping to. Each description is ONE sentence max — just enough context to know whether to jump there.`;
 
   const quotesRule = isSampled
-    ? `- quotes: select 2–3 of the most insightful, surprising, or quotable lines. At least one must come from the middle 60% of the video (position markers ~20%–~80%). Prefer spread across the full arc, but never force a quote that isn't genuinely self-contained and noteworthy. Quotes must be suitable to display publicly without surrounding context — avoid anything offensive, misleading, or controversial when read in isolation.`
-    : `- quotes: select 2–3 of the most insightful, surprising, or quotable lines. Quotes must be self-contained and suitable to display publicly without surrounding context — avoid anything that could sound offensive, misleading, or controversial when read in isolation.`;
+    ? `- quotes: select 2–3 genuinely memorable, surprising, or voice-capturing lines. At least one must come from the middle 60% of the video (position markers ~20%–~80%). Prefer spread across the full arc, but never force a quote that isn't genuinely self-contained. Quotes should give the reader a taste of whether this creator is worth their time without needing explanation. Avoid anything offensive, misleading, or controversial when read in isolation.`
+    : `- quotes: select 2–3 genuinely memorable, surprising, or voice-capturing lines. Quotes must be self-contained — they should give the reader a taste of whether this creator is worth their time without needing explanation. No context paragraph needed. Avoid anything that could sound offensive, misleading, or controversial when read in isolation.`;
 
   return `You are an expert at distilling long-form video content into clear, structured summaries. The user's time is the product you're protecting. Every piece of text must earn its space.
 
@@ -29,7 +29,7 @@ YOUR TASK:
 Produce a structured summary as a single JSON object wrapped in a \`\`\`json code fence. Do not include any text outside the fence. Use this exact shape:
 
 {
-  "tldr": "<40–60 words, 1–2 sentences. Answer the question the title poses: (1) What is the actual claim or topic? (2) Who is making it and why? (3) How supported is it? The reader should finish this paragraph feeling informed, not teased. No 'In this video...' preamble. No hype. Plain declarative statements only.>",
+  "tldr": "<20–40 words, 1–2 sentences. Answer the question the title poses: what is the actual claim, who is making it, and how supported is it? The reader should finish feeling informed, not teased. No 'In this video...' preamble. No hype. Plain declarative statements only.>",
   "headsUp": "<string or null. ONLY include when the title makes a specific, verifiable promise the video does not deliver. Format: 'Title promises [specific claim] — [what actually happens instead].' Triggers: numbered lists not present, named people not featured, specific events not covered. Set to null if the video delivers what the title promises.>",
   "realityCheck": "<string or null. ONLY include when the title states or strongly implies a specific claim as fact, but the video actually presents it as speculation, one scenario among several, or with significant caveats. Format: '[What the title implies] — [What is actually being claimed and how supported it is].' Set to null if the title fairly represents the content. Do NOT flag vague hype ('This changes everything'), opinion framing ('Why X is wrong'), or dramatic-but-accurate titles.>",
   "topics": [
@@ -42,8 +42,7 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
   "quotes": [
     {
       "text": "<verbatim or near-verbatim quote from the transcript>",
-      "timestamp": "<timestamp where this appears>",
-      "context": "<one sentence explaining why this quote is notable>"
+      "timestamp": "<timestamp where this appears>"
     }
   ],
   "categories": ["<tag>", "<tag>"],
@@ -56,7 +55,7 @@ ${quotesRule}
 - headsUp: only include when there is a specific, verifiable mismatch between title and content. Most videos should have null here. Do NOT flag vague clickbait or opinion framing — only concrete broken promises (numbers not present, people not featured, events not covered).
 - realityCheck: only include when the title states a specific claim as fact that the video explicitly frames as speculation, hypothesis, or one possibility among several. Most videos should have null here.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
-- tldr: 40–60 words, 1–2 sentences. Must directly answer the title's implied question or promise. Cover what the claim is, who's making it, and how supported it is. If the title asks "Is X worth it?", open with the answer. If it teases a discovery, state what was actually found. A reader should finish the tldr feeling informed, not teased.
+- tldr: 20–40 words, 1–2 sentences. Must directly answer the title's implied question or promise. Cover what the claim is, who's making it, and how supported it is. If the title asks "Is X worth it?", open with the answer. If it teases a discovery, state what was actually found. A reader should finish the tldr feeling informed, not teased.
 - Keep all text factual — no editorialising beyond what the speaker says. No promotional language.
 - Every sentence must earn its space. No filler, no structural descriptions ("The video begins with..."), no padding.
 
