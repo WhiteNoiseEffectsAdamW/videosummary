@@ -86,7 +86,7 @@ function DigestEmailMockup({ data }) {
 }
 
 function CuratedSummary({ data }) {
-  const { headsUp, inContext, tldr, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
+  const { tldr, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
   const quote = quotes[0];
 
   return (
@@ -124,19 +124,6 @@ function CuratedSummary({ data }) {
           </div>
         )}
       </div>
-
-      {headsUp && (
-        <div className="card card-flag" style={{ marginTop: 20 }}>
-          <div className="card-label">Heads Up</div>
-          <p className="flag-text">{headsUp}</p>
-        </div>
-      )}
-      {inContext && (
-        <div className="card card-flag" style={{ marginTop: 12 }}>
-          <div className="card-label">In Context</div>
-          <p className="flag-text">{inContext}</p>
-        </div>
-      )}
 
       {tldr && (
         <div className="card" style={{ marginTop: 12 }}>
