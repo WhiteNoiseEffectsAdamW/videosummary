@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-const DEMO_SLUG = 'oGDlq0UniQ';
+const DEMO_SLUG = 'Ql5yp4Xz5L';
 
 function useFadeIn() {
   const ref = useRef(null);
@@ -86,7 +86,12 @@ function DigestEmailMockup({ data }) {
 }
 
 function CuratedSummary({ data }) {
-  const { tldr, quotes = [], channelName, title, videoId, thumbnailUrl } = data;
+  const { tldr, quotes = [], channelName, title, videoId, thumbnailUrl, titleVsDelivered, inContext } = data;
+  const flag = titleVsDelivered
+    ? { label: 'Title vs Delivered', text: titleVsDelivered }
+    : inContext
+    ? { label: 'In Context', text: inContext }
+    : null;
   const quote = quotes[0];
 
   return (
@@ -129,6 +134,12 @@ function CuratedSummary({ data }) {
         <div className="card" style={{ marginTop: 12 }}>
           <div className="card-label">TL;DR</div>
           <p className="tldr-text">{tldr}</p>
+        </div>
+      )}
+      {flag && (
+        <div className="card card-flag" style={{ marginTop: 8 }}>
+          <div className="card-label">{flag.label}</div>
+          <p className="flag-text">{flag.text}</p>
         </div>
       )}
     </div>
