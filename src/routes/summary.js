@@ -88,7 +88,7 @@ router.get('/', anonLimit, async (req, res, next) => {
       getTranscript(videoId),
       fetchVideoMeta(videoId),
     ]);
-    const { summary, inputTokens, outputTokens } = await summarize(text, durationSeconds, meta.title, isSampled);
+    const { summary, inputTokens, outputTokens } = await summarize(text, durationSeconds, meta.title, isSampled, meta.channelName);
 
     await summaryModel.create({
       videoId,

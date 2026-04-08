@@ -10,9 +10,10 @@
  *   60+ min   → full (6-10 topics, 3 quotes)
  */
 
-function buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled = false) {
+function buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled = false, channelName = null) {
   const durationMins = Math.round(durationSeconds / 60);
   const titleLine = title ? `\nVIDEO TITLE: "${title}"\n` : '';
+  const channelLine = channelName ? `\nCHANNEL: "${channelName}"\n` : '';
 
   const transcriptFraming = isSampled
     ? `Below is a sampled transcript (~${durationMins} minutes total). Eight evenly-spaced excerpts are shown, each labeled with its approximate position in the video (e.g. [~40% into transcript]). Gaps between excerpts are marked with .... Do not infer or assume what was said in the gaps — only summarize what is explicitly present in the samples.`
@@ -44,7 +45,7 @@ function buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled 
 
   return `You are an expert at distilling long-form video content into clear, structured summaries. The user's time is the product you're protecting. Every piece of text must earn its space.
 
-${transcriptFraming}${titleLine}
+${transcriptFraming}${titleLine}${channelLine}
 
 This video is ~${durationMins} minutes long. Match your summary depth to the content density — a 12-minute explainer should not get the same treatment as a 90-minute interview.
 
@@ -82,6 +83,7 @@ ${quotesRule}
 - inContext: only include when the title implies certainty but the content IS present, just framed as speculation or one scenario. This is the milder flag. If titleVsDelivered applies, set inContext to null — only one flag per video, and titleVsDelivered always wins. Most videos should have null here.
 - bestFor: under 15 words. Who gets the most value from this video. Specific audience, not a generic recommendation. Set to null if titleVsDelivered is set — a broken promise needs no audience pitch.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
+- Speaker introductions: if CHANNEL is provided, the channel host needs no credentials — the reader already follows them. Use last name only and go straight to the content (e.g. "VanderKlay argues..." not "Pastor and YouTuber Paul VanderKlay argues..."). For guests or interviewees, include a brief one-line credential since the reader may not know them (e.g. "Demis Hassabis, CEO of Google DeepMind, argues...").
 - Keep all text factual — no editorialising beyond what the speaker says. No promotional language.
 - Every sentence must earn its space. No filler, no structural descriptions ("The video begins with..."), no padding.
 

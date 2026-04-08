@@ -4,8 +4,8 @@ const { buildSummarizePrompt } = require('../prompts/summarize');
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-async function summarize(transcriptText, durationSeconds, title, isSampled = false) {
-  const prompt = buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled);
+async function summarize(transcriptText, durationSeconds, title, isSampled = false, channelName = null) {
+  const prompt = buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled, channelName);
 
   const message = await client.messages.create({
     model: 'claude-sonnet-4-6',

@@ -207,8 +207,8 @@ body::before {
 .key-link:hover { text-decoration: underline; }
 
 @media (max-width: 480px) {
-  .form-row { flex-direction: column; gap: 14px; }
-  .btn-summarize { width: auto; align-self: flex-start; padding: 10px 28px; }
+  .form-row { flex-direction: column; gap: 10px; }
+  .btn-summarize { width: 100%; padding: 12px 28px; }
   .hero { padding: 36px 16px 28px; }
   .hero p { font-size: 15px; margin-bottom: 24px; }
   .key-row { gap: 8px; }
