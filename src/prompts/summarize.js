@@ -5,9 +5,9 @@
  * so it can be reliably extracted even if Claude adds a preamble sentence.
  *
  * Summary depth scales with video length:
- *   < 20 min  → tight (2-3 topics, 1 quote)
- *   20-60 min → standard (4-6 topics, 2 quotes)
- *   60+ min   → full (6-10 topics, 3 quotes)
+ *   < 12 min  → tight (2-3 topics, 2 quotes)
+ *   12-45 min → standard (4-6 topics, 3 quotes)
+ *   45+ min   → full (6-10 topics, 4-5 quotes)
  */
 
 function buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled = false, channelName = null) {
@@ -22,25 +22,27 @@ function buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled 
   // ── Depth tiers based on video length ──────────────────────
   let topicsRule, quotesRule;
 
-  if (durationMins < 20) {
+  if (durationMins < 12) {
     topicsRule = isSampled
       ? `- topics: identify 2–3 distinct themes. Use [~N%] position markers. Only include topics that represent a major shift or core claim — most short videos have one main point, don't pad it. Each description is ONE sentence.`
       : `- topics: identify 2–3 key topics, in chronological order. Only include topics that represent a major shift or core claim — most short videos have one main point, don't pad it. Each description is ONE sentence.`;
-    quotesRule = `- quotes: select 1 genuinely memorable, surprising, or voice-capturing line. Must be self-contained — give the reader a taste of whether this creator is worth their time. Avoid anything offensive, misleading, or controversial when read in isolation.`;
-  } else if (durationMins < 60) {
+    quotesRule = isSampled
+      ? `- quotes: select 2 genuinely memorable, surprising, or voice-capturing lines. Must be self-contained. Avoid anything offensive, misleading, or controversial when read in isolation.`
+      : `- quotes: select 2 genuinely memorable, surprising, or voice-capturing lines. Must be self-contained — give the reader a taste of whether this creator is worth their time. Avoid anything offensive, misleading, or controversial when read in isolation.`;
+  } else if (durationMins < 45) {
     topicsRule = isSampled
       ? `- topics: identify 4–6 distinct sections or themes in chronological order. Include at least one topic anchored in each third of the video. Use [~N%] position markers. Each topic title must be specific. Each description is ONE sentence.`
       : `- topics: identify 4–6 distinct sections or themes, in chronological order. Only include topics worth skipping to. Each description is ONE sentence.`;
     quotesRule = isSampled
-      ? `- quotes: select 2 genuinely memorable, surprising, or voice-capturing lines. At least one must come from the middle 60% of the video (position markers ~20%–~80%). Must be self-contained. Avoid anything offensive, misleading, or controversial when read in isolation.`
-      : `- quotes: select 2 genuinely memorable, surprising, or voice-capturing lines. Must be self-contained — give the reader a taste of whether this creator is worth their time. Avoid anything offensive, misleading, or controversial when read in isolation.`;
+      ? `- quotes: select 3 genuinely memorable, surprising, or voice-capturing lines. At least one must come from the middle 60% of the video (position markers ~20%–~80%). Must be self-contained. Avoid anything offensive, misleading, or controversial when read in isolation.`
+      : `- quotes: select 3 genuinely memorable, surprising, or voice-capturing lines. Must be self-contained — give the reader a taste of whether this creator is worth their time. Avoid anything offensive, misleading, or controversial when read in isolation.`;
   } else {
     topicsRule = isSampled
       ? `- topics: identify 6–10 distinct sections or themes in chronological order. Include at least one topic anchored in each third of the video. Use [~N%] position markers. These are usually wide-ranging conversations — cover the distinct threads. Each description is ONE sentence.`
       : `- topics: identify 6–10 distinct sections or themes, in chronological order. These are usually wide-ranging conversations with multiple distinct threads. Each description is ONE sentence.`;
     quotesRule = isSampled
-      ? `- quotes: select 3 genuinely memorable, surprising, or voice-capturing lines. At least one must come from the middle 60% of the video (position markers ~20%–~80%). Prefer spread across the full arc. Must be self-contained. Avoid anything offensive, misleading, or controversial when read in isolation.`
-      : `- quotes: select 3 genuinely memorable, surprising, or voice-capturing lines. Prefer spread across the full arc of the video. Must be self-contained — give the reader a taste of whether this creator is worth their time. Avoid anything offensive, misleading, or controversial when read in isolation.`;
+      ? `- quotes: select 4–5 genuinely memorable, surprising, or voice-capturing lines. At least one must come from the middle 60% of the video (position markers ~20%–~80%). Prefer spread across the full arc. Must be self-contained. Avoid anything offensive, misleading, or controversial when read in isolation.`
+      : `- quotes: select 4–5 genuinely memorable, surprising, or voice-capturing lines. Prefer spread across the full arc of the video. Must be self-contained — give the reader a taste of whether this creator is worth their time. Avoid anything offensive, misleading, or controversial when read in isolation.`;
   }
 
   return `You are an expert at distilling long-form video content into clear, structured summaries. The user's time is the product you're protecting. Every piece of text must earn its space.
