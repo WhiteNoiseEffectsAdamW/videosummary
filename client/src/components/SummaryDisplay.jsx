@@ -38,7 +38,7 @@ function esc(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
-function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, thumbnailUrl, tldr, topics = [], quotes = [], headsUp, inContext }) {
+function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, thumbnailUrl, tldr, topics = [], quotes = [], titleVsDelivered, inContext }) {
   const summaryUrl = `${window.location.origin}/s/${slug || videoId}`;
   const dur = durationSeconds > 0 ? `${Math.round(durationSeconds / 60)} min` : '';
   const meta = [channelName, dur].filter(Boolean).join(' · ');
@@ -52,7 +52,7 @@ function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, th
   ).join('');
 
   const flagsHtml = [
-    headsUp ? `<div style="border-left:2px solid #c49a2a;padding-left:12px;margin-bottom:14px;"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#c49a2a;">Heads Up</strong><div style="font-size:13px;color:#555;margin-top:4px;">${esc(headsUp)}</div></div>` : '',
+    titleVsDelivered ? `<div style="border-left:2px solid #c49a2a;padding-left:12px;margin-bottom:14px;"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#c49a2a;">Title vs Delivered</strong><div style="font-size:13px;color:#555;margin-top:4px;">${esc(titleVsDelivered)}</div></div>` : '',
     inContext ? `<div style="border-left:2px solid #c49a2a;padding-left:12px;margin-bottom:14px;"><strong style="font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#c49a2a;">In Context</strong><div style="font-size:13px;color:#555;margin-top:4px;">${esc(inContext)}</div></div>` : '',
   ].join('');
 
@@ -84,7 +84,7 @@ function formatDuration(seconds) {
 
 export default function SummaryDisplay({ data }) {
   if (!data) return null;
-  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, slug, thumbnailUrl, title, headsUp, inContext, channelName, channelId, durationSeconds } = data;
+  const { tldr, topics = [], quotes = [], categories = [], cached, videoId, slug, thumbnailUrl, title, titleVsDelivered, inContext, channelName, channelId, durationSeconds } = data;
   const savesMins = durationSeconds > 0 ? Math.round(durationSeconds / 60) : null;
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
@@ -159,7 +159,7 @@ export default function SummaryDisplay({ data }) {
   }
 
   function handleCopyHtml() {
-    const html = buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, thumbnailUrl, tldr, topics, quotes, headsUp, inContext });
+    const html = buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, thumbnailUrl, tldr, topics, quotes, titleVsDelivered, inContext });
     navigator.clipboard.writeText(html).then(() => {
       setToast('HTML copied!');
       setShareOpen(false);
@@ -266,10 +266,10 @@ export default function SummaryDisplay({ data }) {
       </div>
 
       {/* Flags — only render when present */}
-      {headsUp && (
+      {titleVsDelivered && (
         <div className="card card-flag card-flag-headsup">
-          <div className="card-label">Heads Up</div>
-          <p className="flag-text">{headsUp}</p>
+          <div className="card-label">Title vs Delivered</div>
+          <p className="flag-text">{titleVsDelivered}</p>
         </div>
       )}
       {inContext && (

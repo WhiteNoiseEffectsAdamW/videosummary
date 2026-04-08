@@ -89,15 +89,19 @@ function renderDigestHtml(summaries) {
 
   function renderFeatured(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, quotes = [], topics = [], verdict, headsUp, inContext } = data;
-    const quote = quotes[0];
+    const { tldr, quotes = [], topics = [], bestFor, titleVsDelivered, inContext } = data;
+    // Hierarchy: titleVsDelivered suppresses inContext and bestFor
+    const flag = titleVsDelivered ? { label: 'Title vs Delivered', text: titleVsDelivered } : inContext ? { label: 'In Context', text: inContext } : null;
+    const showBestFor = !titleVsDelivered && bestFor;
+    // Pick shortest quote under 25 words, or truncate the first
+    const rawQuote = quotes.find(q => q.text.split(/\s+/).length <= 25) || quotes[0];
+    const quote = rawQuote ? { ...rawQuote, text: rawQuote.text.split(/\s+/).slice(0, 25).join(' ') + (rawQuote.text.split(/\s+/).length > 25 ? '…' : '') } : null;
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
     const channelName = cleanName(s.channel_name);
     const durationMins = s.duration_seconds ? Math.round(s.duration_seconds / 60) : null;
     const topicsCapped = (topics || []).slice(0, 4);
     const stats = [durationMins ? `${durationMins} min` : null, topicsCapped.length ? `${topicsCapped.length} topics` : null].filter(Boolean).join(' &middot; ');
-    const flag = headsUp ? { label: 'Heads Up', text: headsUp } : inContext ? { label: 'In Context', text: inContext } : null;
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
@@ -117,7 +121,7 @@ function renderDigestHtml(summaries) {
       ${tldr ? `<p style="font-size:15px;color:#2a2a2a;line-height:1.7;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
       ${flag ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #c49a2a;padding-left:14px;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c49a2a;">${flag.label}</span><p style="font-size:13px;color:#555;line-height:1.55;margin:4px 0 0;">${esc(flag.text)}</p></td></tr></table>` : ''}
       ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #b8924a;padding-left:16px;"><p style="font-size:15px;font-style:italic;color:#3d3d3d;line-height:1.6;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
-      ${verdict ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:14px;vertical-align:top;width:58px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;">Verdict</span></td><td style="padding:14px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#3d3d3d;line-height:1.5;">${esc(verdict)}</span></td></tr></table>` : ''}
+      ${showBestFor ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:14px;vertical-align:top;width:58px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;">Best For</span></td><td style="padding:14px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#3d3d3d;line-height:1.5;">${esc(bestFor)}</span></td></tr></table>` : ''}
     </td>
   </tr>
   ${topicsCapped.length > 0 ? `<tr><td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;">${topicsCapped.map((t, i) => `<tr><td style="padding:10px 10px 10px 0;vertical-align:top;width:48px;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:11px;color:#b8924a;font-weight:500;">${esc(t.timestamp || '')}</span></td><td style="padding:10px 0;vertical-align:top;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:13px;font-weight:600;color:#333;">${esc(t.title || '')}</span>${t.description ? `<span style="font-size:13px;color:#666;"> — ${esc(t.description)}</span>` : ''}</td></tr>`).join('')}</table></td></tr>` : ''}
@@ -133,13 +137,14 @@ function renderDigestHtml(summaries) {
 
   function renderCompact(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, verdict, headsUp, inContext } = data;
+    const { tldr, bestFor, titleVsDelivered, inContext } = data;
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
     const channelName = cleanName(s.channel_name);
     const tldrShort = tldr ? (tldr.match(/^.+?[.!?](?:\s|$)/) || [tldr])[0].trim() : '';
-    const flagLabel = headsUp ? 'Heads Up' : inContext ? 'In Context' : null;
-    const flagText = headsUp || inContext || null;
+    const flagLabel = titleVsDelivered ? 'Title vs Delivered' : inContext ? 'In Context' : null;
+    const flagText = titleVsDelivered || inContext || null;
+    const showBestFor = !titleVsDelivered && bestFor;
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-bottom:1px solid #ede9e1;">
   <tr>
@@ -151,7 +156,7 @@ function renderDigestHtml(summaries) {
       <div style="font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35;margin-bottom:4px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
       ${tldrShort ? `<div style="font-size:13px;color:#555;line-height:1.5;margin-bottom:4px;">${esc(tldrShort)}</div>` : ''}
       ${flagLabel ? `<div style="font-size:11px;color:#c49a2a;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">${flagLabel}: <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#777;font-size:12px;">${esc(flagText)}</span></div>` : ''}
-      ${verdict ? `<div style="font-size:12px;color:#777;font-style:italic;line-height:1.5;">${esc(verdict)}</div>` : ''}
+      ${showBestFor ? `<div style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Best For: <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#777;">${esc(bestFor)}</span></div>` : ''}
     </td>
   </tr>
 </table>`;

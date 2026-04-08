@@ -53,8 +53,8 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
 
 {
   "tldr": "<1–2 sentences. Answer the question the title poses: what is the actual claim, who is making it, and how supported is it? The reader should finish feeling informed, not teased. No 'In this video...' preamble. No hype. Plain declarative statements only.>",
-  "headsUp": "<string or null. ONLY include when the title makes a specific, verifiable promise the video does not deliver. Format: 'Title promises [specific claim] — [what actually happens instead].' Triggers: numbered lists not present, specific events not covered. Set to null if the video delivers what the title promises.>",
-  "inContext": "<string or null. ONLY include when the title states or strongly implies a specific claim as fact, but the video actually presents it as speculation, one scenario among several, or with significant caveats. Format: '[What the title implies] — [What is actually being claimed and how supported it is].' Set to null if the title fairly represents the content. Do NOT flag vague hype ('This changes everything'), opinion framing ('Why X is wrong'), or dramatic-but-accurate titles.>",
+  "titleVsDelivered": "<string or null. ONLY include when the title promises something specific that the video never delivers — a numbered list, a named person, a specific event. This is the stronger flag. Format: 'Title promises [specific claim] — [what actually happens instead].' Set to null if the video delivers what the title promises. When this is set, inContext must be null.>",
+  "inContext": "<string or null. ONLY include when the title states a specific claim as fact but the video presents it as speculation, one scenario among several, or with significant caveats — and the content IS present, just framed differently than the title implies. This is the milder flag. Format: '[What the title implies] — [What is actually being claimed and how supported it is].' Set to null if titleVsDelivered is set, if the title fairly represents the content, or if the content is genuinely absent (use titleVsDelivered instead). Do NOT flag vague hype ('This changes everything'), opinion framing ('Why X is wrong'), or dramatic-but-accurate titles.>",
   "topics": [
     {
       "title": "<specific topic title>",
@@ -70,7 +70,7 @@ Produce a structured summary as a single JSON object wrapped in a \`\`\`json cod
     }
   ],
   "categories": ["<tag>", "<tag>"],
-  "verdict": "<one sentence: who this video is most useful for and whether it's worth the full watch. Be specific about the audience. Never say 'skip' or tell the reader what to do — just give context.>"
+  "bestFor": "<under 15 words. Who gets the most value from this. Not a recommendation — just context. Examples: 'Deep Work readers wanting a 2026 update' or 'AI safety skeptics familiar with alignment debates'. Set to null if titleVsDelivered is set.>"
 }
 
 RULES:
@@ -78,8 +78,9 @@ RULES:
 ${topicsRule}
 ${quotesRule}
   Prefer quotes that land without explanation. Avoid quotes that reference technical terms the reader hasn't encountered, are mid-argument responses to something unstated, or use "this"/"that" referring to something not in the quote. If a strong quote genuinely needs context, add a "setup" line (under 15 words, no period). But a quote that stands alone is always stronger than one needing scaffolding.
-- headsUp: only include when there is a specific, verifiable mismatch between title and content. Most videos should have null here. Do NOT flag vague clickbait or opinion framing — only concrete broken promises (numbers not present, specific events not covered).
-- inContext: only include when the title states a specific claim as fact that the video explicitly frames as speculation, hypothesis, or one possibility among several. Most videos should have null here.
+- titleVsDelivered: only include when the title promises something specific the video never delivers (a list, a named person, a specific event). This is the stronger flag. Most videos should have null here. Do NOT flag vague clickbait or opinion framing — only concrete broken promises.
+- inContext: only include when the title implies certainty but the content IS present, just framed as speculation or one scenario. This is the milder flag. If titleVsDelivered applies, set inContext to null — only one flag per video, and titleVsDelivered always wins. Most videos should have null here.
+- bestFor: under 15 words. Who gets the most value from this video. Specific audience, not a generic recommendation. Set to null if titleVsDelivered is set — a broken promise needs no audience pitch.
 - categories: 2–4 short topical tags describing the video's subject matter (e.g. "Productivity", "Deep Work", "Technology", "Science", "Business", "Health"). Use title case.
 - Keep all text factual — no editorialising beyond what the speaker says. No promotional language.
 - Every sentence must earn its space. No filler, no structural descriptions ("The video begins with..."), no padding.
