@@ -1964,10 +1964,22 @@ body::before {
 .landing-nav .btn-primary:hover:not(:disabled) { background: #1a1612; color: #fafaf7; }
 .landing-page .card { background: #fff; border-color: #e8e4dc; box-shadow: none; }
 .landing-page .card:hover { background: #fff; border-color: #ddd8d0; }
-.landing-page .card-label { color: #bbb; }
+.landing-page .card-label { color: #aaa; }
 .landing-page .tldr-text { color: #444; }
+.landing-page .tldr-quote { color: #2a2a2a; }
 .landing-page .card-flag { border-left-color: rgba(184,146,74,0.4); }
 .landing-page .flag-text { color: #666; }
+.landing-page .summary-title { color: #1a1a1a; }
+.landing-page .summary-header-row { border-image: linear-gradient(90deg, transparent, rgba(0,0,0,0.08) 50%, transparent) 1; }
+.landing-page .summary-thumb-inset { border-color: rgba(0,0,0,0.08); }
+.landing-page .topic-title { color: #333; }
+.landing-page .topic-desc { color: #666; }
+.landing-page .topic-item { border-bottom-color: rgba(0,0,0,0.07); }
+.landing-page .quote-text { color: #555; }
+.landing-page .quote-copy-btn { border-color: rgba(0,0,0,0.12); color: #777; }
+.landing-page .quote-copy-btn:hover { color: #444; border-color: rgba(0,0,0,0.22); }
+.landing-page .follow-section-headline { color: #1a1a1a; }
+.landing-page .summary-disclaimer { border-image: linear-gradient(90deg, transparent, rgba(0,0,0,0.1) 50%, transparent) 1; }
 .landing-page .landing-or-signup-how { font-size: 18px; font-weight: 500; color: #333; }
 
 @media (max-width: 600px) {
