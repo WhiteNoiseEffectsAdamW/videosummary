@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SummaryDisplay from '../components/SummaryDisplay.jsx';
+import ErrorBoundary from '../components/ErrorBoundary.jsx';
 
 const DEMO_SLUG = 'Ql5yp4Xz5L';
 
@@ -212,9 +214,9 @@ export default function LandingPage() {
 
         {/* Demo summary — visible immediately, no URL required */}
         {!result && !loading && demoData && (
-          <div style={{ textAlign: 'left', marginBottom: 32 }}>
+          <div style={{ textAlign: 'left', marginBottom: 40 }}>
             <div className="landing-demo-trust">The video, not the title.</div>
-            <CuratedSummary data={demoData} />
+            <ErrorBoundary><SummaryDisplay data={demoData} /></ErrorBoundary>
           </div>
         )}
 
