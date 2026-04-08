@@ -105,7 +105,7 @@ export default function Nav() {
     <>
       {/* Desktop top nav */}
       <nav className="nav">
-        <span className="nav-brand" onClick={() => setAboutOpen(true)}>Head<span className="nav-brand-accent">water</span></span>
+        <Link className="nav-brand" to="/">Head<span className="nav-brand-accent">water</span></Link>
         <div className="nav-links">
           {TABS.map((t) => (
             <Link key={t.to} className={`nav-link${pathname === t.to ? ' active' : ''}`} to={t.to}>
@@ -121,6 +121,7 @@ export default function Nav() {
             {menuOpen && (
               <div className="nav-account-menu">
                 <Link className="nav-menu-item" to="/account" onClick={() => setMenuOpen(false)}>Account</Link>
+                <button className="nav-menu-item" onClick={() => { setMenuOpen(false); setAboutOpen(true); }}>About Headwater</button>
                 <div className="nav-menu-divider" />
                 <button className="nav-menu-item" onClick={handleLogout}>Sign out</button>
               </div>

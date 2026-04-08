@@ -841,7 +841,7 @@ body::before {
   border-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.14) 50%, transparent) 1;
   background: #0a0a0a;
 }
-.nav-brand { font-family: 'EB Garamond', Georgia, serif; font-size: 30px; font-weight: 500; color: #f5f0e8; margin-right: auto; white-space: nowrap; cursor: pointer; line-height: 1; }
+.nav-brand { font-family: 'EB Garamond', Georgia, serif; font-size: 30px; font-weight: 500; color: #f5f0e8; margin-right: auto; white-space: nowrap; cursor: pointer; line-height: 1; text-decoration: none; }
 .nav-brand-accent { color: #c4a35a; }
 .about-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: flex-end; }
 .about-sheet { background: #1a1a1a; border-radius: 20px 20px 0 0; padding: 12px 24px 48px; width: 100%; max-width: 480px; margin: 0 auto; animation: slideUp 0.25s ease; }
