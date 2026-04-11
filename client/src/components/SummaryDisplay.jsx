@@ -61,11 +61,8 @@ function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, th
 
   return `<div style="max-width:620px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#fafaf7;border:1px solid #e8e4dc;border-radius:8px;padding:24px;line-height:1.6;color:#333;">
 ${thumbnailUrl ? `<a href="${summaryUrl}" style="display:block;margin-bottom:16px;line-height:0;"><img src="${esc(thumbnailUrl)}" alt="" style="width:100%;max-width:580px;height:auto;border-radius:6px;display:block;" /></a>` : ''}
-${meta ? `<div style="font-size:12px;font-weight:600;color:#b8924a;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">${esc(meta)}</div>` : ''}
-<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
-<div style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(title || videoId)}</a></div>
-<a href="${ytBase}" style="font-size:12px;font-weight:600;color:#b8924a;text-decoration:none;white-space:nowrap;flex-shrink:0;" target="_blank">▶ Watch on YouTube</a>
-</div>
+${meta ? `<div style="font-size:12px;font-weight:600;color:#b8924a;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">${esc(meta)} · <a href="${ytBase}" style="color:#b8924a;text-decoration:none;font-weight:600;" target="_blank">▶ Watch</a></div>` : `<div style="font-size:12px;margin-bottom:6px;"><a href="${ytBase}" style="color:#b8924a;text-decoration:none;font-weight:600;" target="_blank">▶ Watch on YouTube</a></div>`}
+<div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:12px;line-height:1.3;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(title || videoId)}</a></div>
 ${quotes.length > 0 ? `<div style="border-left:3px solid #b8924a;padding-left:14px;margin-bottom:14px;">${quotes[0].setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(quotes[0].setup)}</div>` : ''}<em style="font-size:16px;color:#444;line-height:1.6;">"${esc(quotes[0].text)}"</em>${quotes[0].timestamp ? ` <a href="${tsUrl(quotes[0].timestamp)}" style="color:#b8924a;font-size:12px;text-decoration:none;" target="_blank">— ${esc(quotes[0].timestamp)}</a>` : ''}</div>` : ''}
 ${tldr ? `<p style="font-size:15px;color:#333;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
 ${flagsHtml}
