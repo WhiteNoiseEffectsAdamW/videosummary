@@ -43,12 +43,15 @@ function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, th
   const dur = durationSeconds > 0 ? `${Math.round(durationSeconds / 60)} min` : '';
   const meta = [channelName, dur].filter(Boolean).join(' · ');
 
+  const ytBase = `https://www.youtube.com/watch?v=${videoId}`;
+  const tsUrl = (ts) => ts ? `${ytBase}&t=${tsToSeconds(ts)}` : ytBase;
+
   const topicsHtml = topics.map((t) =>
-    `<div style="padding:6px 0;font-size:14px;line-height:1.5;"><strong style="color:#1a1a1a;">${esc(t.title)}</strong>${t.description ? ` <span style="color:#666;">— ${esc(t.description)}</span>` : ''}${t.timestamp ? ` <span style="color:#b8924a;font-size:13px;">${esc(t.timestamp)}</span>` : ''}</div>`
+    `<div style="padding:6px 0;font-size:14px;line-height:1.5;"><strong style="color:#1a1a1a;">${esc(t.title)}</strong>${t.description ? ` <span style="color:#666;">— ${esc(t.description)}</span>` : ''}${t.timestamp ? ` <a href="${tsUrl(t.timestamp)}" style="color:#b8924a;font-size:13px;text-decoration:none;" target="_blank">${esc(t.timestamp)}</a>` : ''}</div>`
   ).join('');
 
   const quotesHtml = quotes.map((q) =>
-    `<div style="border-left:2px solid #b8924a;padding-left:14px;margin-bottom:12px;">${q.setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(q.setup)}</div>` : ''}<em style="color:#444;font-size:14px;line-height:1.6;">"${esc(q.text)}"</em>${q.timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(q.timestamp)}</span>` : ''}</div>`
+    `<div style="border-left:2px solid #b8924a;padding-left:14px;margin-bottom:12px;">${q.setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(q.setup)}</div>` : ''}<em style="color:#444;font-size:14px;line-height:1.6;">"${esc(q.text)}"</em>${q.timestamp ? ` <a href="${tsUrl(q.timestamp)}" style="color:#b8924a;font-size:12px;text-decoration:none;" target="_blank">— ${esc(q.timestamp)}</a>` : ''}</div>`
   ).join('');
 
   const flagsHtml = [
@@ -59,8 +62,11 @@ function buildEmbedHtml({ title, channelName, durationSeconds, videoId, slug, th
   return `<div style="max-width:620px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:#fafaf7;border:1px solid #e8e4dc;border-radius:8px;padding:24px;line-height:1.6;color:#333;">
 ${thumbnailUrl ? `<a href="${summaryUrl}" style="display:block;margin-bottom:16px;line-height:0;"><img src="${esc(thumbnailUrl)}" alt="" style="width:100%;max-width:580px;height:auto;border-radius:6px;display:block;" /></a>` : ''}
 ${meta ? `<div style="font-size:12px;font-weight:600;color:#b8924a;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">${esc(meta)}</div>` : ''}
-<div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-bottom:12px;line-height:1.3;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(title || videoId)}</a></div>
-${quotes.length > 0 ? `<div style="border-left:3px solid #b8924a;padding-left:14px;margin-bottom:14px;">${quotes[0].setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(quotes[0].setup)}</div>` : ''}<em style="font-size:16px;color:#444;line-height:1.6;">"${esc(quotes[0].text)}"</em>${quotes[0].timestamp ? ` <span style="color:#b8924a;font-size:12px;">— ${esc(quotes[0].timestamp)}</span>` : ''}</div>` : ''}
+<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap;">
+<div style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(title || videoId)}</a></div>
+<a href="${ytBase}" style="font-size:12px;font-weight:600;color:#b8924a;text-decoration:none;white-space:nowrap;flex-shrink:0;" target="_blank">▶ Watch on YouTube</a>
+</div>
+${quotes.length > 0 ? `<div style="border-left:3px solid #b8924a;padding-left:14px;margin-bottom:14px;">${quotes[0].setup ? `<div style="font-size:12px;font-style:italic;color:#888;margin-bottom:2px;">${esc(quotes[0].setup)}</div>` : ''}<em style="font-size:16px;color:#444;line-height:1.6;">"${esc(quotes[0].text)}"</em>${quotes[0].timestamp ? ` <a href="${tsUrl(quotes[0].timestamp)}" style="color:#b8924a;font-size:12px;text-decoration:none;" target="_blank">— ${esc(quotes[0].timestamp)}</a>` : ''}</div>` : ''}
 ${tldr ? `<p style="font-size:15px;color:#333;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
 ${flagsHtml}
 ${topics.length > 0 ? `<div style="border-top:1px solid #e8e4dc;padding-top:14px;margin-bottom:14px;"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#999;margin-bottom:10px;">Key Topics</div>${topicsHtml}</div>` : ''}
