@@ -321,22 +321,22 @@ async function sendWelcome(toEmail) {
   const html = `<!DOCTYPE html><html lang="en"><body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;margin:0;padding:0;">
 <div style="max-width:480px;margin:0 auto;padding:48px 24px;">
   <div style="font-size:13px;color:#999;margin-bottom:32px;">Head<span style="color:#b8924a;">water</span></div>
-  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Thanks for signing up — genuinely means a lot for something I built for myself.</p>
-  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Every morning you'll get a digest from your channels — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose.</p>
-  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 28px;">Add your channels and your first digest arrives tomorrow morning.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">Tomorrow morning you'll get your first digest.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 20px;">It's not a feed. It's not recommendations. Just the channels you chose — summarized well enough that most days you won't need to click through.</p>
+  <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 28px;">Your attention is yours. This is a small tool to help keep it that way.</p>
   <a href="${followUrl}" style="display:inline-block;background:#1a1a1a;color:#fafaf7;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:32px;">Add your channels →</a>
-  <p style="font-size:15px;color:#555;margin:0 0 16px;line-height:1.6;">— Adam at Headwater</p>
-  <p style="font-size:13px;color:#888;margin:0 0 48px;line-height:1.75;"><em>P.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.</em></p>
+  <p style="font-size:15px;color:#555;margin:0 0 16px;line-height:1.6;">— Adam</p>
+  <p style="font-size:13px;color:#888;margin:0 0 48px;line-height:1.75;"><em>P.S. Reply anytime. I read everything.</em></p>
   <p style="font-size:12px;color:#bbb;line-height:1.6;">You're receiving this because you created a Headwater account.<br><a href="${followUrl}" style="color:#bbb;">Unsubscribe</a></p>
 </div>
 </body></html>`;
 
-  const text = `Thanks for signing up — genuinely means a lot for something I built for myself.\n\nEvery morning you'll get a digest from your channels — key points, notable quotes, enough to know if a video is worth your time. No feed. No recommendations. Just the channels you chose.\n\nAdd your channels and your first digest arrives tomorrow morning.\n\nAdd your channels: ${followUrl}\n\n— Adam at Headwater\n\nP.S. You can reply directly to this email with questions, suggestions, or feedback. I read everything.\n\nYou're receiving this because you created a Headwater account.\nUnsubscribe: ${followUrl}`;
+  const text = `Tomorrow morning you'll get your first digest.\n\nIt's not a feed. It's not recommendations. Just the channels you chose — summarized well enough that most days you won't need to click through.\n\nYour attention is yours. This is a small tool to help keep it that way.\n\nAdd your channels: ${followUrl}\n\n— Adam\n\nP.S. Reply anytime. I read everything.\n\nYou're receiving this because you created a Headwater account.\nUnsubscribe: ${followUrl}`;
 
   await getResend().emails.send({
     from: FROM,
     to: toEmail,
-    subject: 'I got tired of letting YouTube decide for me',
+    subject: 'Your attention is yours.',
     html,
     text,
   });
