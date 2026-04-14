@@ -8,12 +8,13 @@ const { sendDigest } = require('../services/email');
 // GET /api/videos — user's saved videos (manual + channel)
 router.get('/', requireAuth, async (req, res, next) => {
   try {
-    const isPro = req.user.subscription_status === 'pro';
-    const historyLimit = isPro ? null : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    // History limit disabled — all users get full history while free tier is open
+    // const isPro = req.user.subscription_status === 'pro';
+    // const historyLimit = isPro ? null : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
     const [subs, savedRows] = await Promise.all([
       subscriptionModel.findByUserId(req.user.id),
-      summaryModel.findSavedByUserId(req.user.id, 100, historyLimit),
+      summaryModel.findSavedByUserId(req.user.id, 500),
     ]);
 
     const channelMap = Object.fromEntries(subs.map((s) => [s.channel_id, s.channel_name || s.channel_id]));
