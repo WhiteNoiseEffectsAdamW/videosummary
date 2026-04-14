@@ -77,6 +77,8 @@ RULES
 TLDR
 2–4 sentences. Open with the core claim directly. Answer the question the title poses with the video's actual reasoning — what the claim is, who is making it, and the key logic or evidence. The reader should be able to explain this to someone else after reading.
 
+If the title makes a specific promise ("You MUST Do This," "The One Thing," "What Nobody Tells You About X"), the TL;DR must deliver on that promise directly. Name the thing. Don't gesture at it. The reader should not have to scan the topics to find the answer the title promised.
+
 TOPICS
 ${topicsRule} List in chronological order. Include a timestamp for each.
 
