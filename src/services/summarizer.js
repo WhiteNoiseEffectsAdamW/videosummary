@@ -7,15 +7,26 @@ const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 async function summarize(transcriptText, durationSeconds, title, isSampled = false, channelName = null) {
   const prompt = buildSummarizePrompt(transcriptText, durationSeconds, title, isSampled, channelName);
 
-  const message = await client.messages.create({
-    model: 'claude-sonnet-4-6',
-    max_tokens: 2048,
-    messages: [{ role: 'user', content: prompt }],
-  });
+  const MAX_RETRIES = 2;
+  let lastError;
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    const message = await client.messages.create({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4096,
+      messages: [{ role: 'user', content: prompt }],
+    });
 
-  const raw = message.content[0].text;
-  const summary = parseStructuredSummary(raw);
-  return { summary, inputTokens: message.usage.input_tokens, outputTokens: message.usage.output_tokens };
+    const raw = message.content[0].text;
+    try {
+      const summary = parseStructuredSummary(raw);
+      if (attempt > 1) console.log(`[summarize] succeeded on attempt ${attempt}`);
+      return { summary, inputTokens: message.usage.input_tokens, outputTokens: message.usage.output_tokens };
+    } catch (err) {
+      console.warn(`[summarize] parse failed on attempt ${attempt}:`, raw.slice(0, 200));
+      lastError = err;
+    }
+  }
+  throw lastError;
 }
 
 function parseStructuredSummary(raw) {
