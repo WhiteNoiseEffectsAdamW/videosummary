@@ -137,24 +137,28 @@ function renderDigestHtml(summaries) {
 
   function renderCompact(s) {
     const data = JSON.parse(s.summary_json);
-    const { tldr, bestFor, titleVsDelivered, inContext } = data;
+    const { tldr, quotes = [], bestFor, titleVsDelivered, inContext } = data;
     const summaryUrl = `${APP_URL}/s/${s.slug || s.video_id}`;
     const thumb = `${APP_URL}/api/og/thumb/${s.video_id}`;
     const channelName = cleanName(s.channel_name);
-    const tldrShort = tldr ? (tldr.match(/^.+?[.!?](?:\s|$)/) || [tldr])[0].trim() : '';
+    const sentences = tldr ? tldr.match(/[^.!?]+[.!?]+/g) || [tldr] : [];
+    const tldrShort = sentences.slice(0, 2).join(' ').trim();
+    const rawQuote = quotes[0];
+    const quoteText = rawQuote ? rawQuote.text.split(/\s+/).slice(0, 20).join(' ') + (rawQuote.text.split(/\s+/).length > 20 ? '…' : '') : null;
     const flagLabel = titleVsDelivered ? 'Title vs Delivered' : inContext ? 'In Context' : null;
     const flagText = titleVsDelivered || inContext || null;
     const showBestFor = !titleVsDelivered && bestFor;
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-bottom:1px solid #ede9e1;">
   <tr>
-    <td style="padding:16px 14px 16px 0;vertical-align:middle;width:72px;">
+    <td style="padding:16px 14px 16px 0;vertical-align:top;width:72px;">
       <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="72" style="display:block;width:72px;height:auto;border-radius:3px;background-color:#eae6de;" /></a>
     </td>
-    <td style="padding:16px 0;vertical-align:middle;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+    <td style="padding:16px 0;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
       ${channelName ? `<div style="font-size:11px;font-weight:600;color:#b8924a;margin-bottom:2px;">${esc(channelName)}</div>` : ''}
-      <div style="font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35;margin-bottom:4px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
-      ${tldrShort ? `<div style="font-size:13px;color:#555;line-height:1.5;margin-bottom:4px;">${esc(tldrShort)}</div>` : ''}
+      <div style="font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35;margin-bottom:6px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
+      ${tldrShort ? `<div style="font-size:13px;color:#555;line-height:1.55;margin-bottom:6px;">${esc(tldrShort)}</div>` : ''}
+      ${quoteText ? `<div style="font-size:12px;font-style:italic;color:#777;line-height:1.5;border-left:2px solid #b8924a;padding-left:8px;margin-bottom:6px;">&ldquo;${esc(quoteText)}&rdquo;</div>` : ''}
       ${flagLabel ? `<div style="font-size:11px;color:#c49a2a;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">${flagLabel}: <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#777;font-size:12px;">${esc(flagText)}</span></div>` : ''}
       ${showBestFor ? `<div style="font-size:11px;color:#888;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;">Best For: <span style="font-weight:400;text-transform:none;letter-spacing:0;color:#777;">${esc(bestFor)}</span></div>` : ''}
     </td>
@@ -265,12 +269,13 @@ async function sendNudge(toEmail) {
   <a href="${followUrl}" style="display:inline-block;background:#1a1a1a;color:#fafaf7;font-size:14px;font-weight:600;padding:12px 24px;border-radius:8px;text-decoration:none;margin-bottom:24px;">Follow your first channel →</a>
   <p style="font-size:15px;color:#333;line-height:1.75;margin:0 0 16px;">Not ready yet? Paste any YouTube URL and see what a summary looks like first.</p>
   <a href="${tryUrl}" style="font-size:15px;font-weight:600;color:#b8924a;text-decoration:none;">Try a video →</a>
-  <p style="font-size:15px;color:#555;font-style:italic;margin-top:40px;line-height:1.6;">— Adam at Headwater</p>
-  <p style="font-size:12px;color:#bbb;margin-top:16px;line-height:1.6;">If you'd rather not receive emails like this, <a href="${followUrl}" style="color:#bbb;">unsubscribe here</a>.</p>
+  <p style="font-size:15px;color:#555;font-style:italic;margin-top:40px;line-height:1.6;">— Adam</p>
+  <p style="font-size:13px;color:#888;margin:0 0 16px;line-height:1.75;"><em>P.S. Reply anytime. I read everything.</em></p>
+  <p style="font-size:12px;color:#bbb;line-height:1.6;"><a href="${followUrl}" style="color:#bbb;">Unsubscribe</a></p>
 </div>
 </body></html>`;
 
-  const text = `Your first digest is waiting on you — add a channel and it arrives tomorrow morning. Pick one you already follow on YouTube; that's all it takes.\n\nFollow your first channel: ${followUrl}\n\nNot ready yet? Paste any YouTube URL and see what a summary looks like first.\n\nTry a video: ${tryUrl}\n\n— Adam at Headwater\n\nIf you'd rather not receive emails like this: ${followUrl}`;
+  const text = `Your first digest is waiting on you — add a channel and it arrives tomorrow morning. Pick one you already follow on YouTube; that's all it takes.\n\nFollow your first channel: ${followUrl}\n\nNot ready yet? Paste any YouTube URL and see what a summary looks like first.\n\nTry a video: ${tryUrl}\n\n— Adam\n\nP.S. Reply anytime. I read everything.\n\nUnsubscribe: ${followUrl}`;
 
   await getResend().emails.send({
     from: FROM,
