@@ -105,31 +105,25 @@ function renderDigestHtml(summaries) {
 
     return `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
   <tr>
-    <td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      <a href="${summaryUrl}" style="display:block;line-height:0;"><img src="${thumb}" alt="" width="520" style="display:block;width:100%;max-width:520px;height:auto;border-radius:6px;background-color:#eae6de;" /></a>
+    <!-- Thumbnail: 160px on desktop, full-width on mobile -->
+    <td class="feat-thumb-cell" valign="top" style="width:160px;padding:0 16px 0 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      <a href="${summaryUrl}" style="display:block;line-height:0;"><img class="feat-thumb-img" src="${thumb}" alt="" width="160" style="display:block;width:160px;height:auto;border-radius:6px;background-color:#eae6de;" /></a>
     </td>
-  </tr>
-  <tr>
-    <td style="padding:0 0 10px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      ${channelName ? `<div style="font-size:13px;font-weight:700;color:#b8924a;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">${esc(channelName)}</div>` : ''}
-      <div style="font-size:20px;font-weight:700;color:#1a1a1a;line-height:1.3;letter-spacing:-0.01em;margin-bottom:8px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
-      ${stats ? `<div style="font-size:12px;color:#888;margin-bottom:4px;">${stats}</div>` : ''}
-    </td>
-  </tr>
-  <tr>
-    <td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      ${tldr ? `<p style="font-size:15px;color:#2a2a2a;line-height:1.7;margin:0 0 16px;">${esc(tldr)}</p>` : ''}
-      ${flag ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #c49a2a;padding-left:14px;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c49a2a;">${flag.label}</span><p style="font-size:13px;color:#555;line-height:1.55;margin:4px 0 0;">${esc(flag.text)}</p></td></tr></table>` : ''}
-      ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:16px;"><tr><td style="border-left:2px solid #b8924a;padding-left:16px;"><p style="font-size:15px;font-style:italic;color:#3d3d3d;line-height:1.6;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
-      ${showBestFor ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:14px;vertical-align:top;width:58px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;">Best For</span></td><td style="padding:14px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#3d3d3d;line-height:1.5;">${esc(bestFor)}</span></td></tr></table>` : ''}
-    </td>
-  </tr>
-  ${topicsCapped.length > 0 ? `<tr><td style="padding:0 0 18px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;">${topicsCapped.map((t, i) => `<tr><td style="padding:10px 10px 10px 0;vertical-align:top;width:48px;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:11px;color:#b8924a;font-weight:500;">${esc(t.timestamp || '')}</span></td><td style="padding:10px 0;vertical-align:top;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:13px;font-weight:600;color:#333;">${esc(t.title || '')}</span>${t.description ? `<span style="font-size:13px;color:#666;"> — ${esc(t.description)}</span>` : ''}</td></tr>`).join('')}</table></td></tr>` : ''}
-  <tr>
-    <td style="padding:6px 0 20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
-      <a href="${summaryUrl}" style="font-size:14px;font-weight:600;color:#b8924a;text-decoration:none;">Read full summary &rarr;</a>
-      <span style="color:#d8d2c6;padding:0 10px;">&middot;</span>
-      <a href="https://www.youtube.com/watch?v=${s.video_id}" style="font-size:13px;color:#777;text-decoration:none;">Watch on YouTube &#x2197;</a>
+    <!-- Content: sits beside thumb on desktop, below on mobile -->
+    <td class="feat-content-cell" valign="top" style="vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;">
+      ${channelName ? `<div style="font-size:12px;font-weight:700;color:#b8924a;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">${esc(channelName)}</div>` : ''}
+      <div style="font-size:18px;font-weight:700;color:#1a1a1a;line-height:1.3;letter-spacing:-0.01em;margin-bottom:6px;"><a href="${summaryUrl}" style="color:#1a1a1a;text-decoration:none;">${esc(normalizeTitle(s.title) || s.video_id)}</a></div>
+      ${stats ? `<div style="font-size:12px;color:#888;margin-bottom:10px;">${stats}</div>` : ''}
+      ${tldr ? `<p style="font-size:14px;color:#2a2a2a;line-height:1.65;margin:0 0 12px;">${esc(tldr)}</p>` : ''}
+      ${flag ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:12px;"><tr><td style="border-left:2px solid #c49a2a;padding-left:12px;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c49a2a;">${flag.label}</span><p style="font-size:13px;color:#555;line-height:1.55;margin:4px 0 0;">${esc(flag.text)}</p></td></tr></table>` : ''}
+      ${quote ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin-bottom:12px;"><tr><td style="border-left:2px solid #b8924a;padding-left:12px;"><p style="font-size:14px;font-style:italic;color:#3d3d3d;line-height:1.6;margin:0;">&ldquo;${esc(quote.text)}&rdquo;</p></td></tr></table>` : ''}
+      ${showBestFor ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;"><tr><td style="padding-top:12px;vertical-align:top;width:52px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#888;">Best For</span></td><td style="padding:12px 0 0 8px;vertical-align:top;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;"><span style="font-size:13px;color:#3d3d3d;line-height:1.5;">${esc(bestFor)}</span></td></tr></table>` : ''}
+      ${topicsCapped.length > 0 ? `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;border-top:1px solid #e8e4dc;margin-top:4px;">${topicsCapped.map((t, i) => `<tr><td style="padding:8px 8px 8px 0;vertical-align:top;width:44px;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:11px;color:#b8924a;font-weight:500;">${esc(t.timestamp || '')}</span></td><td style="padding:8px 0;vertical-align:top;${i < topicsCapped.length - 1 ? 'border-bottom:1px solid #f0ece4;' : ''}"><span style="font-size:13px;font-weight:600;color:#333;">${esc(t.title || '')}</span>${t.description ? `<span style="font-size:12px;color:#666;"> — ${esc(t.description)}</span>` : ''}</td></tr>`).join('')}</table>` : ''}
+      <div style="padding-top:12px;">
+        <a href="${summaryUrl}" style="font-size:13px;font-weight:600;color:#b8924a;text-decoration:none;">Read full summary &rarr;</a>
+        <span style="color:#d8d2c6;padding:0 8px;">&middot;</span>
+        <a href="https://www.youtube.com/watch?v=${s.video_id}" style="font-size:13px;color:#777;text-decoration:none;">Watch on YouTube &#x2197;</a>
+      </div>
     </td>
   </tr>
 </table>`;
@@ -172,6 +166,13 @@ function renderDigestHtml(summaries) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Morning Digest</title>
+<style>
+  @media only screen and (max-width: 599px) {
+    .feat-thumb-cell { display: block !important; width: 100% !important; padding: 0 0 12px 0 !important; }
+    .feat-thumb-img { width: 100% !important; max-width: 100% !important; }
+    .feat-content-cell { display: block !important; width: 100% !important; }
+  }
+</style>
 </head>
 <body style="margin:0;padding:0;background-color:#e8e4dc;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;">
 <center>
@@ -183,10 +184,6 @@ function renderDigestHtml(summaries) {
       <div style="font-size:13px;color:#999;margin-bottom:4px;">${dateStr}</div>
       <div style="font-size:22px;font-weight:700;color:#1a1a1a;letter-spacing:-0.02em;line-height:1.25;">${channelDisplay} &mdash; <span style="color:#b8924a;">${count} new video${count !== 1 ? 's' : ''}</span></div>
     </td>
-  </tr>
-
-  <tr>
-    <td style="padding:20px 40px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#777;line-height:1.6;">Here's what's new from your channels.</td>
   </tr>
 
   <tr>
